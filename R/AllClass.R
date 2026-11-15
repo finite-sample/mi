@@ -197,7 +197,6 @@ setMethod("initialize", "missing_variable",
 setClass(
   "irrelevant", representation("missing_variable"),
   #   prototype(
-  #     imputation_method = NA_character_,
   #     family = NA_character_)
 )
 
@@ -240,14 +239,8 @@ setMethod("initialize", "categorical",
         return(.Object)
       }
       ## FIXME: check on the unused levels thing
-      #   .Object@raw_data <- factor(.Object@raw_data)
       lev <- levels(factor(.Object@raw_data))
-      #     dummies <- t(sapply(.Object@raw_data, FUN = function(x) as.integer(x == lev)))[,-1, drop = FALSE]
-      #     if(ncol(dummies) == 1) colnames(dummies) <- .Object@variable_name
       #     else colnames(dummies) <- lev[-1]
-      #     mark <- !apply(dummies, 2, FUN = function(x) all(x == 0, na.rm = TRUE))
-      #     dummies <- dummies[,mark, drop = FALSE]
-      #     lev <- c(lev[1], lev[-1][mark])
       .Object@levels <- lev
       .Object@data <- as.integer(factor(.Object@raw_data))
       .Object
@@ -395,10 +388,8 @@ validity = function(object) {
     out <- paste(object@variable_name, ": 'imputation_method' must be one of:\n", paste(im, collapse = ", "))
   }
   #            else if(object@family$family != "multinomial") {
-  #              out <- "the 'family' slot of 'unordered-categorial' class must be 'multinomial(link = 'logit')'"
   #            }
   #            else if(object@family$link != "logit") {
-  #              out <- "the 'family' slot of 'unordered-categorial' class must be 'multinomial(link = 'logit')'"
   #            }
   else if (!(object@estimator %in% c("MNL", "RNL"))) {
     out <- paste(object@variable_name, ": estimator not recognized")
@@ -649,10 +640,8 @@ setClass("bounded-continuous", representation("continuous", lower = "numeric", u
   validity = function(object) {
     out <- TRUE
     #     if(any(object@raw_data <= object@lower, na.rm = TRUE)) {
-    #       out <- paste(object@variable_name, ": all observed data must be strictly greater than 'lower'")
     #     }
     #     else if(any(object@raw_data >= object@upper, na.rm = TRUE)) {
-    #       out <- paste(object@variable_name, ": all observed data must be strictly less than 'upper'")
     #     }
     if (any(object@lower > object@upper)) {
       out <- paste(object@variable_name, ": lower bounds must be less than or equal to upper bounds")
@@ -727,113 +716,43 @@ setClass("proportion", representation("positive-continuous", link.phi = "WeAreFa
 
 # setClass("truncated-continuous",
 #   representation("continuous",
-#                  lower = "ANY",
-#                  upper = "ANY",
-#                  n_lower = "integer",
-#                  which_lower = "integer",
-#                  n_upper = "integer",
-#                  which_upper = "integer",
-#                  n_both = "integer",
-#                  which_both = "integer",
-#                  n_truncated = "integer",
-#                  which_truncated = "integer",
 #                  "VIRTUAL")
 # )
 #
-# setClass("NN_truncated-continuous", representation("truncated-continuous", lower = "numeric", upper = "numeric"))
 #
 # setMethod("initialize", "NN_truncated-continuous", def =
 # function(.Object, ...) {
-#   .Object <- callNextMethod()
-#   l <- length(.Object@raw_data)
-#   if(l == 0) return(.Object)
 #   if(identical(.Object@transformation, .standardize_transform)) {
-#     mean <- mean(.Object@raw_data, na.rm = TRUE)
-#     sd <- sd(.Object@raw_data, na.rm = TRUE)
-#     formals(.Object@transformation)$mean <- formals(.Object@inverse_transformation)$mean <- mean
-#     formals(.Object@transformation)$sd <- formals(.Object@inverse_transformation)$sd <- sd
-#     formals(.Object@inverse_transformation)$inverse <- TRUE
 #   }
-#   .Object@data <- .Object@transformation(.Object@raw_data)
 #
 #   if(length(.Object@lower) == 0 & length(.Object@upper) == 0) {
-#     stop("at least one of 'lower' and 'upper' must be specified")
 #   }
 #   ## FIXME: Deal with interval censoring or force it to the interval class
-#   .Object@n_both <- 0L
-#   lowers <- .Object@raw_data <= .Object@lower
-#   .Object@n_lower <- sum(lowers)
-#   .Object@which_lower <- which(lowers)
-#   uppers <- .Object@raw_data >= .Object@upper
-#   .Object@n_uppers <- sum(uppers)
-#   .Object@which_uppers <- which(uppers)
-#   .Object@n_truncated <- .Object@n_lower + .Object@n_upper
-#   .Object@which_truncated <- c(.Object@which_lower, .Object@which_upper)
-#   return(.Object)
 # })
 #
-# setClass("FN_truncated-continuous", representation("truncated-continuous", lower = "function", upper = "numeric"))
-# setClass("NF_truncated-continuous", representation("truncated-continuous", lower = "numeric", upper = "function"))
-# setClass("FF_truncated-continuous", representation("truncated-continuous", lower = "function", upper = "function"))
 #
 # setClass("censored-continuous",
 #   representation("continuous",
-#                  lower = "ANY",
-#                  upper = "ANY",
-#                  n_lower = "integer",
-#                  which_lower = "integer",
-#                  n_upper = "integer",
-#                  which_upper = "integer",
-#                  n_both = "integer",
-#                  which_both = "integer",
-#                  n_censored = "integer",
-#                  which_censored = "integer",
-#                  lower_indicator = "binary",
-#                  upper_indicator = "binary",
 #                  "VIRTUAL")
 # )
-# setClass("NN_censored-continuous", representation("censored-continuous", lower = "numeric", upper = "numeric"))
 # setMethod("initialize", "NN_censored-continuous", def =
 # function(.Object, ...) {
-#   .Object <- callNextMethod()
-#   l <- length(.Object@raw_data)
-#   if(l == 0) return(.Object)
 #   if(identical(.Object@transformation, .standardize_transform)) {
-#     mean <- mean(.Object@raw_data, na.rm = TRUE)
-#     sd <- sd(.Object@raw_data, na.rm = TRUE)
-#     formals(.Object@transformation)$mean <- formals(.Object@inverse_transformation)$mean <- mean
-#     formals(.Object@transformation)$sd <- formals(.Object@inverse_transformation)$sd <- sd
-#     formals(.Object@inverse_transformation)$inverse <- TRUE
 #   }
-#   .Object@data <- .Object@transformation(.Object@raw_data)
 #
 #   if(length(.Object@lower) == 0 & length(.Object@upper) == 0) {
-#     stop("at least one of 'lower' and 'upper' must be specified")
 #   }
 #   ## FIXME: Deal with interval censoring or force it to the interval class
-#   .Object@n_both <- 0L
-#   lowers <- .Object@raw_data <= .Object@lower
-#   .Object@n_lower <- sum(lowers, na.rm = TRUE)
-#   .Object@which_lower <- which(lowers)
 #   if(.Object@n_lower > 0) {
 #     .Object@lower_indicator <- missing_variable(as.ordered(lowers), type = "binary",
 #                                  variable_name = paste(.Object@variable_name, "lower", sep = ""))
 #   }
-#   uppers <- .Object@raw_data >= .Object@upper
-#   .Object@n_upper <- sum(uppers, na.rm = TRUE)
-#   .Object@which_upper <- which(uppers)
 #   if(.Object@n_upper > 0) {
 #     .Object@lower_indicator <- missing_variable(as.ordered(uppers), type = "binary",
 #                                  variable_name = paste(.Object@variable_name, "upper", sep = ""))
 #   }
-#   .Object@n_censored <- .Object@n_lower + .Object@n_upper
-#   .Object@which_censored <- c(.Object@which_lower, .Object@which_upper)
-#   return(.Object)
 # })
 #
-# setClass("FN_censored-continuous", representation("censored-continuous", lower = "function", upper = "numeric"))
-# setClass("NF_censored-continuous", representation("censored-continuous", lower = "numeric", upper = "function"))
-# setClass("FF_censored-continuous", representation("censored-continuous", lower = "function", upper = "function"))
 
 setClass(
   "semi-continuous", representation("continuous", indicator = "ordered-categorical"),
@@ -1037,7 +956,6 @@ setClass("missing_data.frame",
           "Please verify whether they are in fact logically distinct variables.\n"
         )
         print(temp)
-        # 	warning("Potentially duplicated variables detected by duplicated variable detector")
       } else if (any(dupes == 2L)) {
         temp <- matrix(names(missingness)[combos[, which(dupes == 2L)]], ncol = 2, byrow = TRUE)
         cat(

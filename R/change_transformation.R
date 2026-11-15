@@ -137,7 +137,6 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
         mark <- data@index[[y[i]]][1]
         data@X[, mark] <- data@variables[[y[i]]]@data
       }
-      #   initialize(data)
       data
     }
 )

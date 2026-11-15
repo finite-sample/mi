@@ -222,10 +222,6 @@ setMethod("show", "missing_data.frame",
       if (length(object@patterns)) {
         npatterns <- nlevels(object@patterns)
         cat("\nThere are", npatterns, "missing data patterns\n")
-        #       print(table(as.integer(object@patterns)))
-        #       mat <- as.matrix(levels(object@patterns))
-        #       colnames(mat) <- "missing"
-        #       print(mat)
         cat("\nAppend '@patterns' to this", class(object), "to access the corresponding pattern for every observation or perhaps use table()\n\n")
       }
       print(df1)

@@ -55,7 +55,6 @@ setMethod(
       sub = sub, xlab = xlab, ylab = ylab,
       xlim = xlim, ylim = ylim, aspect = aspect,
       colorkey = colorkey, col.regions = col.regions, cuts = cuts,
-      # 		    par.settings = list(background = list(col = "transparent")),
       panel = function(x, y, z, subscripts, at, ..., col.regions) {
         x <- as.numeric(x[subscripts])
         y <- as.numeric(y[subscripts])
@@ -225,7 +224,6 @@ setMethod("image", signature(x = "mi"),
       }
       foo <- function(z, raw = FALSE) {
         y <- if (raw) z@raw_data else z@data
-        # 	    y <- z@data
         if (is(z, "irrelevant")) {
           NULL
         } else if (is(z, "continuous")) {
@@ -321,7 +319,6 @@ setMethod("image", signature(x = "mi_list"),
       }
     }
     aa <- data.frame(arm::binned.resids(x, y, nclass)$binned)
-    #     aa <- aa[!is.na(aa$X2se),] ## FIXME: remove once Yu-Sung fixes arm::binned.resids
     plot(range(aa$xbar), range(aa$ybar, aa$X2se, -aa$X2se),
       xlab = xlab,
       ylab = ylab, type = "n", main = main, mgp = c(2, 1, 0), tcl = .05

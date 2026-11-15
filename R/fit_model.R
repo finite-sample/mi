@@ -284,18 +284,12 @@ setMethod("fit_model", signature(y = "continuous", data = "missing_data.frame"),
 
 # setMethod("fit_model", signature(y = "truncated-continuous", data = "missing_data.frame"), def =
 # function(y, data, s, warn, ...) {
-#   stop("FIXME: write this method using library(survival)")
 # })
 #
 # setMethod("fit_model", signature(y = "censored-continuous", data = "missing_data.frame"), def =
 # function(y, data, s, warn, ...) {
-#   stop("FIXME: mi does not do censored-continuous variables yet")
-#   to_drop <- data@index[[y@variable_name]]
-#   X <- cbind(y@raw_data, data@X[,-to_drop])
 #   if(is(data, "experiment_missing_data.frame")) {
-#     treatment <- names(which(data@concept == "treatment"))
 #     if(data@concept[y@variable_name] == "outcome") {
-#       X <- cbind(X, interaction = X * data@variables[[treatment]]@data)
 #     }
 #   }
 # })
@@ -795,7 +789,6 @@ setMethod("fit_model", signature(y = "missing", data = "allcategorical_missing_d
     uc <- unique(classes)
     Pr <- t(sapply(uc, FUN = function(c) data@parameters$phi[[c]][[y@variable_name]]))
     rownames(Pr) <- uc
-    #     Pr <- Pr[as.character(classes),,drop=FALSE]
     Pr <- Pr / rowSums(Pr)
     list(fitted = Pr)
   }
@@ -889,7 +882,6 @@ setMethod("fit_model", signature(y = "missing", data = "multilevel_missing_data.
       # model the individual level estimates
       for (i in seq_along(ncol(data))) {
         if (is(data@variables[[i]], "irrelevant")) next
-        #     if(data@no_missing[i]) next
         mark <- if (s < 0) 1 else s
         fish <- sapply(data@mdf_list, FUN = function(d) d@variables[[i]]@parameters[mark, ])
         if (is.list(fish)) {

@@ -555,38 +555,18 @@ setMethod("mi", signature(y = "semi-continuous", model = "missing"),
 
 # setMethod("mi", signature(y = "semi-continuous", model = "missing"), def =
 # function(y) {
-#   if(y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
 #
-#   categories <- 1:(ncol(y@indicator@dummies) + 1)
-#   draws <- sample(categories, size = y@n_drawn, replace = TRUE)
-#   dummies <- t(sapply(draws, FUN = function(x) x == categories))[,-1,drop = FALSE]
-#   y@indicator@dummies[y@which_drawn,] <- dummies
-#   y@indicator@data[y@which_drawn] <- draws
 #
-#   draws <- sample(y@data[y@which_obs], size = y@n_drawn, replace = TRUE)
 #   if(is(y, "SC_proportion")) {
-#     n <- y@n_total
 #     if(is(y@indicator, "binary")) {
-#       mark <- which(complete(y@indicator, m = 0L)[y@which_miss] == 1)
-#       if(any(y@raw_data == 0, na.rm = TRUE)) draws[mark] <- .5 / n
 #       else                                   draws[mark] <- (n - .5) / n
 #     }
 #     else {
-#       mark <- which(complete(y@indicator, m = 0L)[y@which_miss] != 0)
-#       draws[mark] <- (draws[mark] * (n - 1) + .5) / n
 #     }
 #   }
 #   else if(is(y, "nonnegative-continuous")) {
-#     mark <- which(y@indicator@data[y@which_miss] == 1)
-#     if(length(mark)) draws[mark] <- y@transformation(rep(0, length(mark)))
 #   }
 #
-#   the_range <- range(y@data, na.rm = TRUE)
-#   free <- y@data[y@which_obs]
-#   free <- free[free != the_range[1] & free != the_range[2]]
-#   draws <- sample(free, size = y@n_drawn, replace = TRUE)
-#   y@data[y@which_drawn] <- draws
-#   return(y)
 # })
 
 setMethod("mi", signature(y = "bounded-continuous", model = "missing"),
@@ -936,7 +916,6 @@ setMethod("mi", signature(y = "categorical", model = "matrix"),
       } else {
         eta <- model$x %*% parameters
         model$fitted <- model$family$linkinv(eta)
-        #         model$dispersion <- parameters@sigma^2
         draws <- y@family$sim(model, nsim = 1)[y@which_drawn]
       }
     } else if (y@imputation_method == "pmm") {
@@ -981,40 +960,19 @@ setMethod("mi", signature(y = "continuous", model = "glm"),
 
 # setMethod("mi", signature(y = "censored-continuous", model = "glm"), def =
 # function(y, model, s, ...) {
-#   not_obs <- c(y@which_drawn, y@which_censored)
 #   if(y@imputation_method == "ppd") {
-#     parameters <- arm::sim(model, 1)
-#     eta <- model$x[not_obs,,drop=FALSE] %*% parameters@coef[1,]
-#     pred <- model$family$linkinv(eta)
-#     draws <- rnorm(y@n_drawn, pred, parameters@sigma)
 #   }
 #   else if(y@imputation_method == "pmm") {
-#     eta <- predict(model, type = "link")
-#     eta_observed <- eta[y@which_obs]
-#     y_observed <- y@data[y@which_obs]
 #     draws <- sapply(eta[nob_obs], FUN = function(x) {
-#                      mark <- which.min(abs(eta_observed - x))
-#                      return(y_observed[mark])
 #                    })
 #   }
 #   else if(y@imputation_method == "mean") {
-#     eta <- predict(model, type = "response")
-#     eta_observed <- eta[y@which_obs]
-#     eta_mean <- mean(eta_observed)
-#     draws <- rep(eta_mean, length(not_obs))
 #   }
 #   else if(y@imputation_method == "median") {
-#     eta <- predict(model, type = "response")
-#     eta_observed <- eta[y@which_obs]
-#     eta_median <- median(eta_observed)
-#     draws <- rep(floor(eta_median), length(not_obs))
 #   }
 #   else if(y@imputation_method == "expectation") draws <- predict(model, type = "response")[not_obs]
 #   else stop("'imputation_method' not recognized")
 #
-#   y@data[not_obs] <- draws
-#   y@imputations[s,] <- draws
-#   return(y)
 # })
 
 setMethod("mi", signature(y = "semi-continuous", model = "glm"),
@@ -1054,7 +1012,6 @@ setMethod("mi", signature(y = "nonnegative-continuous", model = "glm"),
       means <- coef(model)
       parameters <- .draw_parameters(means, ev)
       #       while(!badHessian && parameters[length(parameters)] <= 0) {
-      #         parameters <- .draw_parameters(means, ev)
       #       }
     }
 

@@ -16,12 +16,10 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 .onLoad <- function(lib, pkg) {
-  #   library.dynam("mi", pkg, lib)
   invisible(NULL)
 }
 
 .onUnload <- function(libpath) {
-  #   library.dynam.unload("mi", libpath)
   invisible(NULL)
 }
 

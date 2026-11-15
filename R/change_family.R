@@ -76,7 +76,6 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "character
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
       for (i in seq_along(y)) {
-        #     link <- data@variables[[y[i]]]@family$link
         if (i <= length(to)) fam <- do.call(to[i], args = list())
         data@variables[[y[i]]] <- change_family(y = data@variables[[y[i]]], to = fam)
       }

@@ -161,51 +161,27 @@ setMethod("show", signature(object = "missing_variable"),
 ## setAs methods cause subtle problems with auto-coercion
 # setAs(from = "unordered-categorical", to = "ordered-categorical", def =
 # function(from) {
-#   class(from) <- "ordered-categorical"
-#   return(from)
 # })
 #
 # setAs(from = "ordered-categorical", to = "unordered-categorical", def =
 # function(from) {
-#   class(from) <- "unordered-categorical"
-#   return(from)
 # })
 #
 # setAs(from = "binary", to = "unordered-categorical", def =
 # function(from) {
-#   stop("not possible or necessary to coerce from 'binary' to 'unordered-categorical'")
 # })
 
 
 # setAs(from = "binary", to = "ordered-categorical", def =
 # function(from) {
-#   stop("not possible or necessary to coerce from 'binary' to 'unordered-categorical'")
 # })
 
 # setAs(from = "nonnegative-continuous", to = "continuous", def =
 # function(from) {
-#   mean <- mean(from@raw_data, na.rm = TRUE)
-#   sd <- sd(from@raw_data, na.rm = TRUE)
-#   from@transformation <- .standardize_transform
-#   formals(from@transformation)$mean <- mean
-#   formals(from@transformation)$sd <- sd
-#   from@inverse_transformation <- .standardize_transform
-#   formals(from@inverse_transformation)$mean <- mean
-#   formals(from@inverse_transformation)$sd <- sd
-#   formals(from@inverse_transformation)$inverse <- TRUE
-#   from@data <- from@transformation(from@raw_data)
-#   class(from) <- "continuous"
-#   return(from)
 # })
 #
 # setAs(from = "continuous", to = "positive-continuous", def =
 # function(from) {
-#   from@transformation <- log
-#   from@inverse_transformation <- exp
-#   from@data <- from@transformation(from@raw_data)
-#   class(from) <- "positive-continuous"
-#   validObject(from)
-#   return(from)
 # })
 #
 

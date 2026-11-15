@@ -121,7 +121,6 @@ setMethod("hist", signature(x = "categorical"),
       NAs <- is.na(x)
 
       h_all <- hist(y, breaks, plot = FALSE)
-      #   h_all$counts[h_all$counts == 0] <- NA_integer_
       plot(h_all,
         border = "lightgray", axes = FALSE, main = "", xlab = if (x@done) "Completed" else "Observed",
         mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ylim = range(h_all$counts, na.rm = TRUE), ...
@@ -174,7 +173,6 @@ setMethod("hist", signature(x = "binary"),
       NAs <- is.na(x)
 
       h_all <- hist(y, breaks, plot = FALSE)
-      #   h_all$counts[h_all$counts == 0] <- NA_integer_
       plot(h_all,
         border = "lightgray", axes = FALSE, main = "", xlab = if (x@done) "Completed" else "Observed",
         mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ylim = range(h_all$counts, na.rm = TRUE), ...
