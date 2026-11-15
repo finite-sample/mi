@@ -1,7 +1,7 @@
 # Regression test for R-devel (PR#17944): validObject() now calls superclass
 # validity methods on the object itself rather than on as(object, superClass).
 # The missing_variable validity method must therefore only inspect its own
-# slots. We call it directly on subclass objects to emulate that behaviour on
+# slots. We call it directly on subclass objects to emulate that behavior on
 # any R version.
 stopifnot(require(mi))
 mv_validity <- getValidity(getClass("missing_variable"))

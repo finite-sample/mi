@@ -14,7 +14,7 @@ authors' own `CHANGELOG` file, available in those CRAN source tarballs.
   or "argument is of length zero". The check now covers only
   `missing_variable`'s own slots.
 - Added a regression test (`tests/validity_subclass.R`) that emulates the
-  R-devel behaviour on any R version.
+  R-devel behavior on any R version.
 - `rmarkdown` is now listed in Suggests; the vignette engine needs it.
 - DESCRIPTION gains URL and BugReports links to the GitHub repository.
 
@@ -60,7 +60,7 @@ authors' own `CHANGELOG` file, available in those CRAN source tarballs.
 - New workflow: `missing_data.frame()` describes the data, `change()` and the
   `change_*()` family (`change_family`, `change_imputation_method`,
   `change_link`, `change_model`, `change_size`, `change_transformation`,
-  `change_type`) adjust how each variable is modelled, `mi()` imputes
+  `change_type`) adjust how each variable is modeled, `mi()` imputes
   (`n.iter = 30`, `n.chains = 4`, `max.minutes = Inf`, `parallel` on
   non-Windows), `Rhats()` checks convergence, `complete()` extracts completed
   datasets, and `pool()` fits a model to each completed dataset and pools the
@@ -117,9 +117,9 @@ authors' own `CHANGELOG` file, available in those CRAN source tarballs.
 
 # mi 0.09-18.03 (2013-08-26)
 
-- Dependencies reorganised: only arm (>= 1.6-07) is in Depends; abind, car, foreign, lme4 (>= 0.999999-2), MASS, Matrix (>= 1.0), methods, nnet, stats and R2WinBUGS moved to Imports, with explicit `importFrom()` directives in NAMESPACE.
+- Dependencies reorganized: only arm (>= 1.6-07) is in Depends; abind, car, foreign, lme4 (>= 0.999999-2), MASS, Matrix (>= 1.0), methods, nnet, stats and R2WinBUGS moved to Imports, with explicit `importFrom()` directives in NAMESPACE.
 - `coef`, `coefficients`, `fitted`, `resid` and `residuals` are now declared as S4 generics in the package; plot methods call `residuals(x, y = y)` by name.
-- The bundled `LICENSE` file was removed (the licence is still GPL (>= 2)).
+- The bundled `LICENSE` file was removed (the license is still GPL (>= 2)).
 - Documentation: the `?mi` example now runs with `add.noise = FALSE`; the coefficient-convergence example lines are commented out.
 
 # mi 0.09-18 (2012-09-05)
@@ -240,13 +240,13 @@ authors' own `CHANGELOG` file, available in those CRAN source tarballs.
 
 # mi 0.08-08.02 (2010-04-13)
 
-- Minor rewrite of the convergence check that prints the termination message in `mi()`; no change in behaviour is visible in the diff.
+- Minor rewrite of the convergence check that prints the termination message in `mi()`; no change in behavior is visible in the diff.
 
 # mi 0.08-08.01 (2010-04-11)
 
 - `missing.pattern.plot()` / `mp.plot()` gain `clustered = TRUE`, which orders rows by hierarchical clustering of their missingness pattern.
 - `mi.pooled()` drops the `m` argument; the number of imputations is taken from `length(coef)`.
-- The `threshhold` argument of `mi.info()`, `mi.check.correlation()` and `mi.correlated.list()` is renamed `threshold`.
+- The `threshhold` argument of `mi.info()`, `mi.check.correlation()` and `mi.correlated.list()` is renamed `threshold`. <!-- codespell:ignore -->
 
 # mi 0.08-08 (2010-04-03)
 
@@ -306,13 +306,13 @@ authors' own `CHANGELOG` file, available in those CRAN source tarballs.
 # mi 0.08-03 (2009-06-23)
 
 - When starting values are supplied, `mi.binary()`, `mi.continuous()`, `mi.count()` and `mi.pmm()` now fit with `n.iter = 30` (previously 1 for `mi.binary()` and `mi.pmm()`, and the caller's `n.iter` for the others).
-- `mi()` on an existing `mi` object always initialises each chain with `random.imp()` of the data; before, when `preprocess = FALSE`, it started from the previous completed data.
+- `mi()` on an existing `mi` object always initializes each chain with `random.imp()` of the data; before, when `preprocess = FALSE`, it started from the previous completed data.
 
 # mi 0.08-02 (2009-06-19)
 
 - Numeric unordered-categorical variables are converted with `as.factor(as.character(x))`.
 - `plot()` for `mi.polr` and `mi.categorical` imputations no longer draws the binned-residual panel.
-- `residuals()` / `resid()` for `mi.count` standardise by `sd(fitted)` instead of `sqrt(y)`.
+- `residuals()` / `resid()` for `mi.count` standardize by `sd(fitted)` instead of `sqrt(y)`.
 
 # mi 0.08-01 (2009-06-17)
 
@@ -422,7 +422,7 @@ authors' own `CHANGELOG` file, available in those CRAN source tarballs.
 - New imputation function `mi.count()` and variable types `"count"`, `"proportion"` and `"positive-continuous"`.
 - Removed `mi.logcontinuous()`, `mi.sqrtcontinuous()`, `mi.mixed()`, `mi.start()` and `mi.matrix()`, along with the `"logscale-continuous"` and `"squareroot-continuous"` types. `"mixed"` is now imputed with `mi.continuous()` after preprocessing.
 - `mi.info.update()` was replaced by an `update()` method for `mi.info` objects. The `mi.info.update.*()` helpers now take `object` instead of `info`.
-- `mi.info()`: the argument `threshold` was renamed `threshhold`.
+- `mi.info()`: the argument `threshold` was renamed `threshhold`. <!-- codespell:ignore -->
 - `mi.completed()` now returns a list of completed data frames, one per imputation. Its `m` and `outcome` arguments were removed.
 - `mi.data.frame(object, m = 1)` now honors `m`. Previously it always returned imputation 1.
 - `coef`, `fitted`, `resid`/`residuals` and `plot` methods are now S4 methods. New `coef` and `se.coef` methods for `lm.mi()`/`glm.mi()` results.

@@ -1,0 +1,6 @@
+[codespell]
+# Binary data and figures.
+skip = *.RData,*.rda,*.pdf,*.png
+# Identifiers, not prose: grDevices::grey() is imported by name, and `ans`
+# is a local variable in R/mi.R.
+ignore-words-list = grey,ans

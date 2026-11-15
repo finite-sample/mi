@@ -20,6 +20,7 @@ Suggests: betareg, lattice, knitr, MASS, nnet, parallel, rmarkdown, sn, survival
 URL: https://github.com/finite-sample/mi, https://sites.stat.columbia.edu/gelman/
 BugReports: https://github.com/finite-sample/mi/issues
 License: GPL (>= 2)
+Language: en-US
 LazyLoad: yes
 Author: Andrew Gelman [ctb],
   Jennifer Hill [ctb],

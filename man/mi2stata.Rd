@@ -3,7 +3,7 @@
 \title{Exports completed data in Stata (.dta) or comma-separated (.csv) format}
 \description{
 This function exports completed data from an object of \code{\link{mi-class}} in which \code{m} completed 
-\code{\link{data.frame}}s are appended to the end of the raw data. Two additional variables are added which indicate the row number and distinguish the \code{\link{data.frame}}s.  The outputed file is either Stata 
+\code{\link{data.frame}}s are appended to the end of the raw data. Two additional variables are added which indicate the row number and distinguish the \code{\link{data.frame}}s.  The output file is either Stata 
 (.dta) or comma-separated (.csv) format, and can be easily registered in Stata as multiply imputed data.}
 \usage{
 mi2stata(imputations, m, file, missing.ind=FALSE, ...)

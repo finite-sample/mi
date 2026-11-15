@@ -18,7 +18,7 @@ rdata.frame(N = 1000,
 \arguments{
   \item{N}{integer indicating the number of observations}
   \item{restrictions}{character string indicating what restrictions to impose on
-     the the missing data mechansim, see the Details section}
+     the the missing data mechanism, see the Details section}
   \item{last_CPC}{a numeric scalar between \eqn{-1} and \eqn{1} exclusive or 
     \code{NA_real_} (the default). If not \code{NA_real_}, then this value will
     be used to construct the correlation matrix from which the data are drawn.
@@ -72,7 +72,7 @@ rdata.frame(N = 1000,
     data-generating process. The default value of 1 implies that the correlation
     matrix among the variables is jointly uniformally distributed, using
     essentially the same logic as in the \pkg{clusterGeneration} package}
-  \item{df}{positive numeric scalar indicating the degress of freedom for the
+  \item{df}{positive numeric scalar indicating the degrees of freedom for the
     (possibly skewed) multivariate t distribution, which defaults to
     \code{\link{Inf}} implying a (possibly skewed) multivariate normal 
     distribution}

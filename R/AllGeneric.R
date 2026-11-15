@@ -31,4 +31,4 @@ setGeneric("hist", def = function(x, ...) standardGeneric("hist"))
 setGeneric("mi", def = function(y, model, ...) standardGeneric("mi"))
 setGeneric("missing_variable", def = function(y, type, ...) standardGeneric("missing_variable"))
 setGeneric("missing_data.frame", def = function(y, ...) standardGeneric("missing_data.frame"))
-## FIXME: acount for the other stuff in the original AllGeneric.R
+## FIXME: account for the other stuff in the original AllGeneric.R

@@ -88,7 +88,7 @@ round(mipply(imputations, mean, to.matrix = TRUE), 3)
 Rhats(imputations)
 ```
 If so --- and when it does in the example depends on the pseudo-random number seed 
---- we can procede to diagnosing other problems. For the sake of example, we 
+--- we can proceed to diagnosing other problems. For the sake of example, we 
 continue our 4 chains for another 5 iterations by calling 
 ```{r, step5B}
 imputations <- mi(imputations, n.iter = 5)

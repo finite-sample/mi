@@ -39,7 +39,7 @@ mi(y, model, ...)
     \item{\code{save_models}}{logical scalar that defaults to \code{FALSE} but if \code{TRUE} indicates
     	that the models estimated on a frozen completed dataset should be saved. This option should be used if the user is interested in evaluating the quality of the models 			run after the last iteration of the \code{mi} algorithm, but saving these models consumes much more RAM}
     \item{\code{debug}}{logical scalar indicating whether to run in debug mode, which forces the processing to be sequential, and allows developers to capture errors within 			chains}
-    \item{\code{parallel}}{if TRUE, then parallel processing is used, if available.  If FALSE, sequential processing is used. In addition, ths argument may be an object produced 		by \code{\link[parallel]{makeCluster}}}
+    \item{\code{parallel}}{if TRUE, then parallel processing is used, if available.  If FALSE, sequential processing is used. In addition, this argument may be an object produced 		by \code{\link[parallel]{makeCluster}}}
   }
 }
 }
@@ -66,7 +66,7 @@ There are a few methods for such an object, such as \code{\link{show}}, \code{\l
 \code{\link{dimnames}}, \code{\link{nrow}}, \code{\link{ncol}}, etc.
 
 If \code{mi} is called on a \code{\link{missing_data.frame}} with \code{model} missing and a nonpositive
-\code{n.chains}, then the \code{\link{missing_data.frame}} will be returned after allocating storeage.
+\code{n.chains}, then the \code{\link{missing_data.frame}} will be returned after allocating storage.
 
 If \code{model} is not missing, then the \code{mi} method will impute missing values for the \code{y}
 argument and return it.

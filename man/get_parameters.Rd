@@ -9,7 +9,7 @@ During the multiple imputation process, the \code{\link{mi}}
 function estimates models and stores the estimated parameters in the
 \code{parameters} slot of an object that inherits from the 
 \code{\link{missing_variable-class}}. The \code{get_parameter} 
-function simply extracts these parameters for storeage, which are
+function simply extracts these parameters for storage, which are
 usually the estimated coefficients but may also include ancillary
 parameters.
 }
