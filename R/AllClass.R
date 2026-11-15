@@ -110,7 +110,10 @@ setClass("missing_variable",
                out <- paste(object@variable_name, ": ''which_*' slots must be mutually exclusive and exhaustive")
              }
            }
-           for(i in slotNames(object)) {
+           # R-devel (PR#17944) runs this method on subclass objects rather than
+           # on as(object, "missing_variable"), so restrict the scalar check to
+           # this class's own slots; subclasses validate their own vector slots.
+           for(i in slotNames("missing_variable")) {
              if(i %in% c("raw_data", "data", "which_obs", "which_miss", "which_extra", 
                          "which_unpossible", "which_drawn", "imputation_method", "known_transformations",
                          "family", "known_families", "known_links", "levels", "cutpoints")) next

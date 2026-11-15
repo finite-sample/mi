@@ -1,8 +1,8 @@
 Package: mi
 Type: Package
 Title: Missing Data Imputation and Model Checking
-Version: 1.3.1
-Date: 2026-07-27
+Version: 1.3.2
+Date: 2026-11-15
 Authors@R: c(person("Andrew", "Gelman", email = "gelman@stat.columbia.edu", role = "ctb"), 
              person("Jennifer", "Hill", email = "jennifer.hill@nyu.edu", role = "ctb"),
              person("Yu-Sung", "Su", email = "suyusung@tsinghua.edu.cn", role = c("aut")), 
@@ -15,7 +15,7 @@ Description: The mi package provides functions for data manipulation, imputing m
 VignetteBuilder: knitr
 Depends: R (>= 3.0.0), methods, Matrix, stats4
 Imports: arm (>= 1.4-11)
-Suggests: betareg, lattice, knitr, MASS, nnet, parallel, sn, survival,
+Suggests: betareg, lattice, knitr, MASS, nnet, parallel, rmarkdown, sn, survival,
         truncnorm, foreign
 URL: https://github.com/finite-sample/mi, https://sites.stat.columbia.edu/gelman/
 BugReports: https://github.com/finite-sample/mi/issues
