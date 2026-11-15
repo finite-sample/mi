@@ -22,7 +22,7 @@ setMethod("complete", signature(y = "missing_variable", m = "integer"),
   def =
     function(y, m, ...) {
       out <- y@data
-      if (m > 0 & y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
+      if (m > 0 && y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
       out
     }
 )
@@ -38,7 +38,7 @@ setMethod("complete", signature(y = "categorical", m = "integer"),
   def =
     function(y, m, to_factor = TRUE, ...) {
       out <- y@data
-      if (m > 0 & y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
+      if (m > 0 && y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
       if (to_factor) {
         out <- factor(out, ordered = is(y, "ordered-categorical"))
         levels(out) <- y@levels
@@ -51,7 +51,7 @@ setMethod("complete", signature(y = "binary", m = "integer"),
   def =
     function(y, m, to_factor = TRUE, ...) {
       out <- y@data
-      if (m > 0 & y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
+      if (m > 0 && y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
       if (to_factor) {
         out <- factor(out, ordered = FALSE)
         levels(out) <- y@levels
@@ -64,7 +64,7 @@ setMethod("complete", signature(y = "continuous", m = "integer"),
   def =
     function(y, m, transform = TRUE, ...) {
       out <- y@data
-      if (m > 0 & y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
+      if (m > 0 && y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
       if (transform) out <- y@inverse_transformation(out)
       out
     }
@@ -74,7 +74,7 @@ setMethod("complete", signature(y = "nonnegative-continuous", m = "integer"),
   def =
     function(y, m, transform = TRUE, ...) {
       out <- y@data
-      if (m > 0 & y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
+      if (m > 0 && y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
       if (transform) {
         out <- y@inverse_transformation(out)
         out[y@raw_data == 0] <- 0
@@ -87,7 +87,7 @@ setMethod("complete", signature(y = "SC_proportion", m = "integer"),
   def =
     function(y, m, transform = TRUE, ...) {
       out <- y@data
-      if (m > 0 & y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
+      if (m > 0 && y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
       if (transform) out <- y@inverse_transformation(out)
       out[y@raw_data == 0] <- 0
       out[y@raw_data == 1] <- 1

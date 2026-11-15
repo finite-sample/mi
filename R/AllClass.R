@@ -1113,7 +1113,7 @@ setClass("missing_data.frame",
       prior.mean = mu, prior.scale = 2.5, prior.df = 1,
       prior.mean.for.intercept = mu, prior.scale.for.intercept = 10, prior.df.for.intercept = 1
     )
-    if (is(y, "irrelevant") | y@all_obs) {
+    if (is(y, "irrelevant") || y@all_obs) {
       return(NULL)
     } else if (is(y, "binary")) {
       if (y@family$link == "probit") {

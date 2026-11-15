@@ -137,7 +137,7 @@ mi2stata <-
       stop("imputations must be an object of class 'mi'")
     } else if (!is(file, "character")) {
       stop("filename must be specified as a character object")
-    } else if (type != "dta" & type != "csv") {
+    } else if (type != "dta" && type != "csv") {
       stop(
         "file type must be 'dta' for stata format or 'csv' for comma-separated format"
       )
@@ -152,7 +152,7 @@ mi2stata <-
     unpos <- sum(sapply(imputations@data[[1]]@variables, FUN = function(x) {
       x@n_unpossible
     }))
-    if (unpos > 0 & !missing.ind) {
+    if (unpos > 0 && !missing.ind) {
       missing.ind <- TRUE
       warning(
         "There are legitimately skipped values in the data that were not imputed.  ",
@@ -160,7 +160,7 @@ mi2stata <-
         "Values which are still missing but are not indicated are legitimate skips."
       )
     }
-    if (unpos > 0 & missing.ind) {
+    if (unpos > 0 && missing.ind) {
       warning(
         "There are legitimately skipped values in the data that were not imputed. ",
         "Values which are still missing but are not indicated are legitimate skips."

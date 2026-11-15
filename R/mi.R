@@ -88,7 +88,7 @@
   if (verbose) message("Estimating models on completed data for chain ", i, "\n")
 
   mdf@variables <- lapply(mdf@variables, FUN = function(y) {
-    if (!y@all_obs & !is(y, "irrelevant")) {
+    if (!y@all_obs && !is(y, "irrelevant")) {
       model <- fit_model(y, mdf, s = s + 1, warn = TRUE)
       y@fitted <- fitted(model)
       if (!isS4(model)) model$x <- model$X <- model$y <- model$model <- NULL
@@ -140,7 +140,7 @@
   if (verbose) message("Estimating models on completed data for chain ", i, "\n")
 
   mdf@variables <- lapply(mdf@variables, FUN = function(y) {
-    if (!y@all_obs & !is(y, "irrelevant")) {
+    if (!y@all_obs && !is(y, "irrelevant")) {
       model <- fit_model(y, data, s = s + 1, warn = TRUE)
       y@fitted <- fitted(model)
       if (!isS4(model)) model$x <- model$X <- model$y <- model$model <- NULL
@@ -170,7 +170,7 @@ setMethod("mi", signature(y = "missing_data.frame", model = "missing"),
 
       Time.Elapsed <- proc.time() - ProcStart
       y@variables <- lapply(y@variables, FUN = function(x) {
-        if (!x@all_obs & !is(x, "irrelevant")) {
+        if (!x@all_obs && !is(x, "irrelevant")) {
           x@parameters <- matrix(NA_real_, nrow = n.iter, ncol = 0)
           x@imputations <- matrix(NA_real_, nrow = n.iter, ncol = x@n_drawn)
           if (is(x, "semi-continuous")) {
@@ -274,7 +274,7 @@ setMethod(
       y <- mdfs[[i]]
       if (TRUE) {
         y@variables <- lapply(y@variables, FUN = function(x) {
-          if (x@all_obs & is(x, "irrelevant")) {
+          if (x@all_obs && is(x, "irrelevant")) {
             return(x)
           }
           x@imputations <- rbind(x@imputations, matrix(NA_integer_, n.iter, x@n_drawn))

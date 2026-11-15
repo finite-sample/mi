@@ -391,7 +391,7 @@ setMethod("image", signature(x = "mi_list"),
       if (n >= 100) {
         nclass <- floor(sqrt(length(x)))
       }
-      if (n > 10 & n < 100) {
+      if (n > 10 && n < 100) {
         nclass <- 10
       }
       if (n <= 10) {
@@ -416,7 +416,7 @@ setMethod("image", signature(x = "mi_list"),
       if (n >= 100) {
         nclass <- floor(sqrt(length(x)))
       }
-      if (n > 10 & n < 100) {
+      if (n > 10 && n < 100) {
         nclass <- 10
       }
       if (n <= 10) {

@@ -116,8 +116,8 @@ setMethod("change_model", signature(data = "missing_data.frame", y = "character"
       for (i in seq_along(y)) {
         categorical <- is(data@variables[[y[i]]], "categorical")
         data@variables[[y[i]]] <- change_model(y = data@variables[[y[i]]], to = to[i])
-        if (categorical & !is(data@variables[[y[i]]], "categorical")) check <- TRUE
-        if (!categorical & is(data@variables[[y[i]]], "categorical")) check <- TRUE
+        if (categorical && !is(data@variables[[y[i]]], "categorical")) check <- TRUE
+        if (!categorical && is(data@variables[[y[i]]], "categorical")) check <- TRUE
       }
       if (check) {
         new(class(data), variables = data@variables)
@@ -138,8 +138,8 @@ setMethod("change_model", signature(data = "missing_data.frame", y = "numeric", 
       for (i in seq_along(y)) {
         categorical <- is(data@variables[[y[i]]], "categorical")
         data@variables[[y[i]]] <- change_model(y = data@variables[[y[i]]], to = to[[i]])
-        if (categorical & !is(data@variables[[y[i]]], "categorical")) check <- TRUE
-        if (!categorical & is(data@variables[[y[i]]], "categorical")) check <- TRUE
+        if (categorical && !is(data@variables[[y[i]]], "categorical")) check <- TRUE
+        if (!categorical && is(data@variables[[y[i]]], "categorical")) check <- TRUE
       }
       if (check) {
         new(class(data), variables = data@variables)

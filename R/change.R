@@ -36,7 +36,7 @@ setMethod(
       ))) {
         if (length(y) > 1) stop("'y' must have length one")
         if (length(to) > 1) stop("'to' must have length one")
-        if (is.logical(y) | is.numeric(y)) y <- colnames(data)[y]
+        if (is.logical(y) || is.numeric(y)) y <- colnames(data)[y]
 
         if (to == "unpossible") {
           mv <- data@variables[[y]]
@@ -71,7 +71,7 @@ setMethod(
 
         mv <- data@variables[[y]]
         mv@raw_data[mv@raw_data == what] <- to
-        if (is.na(what) | is.na(to)) {
+        if (is.na(what) || is.na(to)) {
           mv <- new(
             class(mv),
             raw_data = mv@raw_data,
@@ -117,7 +117,7 @@ setMethod(
     function(data, y, to, what) {
       if (length(to) > 1) stop("'to' must be a scalar")
       if (length(what) > 1) stop("'what' must be a scalar")
-      if (is.logical(y) | is.numeric(y)) y <- colnames(data)[y]
+      if (is.logical(y) || is.numeric(y)) y <- colnames(data)[y]
 
       mv <- data@variables[[y]]
       # NOTE: exception to "never change the raw_data slot rule"
@@ -132,7 +132,7 @@ setMethod(
             variable_name = mv@variable_name
           )
         }
-      } else if (is.na(what) | is.na(to)) {
+      } else if (is.na(what) || is.na(to)) {
         mv <- new(class(mv), raw_data = mv@raw_data, variable_name = mv@variable_name)
       } else if (is(mv, "continuous")) mv@data <- mv@transformation(mv@raw_data)
       data@variables[[y]] <- mv
@@ -157,7 +157,7 @@ setMethod(
       if (length(to) > 1) stop("'to' must be a scalar")
       if (to != "unpossible") stop("'to' must be 'unpossible'")
       if (length(what) > 1) stop("'what' must be have length one")
-      if (is.logical(y) | is.numeric(y)) y <- colnames(data)[y]
+      if (is.logical(y) || is.numeric(y)) y <- colnames(data)[y]
 
       mv <- data@variables[[y]]
       unpossible <- which(mv@raw_data == what)

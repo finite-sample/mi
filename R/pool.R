@@ -74,7 +74,7 @@ pool <-
       if (is(y, "unordered-categorical")) {
         FUN <- nnet::multinom
         fit <- "multinom"
-      } else if (is(y, "binary") | is(y, "count") | is(y, "continuous")) {
+      } else if (is(y, "binary") || is(y, "count") || is(y, "continuous")) {
         FUN <- arm::bayesglm
         fit <- "bayesglm"
         if (!("family" %in% names(dots))) dots$family <- y@family
@@ -133,7 +133,7 @@ pool <-
     B <- apply(coefs, 1, var)
     ses <- sqrt(W + B * (1 + 1 / m))
 
-    if (is(pooled_summary, "summary.glm") | is(pooled_summary, "summary.polr")) {
+    if (is(pooled_summary, "summary.glm") || is(pooled_summary, "summary.polr")) {
       pooled_summary$call <- match.call()
       pooled_summary$coefficients[, 1:2] <- cbind(rowMeans(coefs), ses)
     } else if (is(pooled_summary, "summary.multinom")) {
