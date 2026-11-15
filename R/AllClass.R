@@ -24,7 +24,16 @@ suppressWarnings(setClassUnion("WeAreFamily", c("family", "character"))) # arm +
 setOldClass("mi_list")
 setOldClass("mdf_list")
 
-.known_imputation_methods <- c("ppd", "pmm", "mean", "median", "expectation", "mode", "mcar", NA_character_)
+.known_imputation_methods <- c(
+  "ppd",
+  "pmm",
+  "mean",
+  "median",
+  "expectation",
+  "mode",
+  "mcar",
+  NA_character_
+)
 .known_families <- c(
   "binomial", "gaussian", "Gamma", "inverse.gaussian", "poisson",
   "quasibinomial", "quasipoisson"
@@ -94,7 +103,14 @@ setClass("missing_variable",
       return(out)
     }
 
-    if (sum(-object@n_total, object@n_obs, object@n_miss, object@n_extra, object@n_unpossible, na.rm = TRUE)) {
+    if (sum(
+      -object@n_total,
+      object@n_obs,
+      object@n_miss,
+      object@n_extra,
+      object@n_unpossible,
+      na.rm = TRUE
+    )) {
       out <- paste(
         object@variable_name,
         ": slots 'n_obs', 'n_miss', 'n_extra', and 'n_unpossible' must sum to 'n_total'"
@@ -106,12 +122,20 @@ setClass("missing_variable",
     } else if (!(length(object@which_extra) %in% c(0:1, object@n_extra))) {
       out <- paste(object@variable_name, ": 'n_extra' must equal the length of 'which_extra'")
     } else if (!(length(object@which_extra) %in% c(0:1, object@n_unpossible))) {
-      out <- paste(object@variable_name, ": 'n_unpossible' must equal the length of 'which_unpossible'")
+      out <- paste(
+        object@variable_name,
+        ": 'n_unpossible' must equal the length of 'which_unpossible'"
+      )
     } else if (sum(object@n_obs)) {
-      temp <- sort(c(object@which_obs, object@which_miss, object@which_extra, object@which_unpossible))
+      temp <- sort(
+        c(object@which_obs, object@which_miss, object@which_extra, object@which_unpossible)
+      )
       names(temp) <- NULL
       if (!identical(1:object@n_total, temp)) {
-        out <- paste(object@variable_name, ": ''which_*' slots must be mutually exclusive and exhaustive")
+        out <- paste(
+          object@variable_name,
+          ": ''which_*' slots must be mutually exclusive and exhaustive"
+        )
       }
     }
     # R-devel (PR#17944) runs this method on subclass objects rather than
@@ -170,7 +194,9 @@ setMethod("initialize", "missing_variable",
         for (i in seq_along(NA.strings)) {
           mark <- .Object@raw_data == NA.strings[i]
           if (any(mark, na.rm = TRUE)) {
-            warning(paste(.Object@variable_name, ": some observations", NA.strings[i], "changing to NA"))
+            warning(
+              paste(.Object@variable_name, ": some observations", NA.strings[i], "changing to NA")
+            )
             .Object@data[mark] <- NA
           }
         }
@@ -209,7 +235,10 @@ setClass("fixed", representation("irrelevant"),
     if (sum(object@n_miss)) {
       out <- paste(object@variable_name, ": fixed variables cannot have missingness")
     } else if (length(vals) > 1) {
-      out <- paste(object@variable_name, ": purportedly 'fixed' variables cannot have multiple unique values")
+      out <- paste(
+        object@variable_name,
+        ": purportedly 'fixed' variables cannot have multiple unique values"
+      )
     }
     out
   }
@@ -383,9 +412,16 @@ validity = function(object) {
 
   im <- getClass(class(object))@prototype@imputation_method
   if (length(values) > 0 && length(values) <= 2) {
-    out <- paste(object@variable_name, "unordered-categoricals must have more than 2 levels; otherwise use binary")
+    out <- paste(
+      object@variable_name,
+      "unordered-categoricals must have more than 2 levels; otherwise use binary"
+    )
   } else if (!all(object@imputation_method %in% im)) {
-    out <- paste(object@variable_name, ": 'imputation_method' must be one of:\n", paste(im, collapse = ", "))
+    out <- paste(
+      object@variable_name,
+      ": 'imputation_method' must be one of:\n",
+      paste(im, collapse = ", ")
+    )
   }
   #            else if(object@family$family != "multinomial") {
   #            }
@@ -418,7 +454,11 @@ validity = function(object) {
   } else if (object@family$family == "multinomial" && object@family$link != "logit") {
     out <- "the 'family' slot of 'ordered-categorial' class must be 'multinomial(link = 'logit')'"
   } else if (!all(object@imputation_method %in% im)) {
-    out <- paste(object@variable_name, ": 'imputation_method' must be one of:\n", paste(im, collapse = ", "))
+    out <- paste(
+      object@variable_name,
+      ": 'imputation_method' must be one of:\n",
+      paste(im, collapse = ", ")
+    )
   }
   out
 }
@@ -465,13 +505,24 @@ setClass("binary", representation("ordered-categorical"),
     kf <- getClass(class(object))@prototype@known_families
     kl <- getClass(class(object))@prototype@known_links
     if (length(vals) != 2) {
-      out <- paste(object@variable_name, ": binary variables must have exactly two response categories")
+      out <- paste(
+        object@variable_name,
+        ": binary variables must have exactly two response categories"
+      )
     } else if (!identical(object@cutpoints, 0.0)) {
       out <- paste(object@variable_name, ": 'cutpoints' must be 0.0 for a binary variable")
     } else if (!(object@family$family %in% kf)) {
-      out <- paste(object@variable_name, ": the 'family' slot of a object of class 'binary' must be one of", paste(kf, collapse = ", "))
+      out <- paste(
+        object@variable_name,
+        ": the 'family' slot of a object of class 'binary' must be one of",
+        paste(kf, collapse = ", ")
+      )
     } else if (!(object@family$link %in% kl)) {
-      out <- paste(object@variable_name, ": the 'link' slot of the 'family' slot of a object of class 'binary' must be one of", paste(kl, collapse = ", "))
+      out <- paste(
+        object@variable_name,
+        ": the 'link' slot of the 'family' slot of a object of class 'binary' must be one of",
+        paste(kl, collapse = ", ")
+      )
     }
     out
   }
@@ -542,11 +593,21 @@ setClass("count", representation("missing_variable"),
     if (any(object@raw_data < 0, na.rm = TRUE)) {
       out <- paste(object@variable_name, ": counts must be nonnegative")
     } else if (any(object@raw_data != as.integer(object@raw_data), na.rm = TRUE)) {
-      out <- paste(object@variable_name, ": must contain all nonnegative integers to use the 'count' class")
+      out <- paste(
+        object@variable_name,
+        ": must contain all nonnegative integers to use the 'count' class"
+      )
     } else if (!all(object@imputation_method %in% im)) {
-      out <- paste(object@variable_name, ": 'imputation_method' must be one of:\n", paste(im, collapse = ", "))
+      out <- paste(
+        object@variable_name,
+        ": 'imputation_method' must be one of:\n",
+        paste(im, collapse = ", ")
+      )
     } else if (sum(object@n_unpossible)) {
-      out <- paste(object@variable_name, ": unpossible observations not supported for count variables yet")
+      out <- paste(
+        object@variable_name,
+        ": unpossible observations not supported for count variables yet"
+      )
     }
     out
   }
@@ -580,7 +641,16 @@ setClass("continuous",
     family = gaussian(),
     known_families = c("gaussian", "Gamma", "inverse.gaussian", "binomial"), # binomial() is only for (SC_)proportions
     known_links = .known_links[.known_links != "sqrt"],
-    known_transformations = c("standardize", "identity", "log", "logshift", "squeeze", "sqrt", "cuberoot", "qnorm")
+    known_transformations = c(
+      "standardize",
+      "identity",
+      "log",
+      "logshift",
+      "squeeze",
+      "sqrt",
+      "cuberoot",
+      "qnorm"
+    )
   ),
   validity = function(object) {
     out <- TRUE
@@ -588,13 +658,28 @@ setClass("continuous",
     kf <- getClass(class(object))@prototype@known_families
     kl <- getClass(class(object))@prototype@known_links
     if (!all(object@imputation_method %in% im)) {
-      out <- paste(object@variable_name, ": 'imputation_method' must be one of:\n", paste(im, collapse = ", "))
+      out <- paste(
+        object@variable_name,
+        ": 'imputation_method' must be one of:\n",
+        paste(im, collapse = ", ")
+      )
     } else if (sum(object@n_unpossible)) {
-      out <- paste(object@variable_name, ": unpossible observations not supported for continuous variables yet")
+      out <- paste(
+        object@variable_name,
+        ": unpossible observations not supported for continuous variables yet"
+      )
     } else if (!(object@family$family %in% kf)) {
-      out <- paste(object@variable_name, ": the 'family' slot of a object of class 'binary' must be one of", paste(kf, collapse = ", "))
+      out <- paste(
+        object@variable_name,
+        ": the 'family' slot of a object of class 'binary' must be one of",
+        paste(kf, collapse = ", ")
+      )
     } else if (!(object@family$link %in% kl)) {
-      out <- paste(object@variable_name, ": the 'link' slot of the 'family' slot of a object of class 'binary' must be one of", paste(kl, collapse = ", "))
+      out <- paste(
+        object@variable_name,
+        ": the 'link' slot of the 'family' slot of a object of class 'binary' must be one of",
+        paste(kl, collapse = ", ")
+      )
     }
     out
   }
@@ -644,11 +729,20 @@ setClass("bounded-continuous", representation("continuous", lower = "numeric", u
     #     else if(any(object@raw_data >= object@upper, na.rm = TRUE)) {
     #     }
     if (any(object@lower > object@upper)) {
-      out <- paste(object@variable_name, ": lower bounds must be less than or equal to upper bounds")
+      out <- paste(
+        object@variable_name,
+        ": lower bounds must be less than or equal to upper bounds"
+      )
     } else if (object@imputation_method != "ppd") {
-      out <- paste(object@variable_name, ": 'imputation_method' must be 'ppd' for 'bounded-continuous' variables ")
+      out <- paste(
+        object@variable_name,
+        ": 'imputation_method' must be 'ppd' for 'bounded-continuous' variables "
+      )
     } else if (!requireNamespace("truncnorm")) {
-      out <- paste(object@variable_name, ": the 'truncnorm' package must be installed to use the 'bounded-continuous' class")
+      out <- paste(
+        object@variable_name,
+        ": the 'truncnorm' package must be installed to use the 'bounded-continuous' class"
+      )
     }
     out
   }
@@ -702,13 +796,27 @@ setClass("proportion", representation("positive-continuous", link.phi = "WeAreFa
     if (any(object@raw_data > 1, na.rm = TRUE)) {
       out <- paste(object@variable_name, ": proportions must be on the unit interval")
     } else if (any(object@raw_data == 1, na.rm = TRUE)) {
-      out <- paste(object@variable_name, ": some proportions are equal to 1.0 so use the SC_proportion class")
+      out <- paste(
+        object@variable_name,
+        ": some proportions are equal to 1.0 so use the SC_proportion class"
+      )
     } else if (!(object@family$family %in% kf)) {
-      out <- paste(object@variable_name, ": the 'family' slot of a object of class 'proportion' must be one of", paste(kf, collapse = ", "))
+      out <- paste(
+        object@variable_name,
+        ": the 'family' slot of a object of class 'proportion' must be one of",
+        paste(kf, collapse = ", ")
+      )
     } else if (!(object@family$link %in% kl)) {
-      out <- paste(object@variable_name, ": the 'link' slot of the 'family' slot of a object of class 'proportion' must be one of", paste(kl, collapse = ", "))
+      out <- paste(
+        object@variable_name,
+        ": the 'link' slot of the 'family' slot of a object of class 'proportion' must be one of",
+        paste(kl, collapse = ", ")
+      )
     } else if (object@family$family == "binomial" && !requireNamespace("betareg")) {
-      out <- paste(object@variable_name, ": you must install the 'betareg' package to model proportions as proportions")
+      out <- paste(
+        object@variable_name,
+        ": you must install the 'betareg' package to model proportions as proportions"
+      )
     }
     out
   }
@@ -837,7 +945,10 @@ setClass("SC_proportion", representation("nonnegative-continuous", link.phi = "W
     } else if (!identical(body(object@transformation), body(.squeeze_transform))) {
       out <- paste(object@variable_name, ": 'transformation' must be 'squeeze'")
     } else if (!requireNamespace("betareg")) {
-      out <- paste(object@variable_name, ": you must install the 'betareg' package to model proportions")
+      out <- paste(
+        object@variable_name,
+        ": you must install the 'betareg' package to model proportions"
+      )
     }
     out
   }
@@ -912,7 +1023,11 @@ setClass("missing_data.frame",
     workpath = "character"
   ),
   contains = "data.frame",
-  prototype(postprocess = function() stop("postprocess does not work yet"), X = matrix(NA_real_, 0, 0), done = FALSE),
+  prototype(
+    postprocess = function() stop("postprocess does not work yet"),
+    X = matrix(NA_real_, 0, 0),
+    done = FALSE
+  ),
   validity = function(object) {
     out <- TRUE
     l <- length(object@variables)
@@ -990,13 +1105,24 @@ setClass("missing_data.frame",
         out[[4]] <- out[[4]] * dnorm(0) / dlogis(0)
       }
     } else if (is(y, "categorical")) {
-      out <- list(prior.mean = mu, prior.scale = 2.5, prior.df = 1, prior.counts.for.bins = 1 / (1 + length(y@levels)))
+      out <- list(
+        prior.mean = mu,
+        prior.scale = 2.5,
+        prior.df = 1,
+        prior.counts.for.bins = 1 / (1 + length(y@levels))
+      )
     }
     out
   }
 
   out <- lapply(variables, FUN = function(y) foo(y))
-  for (i in seq_along(variables)) if (is(y <- variables[[i]], "semi-continuous")) out[[y@indicator@variable_name]] <- foo(y@indicator)
+  for (i in seq_along(variables)) {
+    if (is(y <- variables[[i]], "semi-continuous")) {
+      out[[y@indicator@variable_name]] <- foo(
+        y@indicator
+      )
+    }
+  }
   out
 }
 
@@ -1011,7 +1137,11 @@ setMethod("initialize", "missing_data.frame",
       varnames <- names(.Object@variables)
       if (is.null(varnames)) {
         if (is.null(.Object@DIMNAMES[[2]])) {
-          names(.Object@variables) <- sapply(.Object@variables, FUN = .get_slot, name = "variable_name")
+          names(.Object@variables) <- sapply(
+            .Object@variables,
+            FUN = .get_slot,
+            name = "variable_name"
+          )
         } else {
           names(.Object@variables) <- .Object@DIMNAMES[[2]]
         }
@@ -1045,7 +1175,11 @@ setMethod("initialize", "missing_data.frame",
         }
       } else {
         uZ <- uZ[order(rowSums(uZ)), , drop = FALSE]
-        patterns <- apply(Z, 1, FUN = function(x) which(apply(uZ, 1, FUN = function(u) all(u == x))))
+        patterns <- apply(
+          Z,
+          1,
+          FUN = function(x) which(apply(uZ, 1, FUN = function(u) all(u == x)))
+        )
         pattern_labels <- apply(uZ, 1, FUN = function(x) paste(names(x)[x], collapse = ", "))
         if (length(pattern_labels)) {
           if (pattern_labels[1] == "") pattern_labels[1] <- "nothing"

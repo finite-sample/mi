@@ -40,11 +40,31 @@ setMethod("hist", signature(x = "missing_variable"),
         segments(h_miss$breaks[1], y0 = h_miss$counts[1], x1 = h_miss$breaks[2], col = "red")
 
         for (i in 2:(length(h_obs$breaks) - 1)) {
-          segments(x0 = h_obs$breaks[i], y0 = h_obs$counts[i - 1], y1 = h_obs$counts[i], col = "blue")
-          segments(x0 = h_miss$breaks[i], y0 = h_miss$counts[i - 1], y1 = h_miss$counts[i], col = "red")
+          segments(
+            x0 = h_obs$breaks[i],
+            y0 = h_obs$counts[i - 1],
+            y1 = h_obs$counts[i],
+            col = "blue"
+          )
+          segments(
+            x0 = h_miss$breaks[i],
+            y0 = h_miss$counts[i - 1],
+            y1 = h_miss$counts[i],
+            col = "red"
+          )
 
-          segments(x0 = h_obs$breaks[i], y0 = h_obs$counts[i], x1 = h_obs$breaks[i + 1], col = "blue")
-          segments(x0 = h_miss$breaks[i], y0 = h_miss$counts[i], x1 = h_miss$breaks[i + 1], col = "red")
+          segments(
+            x0 = h_obs$breaks[i],
+            y0 = h_obs$counts[i],
+            x1 = h_obs$breaks[i + 1],
+            col = "blue"
+          )
+          segments(
+            x0 = h_miss$breaks[i],
+            y0 = h_miss$counts[i],
+            x1 = h_miss$breaks[i + 1],
+            col = "red"
+          )
         }
 
         segments(x0 = h_obs$breaks[i + 1], y0 = h_obs$counts[i], y1 = 0, col = "blue")
@@ -66,7 +86,10 @@ setMethod("hist", signature(x = "semi-continuous"),
       h_all <- hist(y, plot = FALSE)
       plot(h_all,
         freq = TRUE, border = "lightgray", main = "", xlab = if (x@done) "Completed" else "Observed", axes = FALSE,
-        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", xlim = range(x@data, na.rm = TRUE), ...
+        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", xlim = range(
+          x@data,
+          na.rm = TRUE
+        ), ...
       )
       axis(1, lwd = 0)
       axis(2)
@@ -81,11 +104,31 @@ setMethod("hist", signature(x = "semi-continuous"),
         segments(h_miss$breaks[1], y0 = h_miss$counts[1], x1 = h_miss$breaks[2], col = "red")
 
         for (i in 2:(length(h_obs$breaks) - 1)) {
-          segments(x0 = h_obs$breaks[i], y0 = h_obs$counts[i - 1], y1 = h_obs$counts[i], col = "blue")
-          segments(x0 = h_miss$breaks[i], y0 = h_miss$counts[i - 1], y1 = h_miss$counts[i], col = "red")
+          segments(
+            x0 = h_obs$breaks[i],
+            y0 = h_obs$counts[i - 1],
+            y1 = h_obs$counts[i],
+            col = "blue"
+          )
+          segments(
+            x0 = h_miss$breaks[i],
+            y0 = h_miss$counts[i - 1],
+            y1 = h_miss$counts[i],
+            col = "red"
+          )
 
-          segments(x0 = h_obs$breaks[i], y0 = h_obs$counts[i], x1 = h_obs$breaks[i + 1], col = "blue")
-          segments(x0 = h_miss$breaks[i], y0 = h_miss$counts[i], x1 = h_miss$breaks[i + 1], col = "red")
+          segments(
+            x0 = h_obs$breaks[i],
+            y0 = h_obs$counts[i],
+            x1 = h_obs$breaks[i + 1],
+            col = "blue"
+          )
+          segments(
+            x0 = h_miss$breaks[i],
+            y0 = h_miss$counts[i],
+            x1 = h_miss$breaks[i + 1],
+            col = "red"
+          )
         }
 
         segments(x0 = h_obs$breaks[i + 1], y0 = h_obs$counts[i], y1 = 0, col = "blue")
@@ -94,15 +137,43 @@ setMethod("hist", signature(x = "semi-continuous"),
         NAs <- is.na(x)[!con]
         tab <- table(x@data[!con], NAs)
         for (i in seq_len(NROW(tab))) {
-          segments(x0 = as.numeric(rownames(tab)[i]), y0 = 0, y1 = sum(tab[i, ]), col = "lightgray", lty = "dashed")
-          segments(x0 = as.numeric(rownames(tab)[i]), y0 = 0, y1 = tab[i, 1], col = "blue", lty = "dashed")
-          if (ncol(tab) == 2) segments(x0 = as.numeric(rownames(tab)[i]), y0 = 0, y1 = tab[i, 2], col = "red", lty = "dashed")
+          segments(
+            x0 = as.numeric(rownames(tab)[i]),
+            y0 = 0,
+            y1 = sum(tab[i, ]),
+            col = "lightgray",
+            lty = "dashed"
+          )
+          segments(
+            x0 = as.numeric(rownames(tab)[i]),
+            y0 = 0,
+            y1 = tab[i, 1],
+            col = "blue",
+            lty = "dashed"
+          )
+          if (ncol(tab) == 2) {
+            segments(
+              x0 = as.numeric(rownames(tab)[i]),
+              y0 = 0,
+              y1 = tab[i, 2],
+              col = "red",
+              lty = "dashed"
+            )
+          }
         }
 
         if (.MI_DEBUG) stopifnot(all(h_all$counts == (h_obs$counts + h_miss$counts)))
       } else {
         tab <- table(x@data[!con])
-        for (i in seq_len(NCOL(tab))) segments(x0 = as.numeric(names(tab)[i]), y0 = 0, y1 = tab[i], col = "blue", lty = "dashed")
+        for (i in seq_len(NCOL(tab))) {
+          segments(
+            x0 = as.numeric(names(tab)[i]),
+            y0 = 0,
+            y1 = tab[i],
+            col = "blue",
+            lty = "dashed"
+          )
+        }
       }
       invisible(NULL)
     }
@@ -123,7 +194,10 @@ setMethod("hist", signature(x = "categorical"),
       h_all <- hist(y, breaks, plot = FALSE)
       plot(h_all,
         border = "lightgray", axes = FALSE, main = "", xlab = if (x@done) "Completed" else "Observed",
-        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ylim = range(h_all$counts, na.rm = TRUE), ...
+        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ylim = range(
+          h_all$counts,
+          na.rm = TRUE
+        ), ...
       )
       axis(1, at = values, labels = levels(x@raw_data), lwd = 0)
       axis(2)
@@ -148,8 +222,22 @@ setMethod("hist", signature(x = "categorical"),
           segments(x0 = breaks[i], y0 = counts_obs[i - 1], y1 = counts_obs[i], col = "blue")
           segments(x0 = breaks[i], y0 = counts_miss[i - 1], y1 = counts_miss[i], col = "red")
 
-          if (counts_obs[i]) segments(x0 = breaks[i], y0 = counts_obs[i], x1 = breaks[i + 1], col = "blue")
-          if (counts_miss[i]) segments(x0 = breaks[i], y0 = counts_miss[i], x1 = breaks[i + 1], col = "red")
+          if (counts_obs[i]) {
+            segments(
+              x0 = breaks[i],
+              y0 = counts_obs[i],
+              x1 = breaks[i + 1],
+              col = "blue"
+            )
+          }
+          if (counts_miss[i]) {
+            segments(
+              x0 = breaks[i],
+              y0 = counts_miss[i],
+              x1 = breaks[i + 1],
+              col = "red"
+            )
+          }
         }
 
         segments(x0 = breaks[i + 1], y0 = counts_obs[i], y1 = 0, col = "blue")
@@ -175,7 +263,10 @@ setMethod("hist", signature(x = "binary"),
       h_all <- hist(y, breaks, plot = FALSE)
       plot(h_all,
         border = "lightgray", axes = FALSE, main = "", xlab = if (x@done) "Completed" else "Observed",
-        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ylim = range(h_all$counts, na.rm = TRUE), ...
+        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ylim = range(
+          h_all$counts,
+          na.rm = TRUE
+        ), ...
       )
       axis(1, at = values, lwd = 0)
       axis(2)
@@ -200,8 +291,22 @@ setMethod("hist", signature(x = "binary"),
           segments(x0 = breaks[i], y0 = counts_obs[i - 1], y1 = counts_obs[i], col = "blue")
           segments(x0 = breaks[i], y0 = counts_miss[i - 1], y1 = counts_miss[i], col = "red")
 
-          if (counts_obs[i]) segments(x0 = breaks[i], y0 = counts_obs[i], x1 = breaks[i + 1], col = "blue")
-          if (counts_miss[i]) segments(x0 = breaks[i], y0 = counts_miss[i], x1 = breaks[i + 1], col = "red")
+          if (counts_obs[i]) {
+            segments(
+              x0 = breaks[i],
+              y0 = counts_obs[i],
+              x1 = breaks[i + 1],
+              col = "blue"
+            )
+          }
+          if (counts_miss[i]) {
+            segments(
+              x0 = breaks[i],
+              y0 = counts_miss[i],
+              x1 = breaks[i + 1],
+              col = "red"
+            )
+          }
         }
 
         segments(x0 = breaks[i + 1], y0 = counts_obs[i], y1 = 0, col = "blue")

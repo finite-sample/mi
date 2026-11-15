@@ -23,7 +23,9 @@
 setMethod("fit_model", signature(y = "missing_variable", data = "missing_data.frame"),
   def =
     function(y, data, s, warn, ...) {
-      stop("This method should not have been called. You need to define the relevant fit_model() S4 method")
+      stop(
+        "This method should not have been called. You need to define the relevant fit_model() S4 method"
+      )
     }
 )
 
@@ -71,7 +73,9 @@ setMethod("fit_model", signature(y = "binary", data = "missing_data.frame"),
         start = start, family = y@family, Warning = FALSE, control = CONTROL
       )
       if (warn && !out$converged) {
-        warning(paste("bayesglm() did not converge for variable", y@variable_name, "on iteration", abs(s)))
+        warning(
+          paste("bayesglm() did not converge for variable", y@variable_name, "on iteration", abs(s))
+        )
       }
       if (any(abs(coef(out)) > 100)) {
         warning(paste(y@variable_name, ": separation on iteration", abs(s)))
@@ -170,8 +174,17 @@ setMethod("fit_model", signature(y = "grouped-binary", data = "missing_data.fram
       to_drop <- data@index[[y@variable_name]]
       X <- data@X[, -to_drop]
       weights <- if (length(data@weights) == 1) data@weights[[1]] else data@weights[[y@variable_name]]
-      groups <- sapply(y@strata, FUN = function(x) complete(data@variables[[x]], m = 0L), simplify = FALSE)
-      out <- .clogit(y@data ~ X + strata(groups), method = "breslow", weights = weights, n = nrow(X))
+      groups <- sapply(
+        y@strata,
+        FUN = function(x) complete(data@variables[[x]], m = 0L),
+        simplify = FALSE
+      )
+      out <- .clogit(
+        y@data ~ X + strata(groups),
+        method = "breslow",
+        weights = weights,
+        n = nrow(X)
+      )
       out$x <- X
       out
     }
@@ -210,7 +223,14 @@ setMethod("fit_model", signature(y = "ordered-categorical", data = "missing_data
       )
 
       if (warn && out$convergence != 0) {
-        warning(paste("bayespolr() did not converge for variable", y@variable_name, "on iteration", abs(s)))
+        warning(
+          paste(
+            "bayespolr() did not converge for variable",
+            y@variable_name,
+            "on iteration",
+            abs(s)
+          )
+        )
       }
       out$x <- X
       out
@@ -241,7 +261,12 @@ setMethod("fit_model", signature(y = "interval", data = "missing_data.frame"),
     mark <- c(TRUE, apply(X[subset, -1, drop = FALSE], 2, FUN = function(x) length(unique(x)) > 1))
     if (!all(mark)) {
       if (abs(s) == 1) {
-        stop(paste(y@variable_name, ": imputed values on iteration 0 randomly inadmissible; try mi() again with different seed"))
+        stop(
+          paste(
+            y@variable_name,
+            ": imputed values on iteration 0 randomly inadmissible; try mi() again with different seed"
+          )
+        )
       }
       X <- X[, mark]
       if (!is.null(start)) start <- start[mark]
@@ -256,7 +281,9 @@ setMethod("fit_model", signature(y = "interval", data = "missing_data.frame"),
     )
 
     if (warn && !out$converged) {
-      warning(paste("bayesglm() did not converge for variable", y@variable_name, "on iteration", abs(s)))
+      warning(
+        paste("bayesglm() did not converge for variable", y@variable_name, "on iteration", abs(s))
+      )
     }
     out$x <- X
     class(out) <- c("bayesglm", "glm", "lm")
@@ -356,7 +383,12 @@ setMethod("fit_model", signature(y = "SC_proportion", data = "missing_data.frame
     mark <- c(TRUE, apply(X[subset, -1, drop = FALSE], 2, FUN = function(x) length(unique(x)) > 1))
     if (!all(mark)) {
       if (abs(s) == 1) {
-        stop(paste(y@variable_name, ": imputed values on iteration 0 randomly inadmissible; try mi() again with a different seed"))
+        stop(
+          paste(
+            y@variable_name,
+            ": imputed values on iteration 0 randomly inadmissible; try mi() again with a different seed"
+          )
+        )
       }
       X <- X[, mark]
       if (!is.null(start)) start <- start[c(mark, TRUE)]
@@ -367,7 +399,9 @@ setMethod("fit_model", signature(y = "SC_proportion", data = "missing_data.frame
       control = betareg::betareg.control(reltol = 1e-8, start = start, fsmaxit = 0)
     )
     if (warn && !out$converged) {
-      warning(paste("betareg() did not converge for variable", y@variable_name, "on iteration", abs(s)))
+      warning(
+        paste("betareg() did not converge for variable", y@variable_name, "on iteration", abs(s))
+      )
     }
     out$x <- X
     class(out) <- c("betareg")
@@ -425,7 +459,10 @@ setMethod("fit_model", signature(y = "continuous", data = "experiment_missing_da
           X <- data@X[, ]
         }
         treatment_name <- names(data@concept[data@concept == "treatment"])
-        X <- cbind(X, interaction = X[, !(colnames(X) %in% c("(Intercept)", treatment_name))] * X[, treatment_name])
+        X <- cbind(
+          X,
+          interaction = X[, !(colnames(X) %in% c("(Intercept)", treatment_name))] * X[, treatment_name]
+        )
       } else if (data@case == "covariates") { # missingness on covariate(s) only
         to_drop <- c(to_drop, which(data@concept == "treatment"))
         if (length(to_drop)) {
@@ -457,7 +494,13 @@ setMethod("fit_model", signature(y = "character", data = "mi"),
         for (i in 1:m) {
           model <- data@data[[i]]@variables[[y]]@model
           if (is.null(model)) {
-            model <- fit_model(y = data@data[[i]]@variables[[y]], data = data@data[[i]], s = s, warn = TRUE, ...)
+            model <- fit_model(
+              y = data@data[[i]]@variables[[y]],
+              data = data@data[[i]],
+              s = s,
+              warn = TRUE,
+              ...
+            )
             if (!isS4(model)) model$x <- model$X <- model$y <- NULL
           }
           models[[i]] <- model
@@ -466,7 +509,13 @@ setMethod("fit_model", signature(y = "character", data = "mi"),
         models <- vector("list", length(m))
         models <- for (i in seq_along(m)) {
           if (is.null(data@data[[i]]@variables[[y]]@model)) {
-            models[[m[i]]] <- fit_model(y = data@data[[m[i]]]@variables[[y]], data = data@data[[m[i]]], s = s, warn = TRUE, ...)
+            models[[m[i]]] <- fit_model(
+              y = data@data[[m[i]]]@variables[[y]],
+              data = data@data[[m[i]]],
+              s = s,
+              warn = TRUE,
+              ...
+            )
           } else {
             models[[i]] <- data@data[[i]]@variables[[y]]@model
           }

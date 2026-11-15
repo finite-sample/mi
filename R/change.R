@@ -15,7 +15,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "ANY", what = "character"),
+setMethod(
+  "change",
+  signature(data = "missing_data.frame", y = "ANY", to = "ANY", what = "character"),
   def =
     function(data, y, to, what, ...) {
       if (length(what) > 1) stop("'what' must have length one")
@@ -25,7 +27,15 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "ANY"
       if (what == "class") what <- "type"
       if (what == "method") what <- "imputation_method"
 
-      if (is.character(y) && !(what %in% c("family", "imputation_method", "link", "model", "size", "transformation", "type"))) {
+      if (is.character(y) && !(what %in% c(
+        "family",
+        "imputation_method",
+        "link",
+        "model",
+        "size",
+        "transformation",
+        "type"
+      ))) {
         if (length(y) > 1) stop("'y' must have length one")
         if (length(to) > 1) stop("'to' must have length one")
         if (is.logical(y) | is.numeric(y)) y <- colnames(data)[y]
@@ -63,7 +73,13 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "ANY"
 
         mv <- data@variables[[y]]
         mv@raw_data[mv@raw_data == what] <- to
-        if (is.na(what) | is.na(to)) mv <- new(class(mv), raw_data = mv@raw_data, variable_name = mv@variable_name)
+        if (is.na(what) | is.na(to)) {
+          mv <- new(
+            class(mv),
+            raw_data = mv@raw_data,
+            variable_name = mv@variable_name
+          )
+        }
         data@variables[[y]] <- mv
         return(data)
       }
@@ -96,7 +112,9 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "ANY"
     }
 )
 
-setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "numeric", what = "numeric"),
+setMethod(
+  "change",
+  signature(data = "missing_data.frame", y = "ANY", to = "numeric", what = "numeric"),
   def =
     function(data, y, to, what) {
       if (length(to) > 1) stop("'to' must be a scalar")
@@ -108,7 +126,13 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "nume
       if (is(mv, "categorical")) {
         values <- unique(mv@raw_data)
         values <- values[!is.na(values)]
-        if (length(values) == 2) mv <- new("binary", raw_data = mv@raw_data, variable_name = mv@variable_name)
+        if (length(values) == 2) {
+          mv <- new(
+            "binary",
+            raw_data = mv@raw_data,
+            variable_name = mv@variable_name
+          )
+        }
       } else if (is.na(what) | is.na(to)) {
         mv <- new(class(mv), raw_data = mv@raw_data, variable_name = mv@variable_name)
       } else if (is(mv, "continuous")) mv@data <- mv@transformation(mv@raw_data)
@@ -117,14 +141,18 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "nume
     }
 )
 
-setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "logical", what = "numeric"),
+setMethod(
+  "change",
+  signature(data = "missing_data.frame", y = "ANY", to = "logical", what = "numeric"),
   def =
     function(data, y, to, what) {
       change(data = data, y = y, what = what, to = as.numeric(to))
     }
 )
 
-setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "character", what = "numeric"),
+setMethod(
+  "change",
+  signature(data = "missing_data.frame", y = "ANY", to = "character", what = "numeric"),
   def =
     function(data, y, to, what) {
       if (length(to) > 1) stop("'to' must be a scalar")
@@ -162,7 +190,9 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "char
     }
 )
 
-setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "logical", what = "character"),
+setMethod(
+  "change",
+  signature(data = "missing_data.frame", y = "ANY", to = "logical", what = "character"),
   def =
     function(data, y, to, what) {
       change(data = data, y = y, what = what, to = as.numeric(to))

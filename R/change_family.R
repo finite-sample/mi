@@ -60,7 +60,9 @@ setMethod("change_family", signature(data = "missing", y = "unordered-categorica
     }
 )
 
-setMethod("change_family", signature(data = "missing_data.frame", y = "character", to = "character"),
+setMethod(
+  "change_family",
+  signature(data = "missing_data.frame", y = "character", to = "character"),
   def =
     function(data, y, to) {
       if (length(to) == 1) {
@@ -129,7 +131,10 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "numeric",
         to <- rep(to, length(y))
       } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
       for (i in seq_along(y)) {
-        data@variables[[y]] <- change_family(y = data@variables[[y]], to = do.call(to[i], args = list(...)))
+        data@variables[[y]] <- change_family(
+          y = data@variables[[y]],
+          to = do.call(to[i], args = list(...))
+        )
       }
       invisible(data)
     }

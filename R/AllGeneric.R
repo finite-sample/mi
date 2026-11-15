@@ -18,11 +18,17 @@
 
 setGeneric("change", def = function(data, y, to, what, ...) standardGeneric("change"))
 setGeneric("change_family", def = function(data, y, to, ...) standardGeneric("change_family"))
-setGeneric("change_imputation_method", def = function(data, y, to, ...) standardGeneric("change_imputation_method"))
+setGeneric(
+  "change_imputation_method",
+  def = function(data, y, to, ...) standardGeneric("change_imputation_method")
+)
 setGeneric("change_link", def = function(data, y, to, ...) standardGeneric("change_link"))
 setGeneric("change_model", def = function(data, y, to, ...) standardGeneric("change_model"))
 setGeneric("change_size", def = function(data, y, to, ...) standardGeneric("change_size"))
-setGeneric("change_transformation", def = function(data, y, to, ...) standardGeneric("change_transformation"))
+setGeneric(
+  "change_transformation",
+  def = function(data, y, to, ...) standardGeneric("change_transformation")
+)
 setGeneric("change_type", def = function(data, y, to, ...) standardGeneric("change_type"))
 setGeneric("complete", def = function(y, m, ...) standardGeneric("complete"))
 setGeneric("fit_model", def = function(y, data, ...) standardGeneric("fit_model"))

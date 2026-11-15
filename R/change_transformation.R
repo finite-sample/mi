@@ -17,12 +17,18 @@
 
 ## these change the transformation and inverse_transformation slots of a continuous variable
 
-setMethod("change_transformation", signature(data = "missing", y = "missing_variable", to = "function"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing", y = "missing_variable", to = "function"),
   def =
     function(y, to, inverse = FALSE) {
       if (!is(y, "continuous")) {
         stop(paste(y@variable_name, "is not a continuous variable and hence has no transformation"))
-      } else if (is(y, "SC_proportion")) stop(paste(y@variable_name, "is a SC_proportion and cannot change its transformation (yet)"))
+      } else if (is(y, "SC_proportion")) {
+        stop(
+          paste(y@variable_name, "is a SC_proportion and cannot change its transformation (yet)")
+        )
+      }
       if (inverse) {
         if (identical(to, .standardize_transform)) {
           formals(to)$mean <- mean(y@raw_data, na.rm = TRUE)
@@ -60,7 +66,9 @@ setMethod("change_transformation", signature(data = "missing", y = "missing_vari
     }
 )
 
-setMethod("change_transformation", signature(data = "missing", y = "missing_variable", to = "missing"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing", y = "missing_variable", to = "missing"),
   def =
     function(y) {
       if (is(y, "continuous")) {
@@ -72,7 +80,9 @@ setMethod("change_transformation", signature(data = "missing", y = "missing_vari
     }
 )
 
-setMethod("change_transformation", signature(data = "missing_data.frame", y = "character", to = "missing"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing_data.frame", y = "character", to = "missing"),
   def =
     function(data, y) {
       if (all(y %in% c("continuous", names(getClass("continuous")@subclasses)))) {
@@ -92,7 +102,9 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
     }
 )
 
-setMethod("change_transformation", signature(data = "missing_data.frame", y = "character", to = "character"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing_data.frame", y = "character", to = "character"),
   def =
     function(data, y, to) {
       if (length(to) == 1) {
@@ -132,7 +144,11 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
       })
       for (i in seq_along(y)) {
         data@variables[[y[i]]] <- change_transformation(y = data@variables[[y[i]]], to = trans[[i]])
-        data@variables[[y[i]]] <- change_transformation(y = data@variables[[y[i]]], to = inverse[[i]], inverse = TRUE)
+        data@variables[[y[i]]] <- change_transformation(
+          y = data@variables[[y[i]]],
+          to = inverse[[i]],
+          inverse = TRUE
+        )
 
         mark <- data@index[[y[i]]][1]
         data@X[, mark] <- data@variables[[y[i]]]@data
@@ -141,14 +157,18 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
     }
 )
 
-setMethod("change_transformation", signature(data = "missing_data.frame", y = "numeric", to = "character"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing_data.frame", y = "numeric", to = "character"),
   def =
     function(data, y, to) {
       change_transformation(data = data, y = colnames(data)[y], to = to)
     }
 )
 
-setMethod("change_transformation", signature(data = "missing_data.frame", y = "logical", to = "character"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing_data.frame", y = "logical", to = "character"),
   def =
     function(data, y, to) {
       if (length(y) != data@DIM[2]) {
@@ -158,7 +178,9 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "l
     }
 )
 
-setMethod("change_transformation", signature(data = "missing_data.frame", y = "character", to = "function"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing_data.frame", y = "character", to = "function"),
   def =
     function(data, y, to, inverse = stop("you must specify 'inverse = FALSE' or 'inverse = TRUE'")) {
       if (all(y %in% c("continuous", names(getClass("continuous")@subclasses)))) {
@@ -170,9 +192,17 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
       for (i in seq_along(y)) {
         if (inverse) {
-          data@variables[[y[i]]] <- change_transformation(y = data@variables[[y[i]]], to = to, inverse = TRUE)
+          data@variables[[y[i]]] <- change_transformation(
+            y = data@variables[[y[i]]],
+            to = to,
+            inverse = TRUE
+          )
         } else {
-          data@variables[[y[i]]] <- change_transformation(y = data@variables[[y[i]]], to = to, inverse = FALSE)
+          data@variables[[y[i]]] <- change_transformation(
+            y = data@variables[[y[i]]],
+            to = to,
+            inverse = FALSE
+          )
         }
 
         mark <- data@index[[y[i]]][1]
@@ -182,7 +212,9 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
     }
 )
 
-setMethod("change_transformation", signature(data = "missing_data.frame", y = "numeric", to = "function"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing_data.frame", y = "numeric", to = "function"),
   def =
     function(data, y, to, inverse) {
       y <- names(data@variables)[y]
@@ -190,7 +222,9 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "n
     }
 )
 
-setMethod("change_transformation", signature(data = "missing_data.frame", y = "logical", to = "function"),
+setMethod(
+  "change_transformation",
+  signature(data = "missing_data.frame", y = "logical", to = "function"),
   def =
     function(data, y, to, inverse) {
       if (length(y) != data@DIM[2]) {

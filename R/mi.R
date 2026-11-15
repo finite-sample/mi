@@ -77,7 +77,13 @@
       break
     }
   }
-  if (((Time.Elapsed) / 60)[3] > max.minutes) mdf@variables <- lapply(mdf@variables, .prune_missing_variable, s = s)
+  if (((Time.Elapsed) / 60)[3] > max.minutes) {
+    mdf@variables <- lapply(
+      mdf@variables,
+      .prune_missing_variable,
+      s = s
+    )
+  }
 
   if (verbose) message("Estimating models on completed data for chain ", i, "\n")
 
@@ -112,7 +118,13 @@
     }
   }
 
-  if (((Time.Elapsed) / 60)[3] > max.minutes) mdf@variables <- lapply(mdf@variables, .prune_missing_variable, s = s)
+  if (((Time.Elapsed) / 60)[3] > max.minutes) {
+    mdf@variables <- lapply(
+      mdf@variables,
+      .prune_missing_variable,
+      s = s
+    )
+  }
 
   if (verbose) message("Estimating models on completed data for chain ", i, "\n")
 
@@ -261,8 +273,14 @@ setMethod(
           x@imputations <- rbind(x@imputations, matrix(NA_integer_, n.iter, x@n_drawn))
           x@parameters <- rbind(x@parameters, matrix(NA_real_, n.iter, ncol(x@parameters)))
           if (is(x, "semi-continuous")) {
-            x@indicator@imputations <- rbind(x@indicator@imputations, matrix(NA_integer_, n.iter, x@indicator@n_drawn))
-            x@indicator@parameters <- rbind(x@indicator@parameters, matrix(NA_real_, n.iter, ncol(x@indicator@parameters)))
+            x@indicator@imputations <- rbind(
+              x@indicator@imputations,
+              matrix(NA_integer_, n.iter, x@indicator@n_drawn)
+            )
+            x@indicator@parameters <- rbind(
+              x@indicator@parameters,
+              matrix(NA_real_, n.iter, ncol(x@indicator@parameters))
+            )
           }
           x
         })
@@ -457,7 +475,11 @@ setMethod("summary", signature(object = "mi"),
       mdf <- object@data[[1]]
       matrices <- complete(object, to_matrix = TRUE, include_missing = FALSE)
       chains <- length(matrices)
-      matrices <- array(unlist(matrices), dim = c(dim(mdf), chains), dimnames = c(dimnames(mdf), NULL))
+      matrices <- array(
+        unlist(matrices),
+        dim = c(dim(mdf), chains),
+        dimnames = c(dimnames(mdf), NULL)
+      )
       out <- vector("list", ncol(mdf))
       names(out) <- colnames(mdf)
       for (i in seq_along(out)) {
@@ -509,14 +531,20 @@ setMethod("traceplot", signature(x = "mi_list"),
 setMethod("mi", signature(y = "missing_variable", model = "ANY"),
   def =
     function(y, model, ...) {
-      stop("This method should not have been called. You need to define the relevant mi() S4 method")
+      stop(
+        "This method should not have been called. You need to define the relevant mi() S4 method"
+      )
     }
 )
 
 setMethod("mi", signature(y = "missing_variable", model = "missing"),
   def =
     function(y) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       draws <- sample(y@data[y@which_obs], size = y@n_drawn, replace = TRUE)
       y@data[y@which_drawn] <- draws
       y
@@ -526,7 +554,11 @@ setMethod("mi", signature(y = "missing_variable", model = "missing"),
 setMethod("mi", signature(y = "semi-continuous", model = "missing"),
   def =
     function(y) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       y@indicator <- mi(y@indicator)
       draws <- sample(y@data[y@which_obs], size = y@n_drawn, replace = TRUE)
       if (is(y, "SC_proportion")) {
@@ -572,7 +604,11 @@ setMethod("mi", signature(y = "semi-continuous", model = "missing"),
 setMethod("mi", signature(y = "bounded-continuous", model = "missing"),
   def =
     function(y) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       a <- if (length(y@lower) == 1) y@lower else y@lower[y@which_drawn]
       a <- ifelse(a == -Inf, min(y@data, na.rm = TRUE), a)
       a <- ifelse(a == Inf, max(y@data, na.rm = TRUE), a)
@@ -590,7 +626,11 @@ setMethod("mi", signature(y = "bounded-continuous", model = "missing"),
 setMethod("mi", signature(y = "categorical", model = "missing"),
   def =
     function(y) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       draws <- sample(y@data[y@which_obs], size = y@n_drawn, replace = TRUE)
       y@data[y@which_drawn] <- draws
       y
@@ -651,7 +691,11 @@ setOldClass("polr")
 setMethod("mi", signature(y = "ordered-categorical", model = "polr"),
   def =
     function(y, model, s, ...) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
 
       if (!is.element(y@imputation_method, c("ppd", "pmm"))) {
         badHessian <- FALSE
@@ -718,7 +762,11 @@ setOldClass("multinom")
 setMethod("mi", signature(y = "unordered-categorical", model = "multinom"),
   def =
     function(y, model, s, ...) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       ev <- eigen(vcov(model), symmetric = TRUE)
       parameters <- .draw_parameters(t(coef(model)), ev)
       if (ncol(model.matrix(model)) != nrow(parameters)) parameters <- t(parameters)
@@ -762,7 +810,11 @@ setOldClass("RNL")
 setMethod("mi", signature(y = "unordered-categorical", model = "RNL"),
   def =
     function(y, model, s, ...) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       if (y@imputation_method == "ppd") { # imputating from the posterior predictive distribution
         Pr <- sapply(model, FUN = function(m) {
           ev <- eigen(vcov(m), symmetric = TRUE)
@@ -804,7 +856,11 @@ setOldClass("glm")
 setMethod("mi", signature(y = "binary", model = "glm"),
   def =
     function(y, model, s, ...) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       if (y@imputation_method == "ppd") {
         ev <- eigen(vcov(model), symmetric = TRUE)
         parameters <- .draw_parameters(coef(model), ev)
@@ -842,7 +898,11 @@ setOldClass("clogit")
 setMethod("mi", signature(y = "grouped-binary", model = "clogit"),
   def =
     function(y, model, s, ...) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       # reconstruc the strata
       Terms <- model$terms
       temp <- survival::untangle.specials(Terms, "strata")
@@ -869,7 +929,11 @@ setMethod("mi", signature(y = "interval", model = "glm"),
   def =
     function(y, model, s, ...) {
       stop("FIXME: write this method")
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       if (y@imputation_method == "ppd") {
         stop("FIXME")
       } else {
@@ -883,7 +947,11 @@ setMethod("mi", signature(y = "interval", model = "glm"),
 setMethod("mi", signature(y = "categorical", model = "matrix"),
   def =
     function(y, model, s, ...) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       if (y@imputation_method != "ppd") stop("only ppd is supported in this case")
       if (nrow(model) != y@n_drawn) stop("matrix of probabilities has the wrong number of rows")
       draws <- apply(model, 1, FUN = function(p) which(rmultinom(1, 1, p) == 1))
@@ -896,7 +964,11 @@ setMethod("mi", signature(y = "categorical", model = "matrix"),
 ## helper function
 .mi_continuous <-
   function(y, model) {
-    if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+    if (y@n_drawn == 0) {
+      stop(
+        "'impute' should not have been called because there are no missing data"
+      )
+    }
     if (y@imputation_method == "ppd") {
       ev <- eigen(vcov(model), symmetric = TRUE)
       parameters <- .draw_parameters(coef(model), ev)
@@ -998,7 +1070,11 @@ setMethod("mi", signature(y = "nonnegative-continuous", model = "glm"),
 ## helper function
 .mi_proportion <-
   function(y, model) {
-    if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+    if (y@n_drawn == 0) {
+      stop(
+        "'impute' should not have been called because there are no missing data"
+      )
+    }
 
     if (!is.element(y@imputation_method, c("ppd", "pmm"))) {
       badHessian <- FALSE
@@ -1113,7 +1189,11 @@ setMethod("mi", signature(y = "SC_proportion", model = "betareg"),
 setMethod("mi", signature(y = "count", model = "glm"),
   def =
     function(y, model, s, ...) {
-      if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
+      if (y@n_drawn == 0) {
+        stop(
+          "'impute' should not have been called because there are no missing data"
+        )
+      }
       if (y@imputation_method == "ppd") {
         ev <- eigen(vcov(model), symmetric = TRUE)
         parameters <- .draw_parameters(coef(model), ev)

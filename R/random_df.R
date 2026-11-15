@@ -226,7 +226,19 @@
     L[upper.tri(L)] <- 0
 
     holder <- matrix(NA_real_, nrow = diff, ncol = ncol(L))
-    L <- .rcorvine_helper(L, holder, n_full, n_partial, n_cat, alpha, restrictions, strong, experiment, treatment_cor, nom)
+    L <- .rcorvine_helper(
+      L,
+      holder,
+      n_full,
+      n_partial,
+      n_cat,
+      alpha,
+      restrictions,
+      strong,
+      experiment,
+      treatment_cor,
+      nom
+    )
     if (restrictions == "MARish") L <- .MAR_opt(L, n_full, n_partial)
     L
   }
@@ -296,7 +308,11 @@ rdata.frame <-
     if (N <= 0) stop("'N' must be positive")
 
     restrictions <- match.arg(restrictions)
-    if (strong && restrictions == "none") warning("instruments are not valid unless the MAR assumption is enforced")
+    if (strong && restrictions == "none") {
+      warning(
+        "instruments are not valid unless the MAR assumption is enforced"
+      )
+    }
 
     if (n_full < 0) stop("'n_full' must be >= 0")
     if (n_partial < 0) stop("'n_partial must be >= 0")
@@ -312,11 +328,24 @@ rdata.frame <-
     if (df <= 0) stop("'df' must be a positive")
 
     if (length(types) == 1) types <- rep(types, n)
-    types <- match.arg(types, c("continuous", "count", "binary", "treatment", "ordinal", "nominal", "proportion", "positive"),
+    types <- match.arg(
+      types,
+      c(
+        "continuous",
+        "count",
+        "binary",
+        "treatment",
+        "ordinal",
+        "nominal",
+        "proportion",
+        "positive"
+      ),
       several.ok = TRUE
     )
     if (any(types[1:n_full] == "nominal")) {
-      warning("fully observed nominal variables not supported, changing them to ordinal without loss of generality")
+      warning(
+        "fully observed nominal variables not supported, changing them to ordinal without loss of generality"
+      )
       types <- ifelse(types == "nominal" & seq_along(types) <= n_full, "ordinal", types)
     }
     #     else if(!is.null(n_cat)) types[n:(n - length(n_cat) + 1)] <- "nominal"
@@ -355,7 +384,11 @@ rdata.frame <-
       )
     } else {
       if (!isSymmetric(Sigma)) stop("'Sigma' must be symmetric")
-      if (ncol(Sigma) != (n_full + 2 * n_partial)) stop("'Sigma' must be of order 'n_full + 2 * n_partial'")
+      if (ncol(Sigma) != (n_full + 2 * n_partial)) {
+        stop(
+          "'Sigma' must be of order 'n_full + 2 * n_partial'"
+        )
+      }
       if (any(types == "nominal")) stop("nominal variables not supported when 'Sigma' is given")
       if (experiment) stop("treatment variables not supported when 'Sigma' is given")
       L <- chol(Sigma)
@@ -401,7 +434,10 @@ rdata.frame <-
       if (any(col_mark)) X[row_mark, col_mark] <- X[row_mark, col_mark] + 1 # ATT
     }
     X_obs <- X
-    correlations <- rep(NA_real_, if (!has_nominal) n_partial else n_partial - length(n_cat) + sum(n_cat))
+    correlations <- rep(
+      NA_real_,
+      if (!has_nominal) n_partial else n_partial - length(n_cat) + sum(n_cat)
+    )
     end <- n_partial - length(n_cat) * has_nominal
     if (end > 0) {
       for (i in 1:end) {
@@ -477,7 +513,13 @@ rdata.frame <-
     if (!has_nominal) {
       names(correlations) <- if (n_partial) paste("e", 1:n_partial, sep = "_") else NULL
     } else {
-      cn <- if (n_partial > length(n_cat)) paste("e", 1:(n_partial - length(n_cat)), sep = "_") else as.character(NULL)
+      cn <- if (n_partial > length(n_cat)) {
+        paste("e", 1:(n_partial - length(n_cat)), sep = "_")
+      } else {
+        as.character(
+          NULL
+        )
+      }
       for (i in seq_along(n_cat)) cn <- c(cn, paste("e:", letters[i], "_", 1:n_cat[i], sep = ""))
       names(correlations) <- cn
     }
@@ -506,7 +548,12 @@ rdata.frame <-
         qs <- quantile(X[, i], prob = seq(from = 0, to = 1, length.out = breaks + 1))
         qs[1] <- -Inf
         qs[length(qs)] <- Inf
-        X_obs[, i] <- X[, i] <- cut(X[, i], breaks = qs, ordered_result = TRUE, labels = LETTERS[1:breaks])
+        X_obs[, i] <- X[, i] <- cut(
+          X[, i],
+          breaks = qs,
+          ordered_result = TRUE,
+          labels = LETTERS[1:breaks]
+        )
       } else if (types[i] == "count") { # this is not quite consistent with the DGP
         X[[toupper(colnames(X)[i])]] <- X[, i]
         X_obs[, i] <- X[, i] <- as.integer(qpois(pt(X[, i], df = df), lambda = 5))
@@ -541,7 +588,12 @@ rdata.frame <-
     )
     rownames(L) <- colnames(L) <- cn
     out <- list(true = X, obs = X_obs, empirical_CPCs = correlations, L = L)
-    if (!is.null(alpha)) out <- c(out, list(alpha = alpha, skewness = result$sn_skewness, kurtosis = result$sn_kurtosis))
+    if (!is.null(alpha)) {
+      out <- c(
+        out,
+        list(alpha = alpha, skewness = result$sn_skewness, kurtosis = result$sn_kurtosis)
+      )
+    }
     out
   }
 
@@ -580,7 +632,9 @@ fmin <-
     omega <- exp(theta[1:n]) # standard deviations of the implicit Omega matrix
     O.cor <- make_O.cor(theta[-(1:n)])
     alphaTO.cor <- alpha %*% O.cor
-    Sigma_proposed <- (O.cor - 2 / (pi * c(1 + alphaTO.cor %*% alpha)) * crossprod(alphaTO.cor)) * tcrossprod(omega)
+    Sigma_proposed <- (O.cor - 2 / (pi * c(1 + alphaTO.cor %*% alpha)) * crossprod(alphaTO.cor)) * tcrossprod(
+      omega
+    )
     if (final) {
       return(Sigma_proposed)
     }

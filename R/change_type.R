@@ -35,7 +35,13 @@ setMethod("change_type", signature(data = "missing", y = "missing_variable", to 
         warning(paste(y@variable_name, ": cannot change type because only one unique value"))
         y
       } else {
-        new(to, variable_name = y@variable_name, raw_data = raw, imputation_method = y@imputation_method, ...)
+        new(
+          to,
+          variable_name = y@variable_name,
+          raw_data = raw,
+          imputation_method = y@imputation_method,
+          ...
+        )
       }
     }
 )

@@ -28,7 +28,9 @@
   version <- utils::packageDescription("mi", lib.loc = miLib)$Version
   builddate <- utils::packageDescription("mi", lib.loc = miLib)$Packaged
   packageStartupMessage(paste("mi (Version ", version, ", packaged: ", builddate, ")", sep = ""))
-  packageStartupMessage("mi  Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Trustees of Columbia University")
+  packageStartupMessage(
+    "mi  Copyright (C) 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015 Trustees of Columbia University"
+  )
   packageStartupMessage("This program comes with ABSOLUTELY NO WARRANTY.")
   packageStartupMessage("This is free software, and you are welcome to redistribute it")
   packageStartupMessage("under the General Public License version 2 or later.")

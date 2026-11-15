@@ -24,7 +24,12 @@
     values <- sort(values[!is.na(values)])
     len <- length(values)
     if (len == 0) {
-      warning(paste(variable_name, ": cannot infer variable type when all values are NA, guessing 'irrelevant'"))
+      warning(
+        paste(
+          variable_name,
+          ": cannot infer variable type when all values are NA, guessing 'irrelevant'"
+        )
+      )
       type <- "irrelevant"
     } else if (len == 1) {
       type <- "fixed"

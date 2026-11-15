@@ -133,7 +133,9 @@ setMethod("image", signature(x = "missing_data.frame"),
         x.lab <- FALSE
       }
       if (clustered) {
-        orderIndex <- order.dendrogram(as.dendrogram(hclust(dist(data, method = "binary"), method = "mcquitty")))
+        orderIndex <- order.dendrogram(
+          as.dendrogram(hclust(dist(data, method = "binary"), method = "mcquitty"))
+        )
         sub <- "Clustered by missingness"
       }
       if (!grayscale) {
@@ -170,7 +172,15 @@ setMethod("image", signature(x = "missing_data.frame"),
       if (grayscale) {
         plot(image(X,
           aspect = "fill", xlab = "Standardized Variable", ylab = "Observation Number", sub = sub,
-          scales = list(x = list(at = seq_len(ncol(data)), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 8)),
+          scales = list(
+            x = list(
+              at = seq_len(ncol(data)),
+              labels = colnames(data),
+              rot = 90,
+              abbreviate = TRUE,
+              minlength = 8
+            )
+          ),
           main = "Dark represents missing data", colorkey = FALSE, alpha.regions = 1, ...
         ))
         return(invisible(NULL))
@@ -182,7 +192,15 @@ setMethod("image", signature(x = "missing_data.frame"),
       breaks <- seq(from = rx[1] - 1e-8, to = rx[2] + 1e-8, length.out = 16)
       plot(image(X,
         aspect = "fill", xlab = "Standardized Variable", ylab = "Observation Number", sub = sub, at = breaks,
-        scales = list(x = list(at = seq_len(ncol(data)), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 8)),
+        scales = list(
+          x = list(
+            at = seq_len(ncol(data)),
+            labels = colnames(data),
+            rot = 90,
+            abbreviate = TRUE,
+            minlength = 8
+          )
+        ),
         main = "Dark represents missing data", colorkey = TRUE, col.regions = col.regions, alpha.regions = 1, ...
       ))
 
@@ -199,7 +217,15 @@ setMethod("image", signature(x = "mdf_list"),
         op <- options(device.ask.default = ask)
         on.exit(options(op), add = TRUE)
       }
-      sapply(x, FUN = image, y.order = y.order, x.order = x.order, clustered = clustered, grayscale = grayscale, ...)
+      sapply(
+        x,
+        FUN = image,
+        y.order = y.order,
+        x.order = x.order,
+        clustered = clustered,
+        grayscale = grayscale,
+        ...
+      )
       invisible(NULL)
     }
 )
@@ -207,7 +233,10 @@ setMethod("image", signature(x = "mdf_list"),
 setMethod("image", signature(x = "mi"),
   def =
     function(x, y.order = FALSE, x.order = FALSE, clustered = TRUE, ...) {
-      data <- lapply(x@data[[1]]@variables, FUN = function(z) if (is(z, "irrelevant")) NULL else is.na(z) * 1)
+      data <- lapply(
+        x@data[[1]]@variables,
+        FUN = function(z) if (is(z, "irrelevant")) NULL else is.na(z) * 1
+      )
       data <- as.matrix(as.data.frame(data[!sapply(data, is.null)]))
       if (x.order) {
         orderIndex <- order(colSums(data), decreasing = TRUE)
@@ -219,7 +248,9 @@ setMethod("image", signature(x = "mi"),
         sub <- "Ordered by number of missing items per observation"
       }
       if (clustered) {
-        orderIndex <- order.dendrogram(as.dendrogram(hclust(dist(data, method = "binary"), method = "mcquitty")))
+        orderIndex <- order.dendrogram(
+          as.dendrogram(hclust(dist(data, method = "binary"), method = "mcquitty"))
+        )
         sub <- "Clustered by missingness"
       }
       foo <- function(z, raw = FALSE) {
@@ -271,7 +302,15 @@ setMethod("image", signature(x = "mi"),
       plot(
         image(X0,
           aspect = "fill", xlab = "", ylab = "Observation Number", sub = "", at = breaks,
-          scales = list(x = list(at = seq_len(ncol(data)), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 5)),
+          scales = list(
+            x = list(
+              at = seq_len(ncol(data)),
+              labels = colnames(data),
+              rot = 90,
+              abbreviate = TRUE,
+              minlength = 5
+            )
+          ),
           main = "Original data", colorkey = TRUE, col.regions = heat.colors(17), ...
         ),
         split = c(1, 1, 1, 2)
@@ -280,7 +319,15 @@ setMethod("image", signature(x = "mi"),
       plot(
         image(X1,
           aspect = "fill", xlab = "", ylab = "Observation Number", sub = "", at = breaks,
-          scales = list(x = list(at = seq_len(ncol(data)), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 5)),
+          scales = list(
+            x = list(
+              at = seq_len(ncol(data)),
+              labels = colnames(data),
+              rot = 90,
+              abbreviate = TRUE,
+              minlength = 5
+            )
+          ),
           main = "Average completed data", colorkey = TRUE, col.regions = heat.colors(17), ...
         ),
         newpage = FALSE, split = c(1, 2, 1, 2)
@@ -298,7 +345,15 @@ setMethod("image", signature(x = "mi_list"),
         op <- options(device.ask.default = ask)
         on.exit(options(op), add = TRUE)
       }
-      sapply(x, FUN = image, y.order = y.order, x.order = x.order, clustered = clustered, grayscale = grayscale, ...)
+      sapply(
+        x,
+        FUN = image,
+        y.order = y.order,
+        x.order = x.order,
+        clustered = clustered,
+        grayscale = grayscale,
+        ...
+      )
       invisible(NULL)
     }
 )
@@ -529,7 +584,10 @@ setMethod("plot", signature(x = "mi", y = "ANY"),
         par(mfrow = c(l, 3), mar = c(5, 4, 1, 1) + .1)
         if (is(x@data[[1]]@variables[[i]], "semi-continuous")) {
           for (j in 1:l) plot(x@data[[j]], x@data[[j]]@variables[[i]]@indicator, ...)
-          title(main = paste("\n", header, x@data[[1]]@variables[[i]]@indicator@variable_name, sep = ""), outer = TRUE)
+          title(
+            main = paste("\n", header, x@data[[1]]@variables[[i]]@indicator@variable_name, sep = ""),
+            outer = TRUE
+          )
         }
         for (j in 1:l) plot(x@data[[j]], x@data[[j]]@variables[[i]], ...)
         new_header <- paste(header, x@data[[1]]@variables[[i]]@variable_name)
@@ -549,9 +607,24 @@ setMethod("plot", signature(x = "mi_list", y = "ANY"),
   def =
     function(x, y, ask = TRUE, ...) {
       if (missing(y)) {
-        for (i in seq_along(x)) plot(x[[i]], ask = ask, header = paste(names(x)[i], ": ", sep = ""), ...)
+        for (i in seq_along(x)) {
+          plot(
+            x[[i]],
+            ask = ask,
+            header = paste(names(x)[i], ": ", sep = ""),
+            ...
+          )
+        }
       } else {
-        for (i in seq_along(x)) plot(x[[i]], y = y, ask = ask, header = paste(names(x)[i], ": ", sep = ""), ...)
+        for (i in seq_along(x)) {
+          plot(
+            x[[i]],
+            y = y,
+            ask = ask,
+            header = paste(names(x)[i], ": ", sep = ""),
+            ...
+          )
+        }
       }
       invisible(NULL)
     }

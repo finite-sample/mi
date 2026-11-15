@@ -47,7 +47,12 @@ setMethod("missing_data.frame", signature(y = "data.frame"),
       if (is.na(subclass)) {
         new("missing_data.frame", variables = variables, DIMNAMES = dimnames(y), ...)
       } else {
-        new(paste(subclass, "missing_data.frame", sep = "_"), variables = variables, DIMNAMES = dimnames(y), ...)
+        new(
+          paste(subclass, "missing_data.frame", sep = "_"),
+          variables = variables,
+          DIMNAMES = dimnames(y),
+          ...
+        )
       }
     }
 )
@@ -215,20 +220,37 @@ setMethod("show", "missing_data.frame",
       for (i in 2:k) {
         df <- rbind(df, .show_helper(object@variables[[i]]))
       }
-      df1 <- cbind(df[, 1:3], model = unlist(sapply(object@variables, FUN = function(y) .default_model(y, object))))
+      df1 <- cbind(
+        df[, 1:3],
+        model = unlist(sapply(object@variables, FUN = function(y) .default_model(y, object)))
+      )
       if (is(object, "experiment_missing_data.frame")) df1$concept[names(object@concept)] <- object@concept
       df2 <- df[, -c(1:3)]
-      cat("Object of class", class(object), "with", nrow(object), "observations on", ncol(object), "variables\n")
+      cat(
+        "Object of class",
+        class(object),
+        "with",
+        nrow(object),
+        "observations on",
+        ncol(object),
+        "variables\n"
+      )
       if (length(object@patterns)) {
         npatterns <- nlevels(object@patterns)
         cat("\nThere are", npatterns, "missing data patterns\n")
-        cat("\nAppend '@patterns' to this", class(object), "to access the corresponding pattern for every observation or perhaps use table()\n\n")
+        cat(
+          "\nAppend '@patterns' to this",
+          class(object),
+          "to access the corresponding pattern for every observation or perhaps use table()\n\n"
+        )
       }
       print(df1)
       cat("\n")
       print(df2)
       if (any(df1$model == "****", na.rm = TRUE)) {
-        cat("\n**** The model lacks a widely-recognized name but is determined by the chosen type, family, and link.\n")
+        cat(
+          "\n**** The model lacks a widely-recognized name but is determined by the chosen type, family, and link.\n"
+        )
       }
       invisible(NULL)
     }

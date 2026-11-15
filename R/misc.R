@@ -65,7 +65,11 @@ mi2BUGS <-
   function(imputations, statistic = c("moments", "imputations", "parameters")) {
     if (is(imputations, "mi_list")) {
       return(lapply(imputations, FUN = mi2BUGS, statistic = statistic))
-    } else if (!is(imputations, "mi")) stop("imputations must be an object of class 'mi' or 'mi_list'")
+    } else if (!is(imputations, "mi")) {
+      stop(
+        "imputations must be an object of class 'mi' or 'mi_list'"
+      )
+    }
 
     statistic <- match.arg(statistic)
     if (statistic == "moments") {
@@ -73,12 +77,24 @@ mi2BUGS <-
       mark <- !imputations@data[[1]]@no_missing &
         !sapply(imputations@data[[1]]@variables, is, class2 = "irrelevant")
       means <- lapply(1:iterations, FUN = function(m) {
-        matrices <- lapply(imputations@data, FUN = complete, m = m, to_matrix = TRUE, include_missing = FALSE)
+        matrices <- lapply(
+          imputations@data,
+          FUN = complete,
+          m = m,
+          to_matrix = TRUE,
+          include_missing = FALSE
+        )
         out <- sapply(matrices, colMeans)[mark, , drop = FALSE]
         out
       })
       sds <- lapply(1:iterations, FUN = function(m) {
-        matrices <- lapply(imputations@data, FUN = complete, m = m, to_matrix = TRUE, include_missing = FALSE)
+        matrices <- lapply(
+          imputations@data,
+          FUN = complete,
+          m = m,
+          to_matrix = TRUE,
+          include_missing = FALSE
+        )
         out <- sapply(matrices, FUN = function(x) apply(x, 2, sd))[mark, , drop = FALSE]
         out
       })
@@ -97,7 +113,10 @@ mi2BUGS <-
         }
       }
     } else if (statistic == "imputations") {
-      imp_list <- lapply(imputations@data, function(x) lapply(x@variables, function(y) y@imputations))
+      imp_list <- lapply(
+        imputations@data,
+        function(x) lapply(x@variables, function(y) y@imputations)
+      )
       n.parameters <- rapply(imp_list, ncol)
       arr <- array(NA_real_, c(sum(imputations@total_iters), length(imp_list), n.parameters)) ## FIXME: names?
       for (i in seq_along(imp_list)) arr[, i, ] <- unlist(imp_list[[i]])
@@ -117,7 +136,11 @@ mi2stata <-
       stop("imputations must be an object of class 'mi'")
     } else if (!is(file, "character")) {
       stop("filename must be specified as a character object")
-    } else if (type != "dta" & type != "csv") stop("file type must be 'dta' for stata format or 'csv' for comma-separated format")
+    } else if (type != "dta" & type != "csv") {
+      stop(
+        "file type must be 'dta' for stata format or 'csv' for comma-separated format"
+      )
+    }
 
     message(
       "Note: after loading the data into Stata, version 11 or later, type 'mi import ice' ",
@@ -134,11 +157,17 @@ mi2stata <-
 		were imputed.  Values which are still missing but are not indicated are legitimate skips.")
     }
     if (unpos > 0 & missing.ind) {
-      warning("There are legitimately skipped values in the data that were not imputed. Values which are still missing but are not indicated are legitimate skips.")
+      warning(
+        "There are legitimately skipped values in the data that were not imputed. Values which are still missing but are not indicated are legitimate skips."
+      )
     }
 
     data.list <- complete(imputations, m)
-    if (missing.ind) miss.indic <- data.list[[1]][, which(!is.element(colnames(data.list[[1]]), names(imputations@data[[1]]@variables)))]
+    if (missing.ind) {
+      miss.indic <- data.list[[1]][, which(
+        !is.element(colnames(data.list[[1]]), names(imputations@data[[1]]@variables))
+      )]
+    }
     vars <- which(is.element(colnames(data.list[[1]]), names(imputations@data[[1]]@variables)))
 
     stata.data <- data.list[[1]][, vars]
@@ -163,7 +192,15 @@ mi2stata <-
 
     if (type == "dta") {
       foreign::write.dta(stata.data, file = file, version = 7L, ...)
-    } else if (type == "csv") write.table(stata.data, file = file, sep = ",", col.names = TRUE, row.names = FALSE)
+    } else if (type == "csv") {
+      write.table(
+        stata.data,
+        file = file,
+        sep = ",",
+        col.names = TRUE,
+        row.names = FALSE
+      )
+    }
   }
 
 ## Returns the Gelman statistic

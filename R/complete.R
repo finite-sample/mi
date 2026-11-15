@@ -101,7 +101,9 @@ setMethod("complete", signature(y = "missing_data.frame", m = "integer"),
       if (to_matrix) {
         out <- sapply(y@variables, complete, m = m, to_factor = FALSE, transform = FALSE)
       } else {
-        out <- as.data.frame(lapply(y@variables, complete, m = m, to_factor = TRUE, transform = TRUE))
+        out <- as.data.frame(
+          lapply(y@variables, complete, m = m, to_factor = TRUE, transform = TRUE)
+        )
       }
 
       if (is(y, "allcategorical_missing_data.frame")) {
@@ -125,12 +127,29 @@ setMethod("complete", signature(y = "mi", m = "numeric"),
       draws <- sum(y@total_iters)
 
       if (length(m) > 1) {
-        out <- lapply(y@data[m], complete, m = 0L, to_matrix = to_matrix, include_missing = include_missing)
+        out <- lapply(
+          y@data[m],
+          complete,
+          m = 0L,
+          to_matrix = to_matrix,
+          include_missing = include_missing
+        )
       } else if (m == 1) {
-        out <- complete(y@data[[1]], m = 0L, to_matrix = to_matrix, include_missing = include_missing)
+        out <- complete(
+          y@data[[1]],
+          m = 0L,
+          to_matrix = to_matrix,
+          include_missing = include_missing
+        )
       } # not a list
       else if (m <= l) {
-        out <- lapply(y@data[1:m], complete, m = 0L, to_matrix = to_matrix, include_missing = include_missing)
+        out <- lapply(
+          y@data[1:m],
+          complete,
+          m = 0L,
+          to_matrix = to_matrix,
+          include_missing = include_missing
+        )
       } else { # wants more completed datasets than chains
         quotient <- m %/% l
         remainder <- m %% l
@@ -139,7 +158,12 @@ setMethod("complete", signature(y = "mi", m = "numeric"),
         count <- 1
         for (i in seq_along(y@data)) {
           if (num[i] == 1) {
-            out[[count]] <- complete(y@data[[i]], m = 0L, to_matrix = to_matrix, include_missing = include_missing)
+            out[[count]] <- complete(
+              y@data[[i]],
+              m = 0L,
+              to_matrix = to_matrix,
+              include_missing = include_missing
+            )
             count <- count + 1
           } else { # double-dip from a chain
             SEQ <- seq(from = ceiling(draws / 2), to = draws, length.out = num[i])
@@ -170,7 +194,13 @@ setMethod("complete", signature(y = "mi", m = "missing"),
 setMethod("complete", signature(y = "mi_list", m = "numeric"),
   def =
     function(y, m = length(y[[1]]), to_matrix = FALSE, include_missing = TRUE) {
-      temp <- lapply(y, FUN = complete, m = m, to_matrix = to_matrix, include_missing = include_missing)
+      temp <- lapply(
+        y,
+        FUN = complete,
+        m = m,
+        to_matrix = to_matrix,
+        include_missing = include_missing
+      )
       dfs <- temp[[1]]
       if (length(m) == 1 && m == 1 && length(temp) > 1) {
         for (i in 2:length(temp)) {

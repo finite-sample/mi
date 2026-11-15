@@ -17,7 +17,9 @@
 
 ## these change the imputation method
 
-setMethod("change_imputation_method", signature(data = "missing", y = "missing_variable", to = "character"),
+setMethod(
+  "change_imputation_method",
+  signature(data = "missing", y = "missing_variable", to = "character"),
   def =
     function(y, to) {
       to <- match.arg(tolower(to), getClass(class(y))@prototype@imputation_method)
@@ -27,7 +29,9 @@ setMethod("change_imputation_method", signature(data = "missing", y = "missing_v
     }
 )
 
-setMethod("change_imputation_method", signature(data = "missing", y = "missing_variable", to = "missing"),
+setMethod(
+  "change_imputation_method",
+  signature(data = "missing", y = "missing_variable", to = "missing"),
   def =
     function(y, to) {
       cat("Possible methods include:", getClass(class(y))@prototype@imputation_method, sep = "\n")
@@ -35,7 +39,9 @@ setMethod("change_imputation_method", signature(data = "missing", y = "missing_v
     }
 )
 
-setMethod("change_imputation_method", signature(data = "missing_data.frame", y = "character", to = "character"),
+setMethod(
+  "change_imputation_method",
+  signature(data = "missing_data.frame", y = "character", to = "character"),
   def =
     function(data, y, to) {
       if (all(y %in% c("missing_variable", names(getClass("missing_variable")@subclasses)))) {
@@ -62,7 +68,9 @@ setMethod("change_imputation_method", signature(data = "missing_data.frame", y =
     }
 )
 
-setMethod("change_imputation_method", signature(data = "missing_data.frame", y = "numeric", to = "character"),
+setMethod(
+  "change_imputation_method",
+  signature(data = "missing_data.frame", y = "numeric", to = "character"),
   def =
     function(data, y, to) {
       if (length(to) == 1) {
@@ -75,7 +83,9 @@ setMethod("change_imputation_method", signature(data = "missing_data.frame", y =
     }
 )
 
-setMethod("change_imputation_method", signature(data = "missing_data.frame", y = "logical", to = "character"),
+setMethod(
+  "change_imputation_method",
+  signature(data = "missing_data.frame", y = "logical", to = "character"),
   def =
     function(data, y, to) {
       if (length(y) != data@DIM[2]) {
