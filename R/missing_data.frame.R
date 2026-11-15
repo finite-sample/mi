@@ -224,7 +224,12 @@ setMethod("show", "missing_data.frame",
         df[, 1:3],
         model = unlist(sapply(object@variables, FUN = function(y) .default_model(y, object)))
       )
-      if (is(object, "experiment_missing_data.frame")) df1$concept[names(object@concept)] <- object@concept
+      if (is(
+        object,
+        "experiment_missing_data.frame"
+      )) {
+        df1$concept[names(object@concept)] <- object@concept
+      }
       df2 <- df[, -c(1:3)]
       cat(
         "Object of class",
@@ -249,7 +254,8 @@ setMethod("show", "missing_data.frame",
       print(df2)
       if (any(df1$model == "****", na.rm = TRUE)) {
         cat(
-          "\n**** The model lacks a widely-recognized name but is determined by the chosen type, family, and link.\n"
+          "\n**** The model lacks a widely-recognized name but is determined by the chosen type,",
+          "family, and link.\n"
         )
       }
       invisible(NULL)

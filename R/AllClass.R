@@ -202,7 +202,7 @@ setMethod("initialize", "missing_variable",
         }
       }
       NAs <- which(is.na(.Object@data))
-      if (length(NAs)) .Object@imputation_method <- "ppd" else .Object@imputation_method <- NA_character_
+      .Object@imputation_method <- if (length(NAs)) "ppd" else NA_character_
       .Object@n_miss <- length(NAs)
       .Object@which_miss <- NAs
       notNAs <- which(!is.na(.Object@data))
@@ -617,7 +617,12 @@ setClass("count", representation("missing_variable"),
 .identity_transform <- function(y, ...) {
   y
 }
-.standardize_transform <- function(y, mean = stop("must supply mean"), sd = stop("must supply sd"), inverse = FALSE) {
+.standardize_transform <- function(
+  y,
+  mean = stop("must supply mean"),
+  sd = stop("must supply sd"),
+  inverse = FALSE
+) {
   if (inverse) {
     y * 2 * sd + mean
   } else {
@@ -994,7 +999,8 @@ setMethod("initialize", "SC_proportion",
 # that its "columns" (actually list elements) are objects that inherit from the missing_variable
 # class. The missing_data.frame class should, in principle, contain ALL the necessary information
 # regarding how the missing_variables relate to each other. Together, the missing_variable class(es)
-# and the missing_data.frame class supplant the mi.info S4 class in previous versions of library(mi).
+# and the missing_data.frame class supplant the mi.info S4 class in previous versions of
+# library(mi).
 
 .get_slot <-
   function(object, name, simplify = TRUE) {
@@ -1040,7 +1046,10 @@ setClass("missing_data.frame",
     }
 
     if (!all(sapply(object@variables, FUN = is, class2 = "missing_variable"))) {
-      out <- "all of the list elements in 'variables' must inherit from the 'missing_variable' class"
+      out <- paste(
+        "all of the list elements in 'variables' must inherit from",
+        "the 'missing_variable' class"
+      )
     } else if (length(unique(.get_slot(object@variables, "n_total"))) > 1) {
       out <- "all missing_variables must have the same 'n_total'"
     } else if (!is.numeric(object@X)) {
@@ -1078,14 +1087,16 @@ setClass("missing_data.frame",
       } else if (any(dupes == 2L)) {
         temp <- matrix(names(missingness)[combos[, which(dupes == 2L)]], ncol = 2, byrow = TRUE)
         cat(
-          "NOTE: In the following pairs of variables, the missingness pattern of the second is a subset of the first.\n",
+          "NOTE: In the following pairs of variables, the missingness pattern of the second",
+          "is a subset of the first.\n",
           "Please verify whether they are in fact logically distinct variables.\n"
         )
         print(temp)
       } else if (any(dupes == 3L)) {
         temp <- matrix(names(missingness)[combos[, which(dupes == 3L)]], ncol = 2, byrow = TRUE)
         cat(
-          "NOTE: In the following pairs of variables, the missingness pattern of the first is a subset of the second.\n",
+          "NOTE: In the following pairs of variables, the missingness pattern of the first",
+          "is a subset of the second.\n",
           "Please verify whether they are in fact logically distinct variables.\n"
         )
         print(temp)
@@ -1371,7 +1382,13 @@ setMethod("initialize", "experiment_missing_data.frame",
       outcomes <- any(!.Object@no_missing[.Object@concept == "outcomes"])
       covariates <- any(!.Object@no_missing[.Object@concept == "covariates"])
 
-      .Object@case <- if (outcomes & covariates) "both" else if (outcomes) "covariates" else "outcomes"
+      .Object@case <- if (outcomes && covariates) {
+        "both"
+      } else if (outcomes) {
+        "covariates"
+      } else {
+        "outcomes"
+      }
       .Object
     }
 )
@@ -1404,7 +1421,8 @@ setMethod("initialize", "multilevel_missing_data.frame",
     }
 )
 
-## an object of class mi merely holds the results of a call to mi(), primary the list of missing_data.frames
+## an object of class mi merely holds the results of a call to mi(), primary the list of
+## missing_data.frames
 setClass(
   "mi",
   representation(

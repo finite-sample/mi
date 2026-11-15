@@ -15,7 +15,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-## these are convenience functions that implicitly change something else by changing the model buzzword
+## these are convenience functions that implicitly change something else by changing the model
+## buzzword
 
 setMethod("change_model", signature(data = "missing", y = "missing_variable", to = "character"),
   def =

@@ -24,7 +24,8 @@ setMethod("fit_model", signature(y = "missing_variable", data = "missing_data.fr
   def =
     function(y, data, s, warn, ...) {
       stop(
-        "This method should not have been called. You need to define the relevant fit_model() S4 method"
+        "This method should not have been called. ",
+        "You need to define the relevant fit_model() S4 method"
       )
     }
 )
@@ -62,7 +63,11 @@ setMethod("fit_model", signature(y = "binary", data = "missing_data.frame"),
         start <- NULL
       }
       start <- NULL
-      weights <- if (length(data@weights) == 1) data@weights[[1]] else data@weights[[y@variable_name]]
+      weights <- if (length(data@weights) == 1) {
+        data@weights[[1]]
+      } else {
+        data@weights[[y@variable_name]]
+      }
       CONTROL <- list(epsilon = max(1e-8, exp(-abs(s))), maxit = 25, trace = FALSE)
       priors <- data@priors[[y@variable_name]]
       out <- bayesglm.fit(X, y@data - 1L,
@@ -134,7 +139,11 @@ setMethod("fit_model", signature(y = "unordered-categorical", data = "missing_da
           X <- cbind(X, interaction = X * data@variables[[treatment]]@data)
         }
       }
-      weights <- if (length(data@weights) == 1) data@weights[[1]] else data@weights[[y@variable_name]]
+      weights <- if (length(data@weights) == 1) {
+        data@weights[[1]]
+      } else {
+        data@weights[[y@variable_name]]
+      }
       if (y@estimator == "MNL") {
         out <- .fit_MNL(y, X, weights)
         data@X
@@ -171,10 +180,15 @@ setMethod("fit_model", signature(y = "unordered-categorical", data = "missing_da
 setMethod("fit_model", signature(y = "grouped-binary", data = "missing_data.frame"),
   def =
     function(y, data, s, warn) {
-      # see http://www.stata.com/support/faqs/stat/clogitcl.html for a good explanation of this model
+      # see http://www.stata.com/support/faqs/stat/clogitcl.html for a good explanation of this
+      # model
       to_drop <- data@index[[y@variable_name]]
       X <- data@X[, -to_drop]
-      weights <- if (length(data@weights) == 1) data@weights[[1]] else data@weights[[y@variable_name]]
+      weights <- if (length(data@weights) == 1) {
+        data@weights[[1]]
+      } else {
+        data@weights[[y@variable_name]]
+      }
       groups <- sapply(
         y@strata,
         FUN = function(x) complete(data@variables[[x]], m = 0L),
@@ -214,7 +228,11 @@ setMethod("fit_model", signature(y = "ordered-categorical", data = "missing_data
       start <- NULL
       start <- c(rep(0, ncol(X)), qlogis(cumsum(table(y@data)) / nrow(X)))
       start <- start[-length(start)]
-      weights <- if (length(data@weights) == 1) data@weights[[1]] else data@weights[[y@variable_name]]
+      weights <- if (length(data@weights) == 1) {
+        data@weights[[1]]
+      } else {
+        data@weights[[y@variable_name]]
+      }
       CONTROL <- list(reltol = max(1e-8, exp(-abs(s))))
       priors <- data@priors[[y@variable_name]]
       out <- bayespolr(as.ordered(y@data) ~ X,
@@ -265,7 +283,8 @@ setMethod("fit_model", signature(y = "interval", data = "missing_data.frame"),
         stop(
           paste(
             y@variable_name,
-            ": imputed values on iteration 0 randomly inadmissible; try mi() again with different seed"
+            ": imputed values on iteration 0 randomly inadmissible;",
+            "try mi() again with different seed"
           )
         )
       }
@@ -387,7 +406,8 @@ setMethod("fit_model", signature(y = "SC_proportion", data = "missing_data.frame
         stop(
           paste(
             y@variable_name,
-            ": imputed values on iteration 0 randomly inadmissible; try mi() again with a different seed"
+            ": imputed values on iteration 0 randomly inadmissible;",
+            "try mi() again with a different seed"
           )
         )
       }
@@ -462,7 +482,8 @@ setMethod("fit_model", signature(y = "continuous", data = "experiment_missing_da
         treatment_name <- names(data@concept[data@concept == "treatment"])
         X <- cbind(
           X,
-          interaction = X[, !(colnames(X) %in% c("(Intercept)", treatment_name))] * X[, treatment_name]
+          interaction =
+            X[, !(colnames(X) %in% c("(Intercept)", treatment_name))] * X[, treatment_name]
         )
       } else if (data@case == "covariates") { # missingness on covariate(s) only
         to_drop <- c(to_drop, which(data@concept == "treatment"))

@@ -23,9 +23,17 @@ setMethod("hist", signature(x = "missing_variable"),
       NAs <- is.na(x)
 
       h_all <- hist(y, plot = FALSE)
-      plot(h_all,
-        border = "lightgray", main = "", xlab = if (x@done) "Completed" else "Observed", axes = FALSE,
-        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ...
+      plot(
+        h_all,
+        border = "lightgray",
+        main = "",
+        xlab = if (x@done) "Completed" else "Observed",
+        axes = FALSE,
+        mgp = c(2, 1, 0),
+        tcl = .05,
+        col = if (x@done) "lightgray" else "blue",
+        freq = TRUE,
+        ...
       )
       axis(1, lwd = 0)
       axis(2)
@@ -84,12 +92,21 @@ setMethod("hist", signature(x = "semi-continuous"),
       NAs <- is.na(x)[con]
 
       h_all <- hist(y, plot = FALSE)
-      plot(h_all,
-        freq = TRUE, border = "lightgray", main = "", xlab = if (x@done) "Completed" else "Observed", axes = FALSE,
-        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", xlim = range(
+      plot(
+        h_all,
+        freq = TRUE,
+        border = "lightgray",
+        main = "",
+        xlab = if (x@done) "Completed" else "Observed",
+        axes = FALSE,
+        mgp = c(2, 1, 0),
+        tcl = .05,
+        col = if (x@done) "lightgray" else "blue",
+        xlim = range(
           x@data,
           na.rm = TRUE
-        ), ...
+        ),
+        ...
       )
       axis(1, lwd = 0)
       axis(2)
@@ -192,12 +209,21 @@ setMethod("hist", signature(x = "categorical"),
       NAs <- is.na(x)
 
       h_all <- hist(y, breaks, plot = FALSE)
-      plot(h_all,
-        border = "lightgray", axes = FALSE, main = "", xlab = if (x@done) "Completed" else "Observed",
-        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ylim = range(
+      plot(
+        h_all,
+        border = "lightgray",
+        axes = FALSE,
+        main = "",
+        xlab = if (x@done) "Completed" else "Observed",
+        mgp = c(2, 1, 0),
+        tcl = .05,
+        col = if (x@done) "lightgray" else "blue",
+        freq = TRUE,
+        ylim = range(
           h_all$counts,
           na.rm = TRUE
-        ), ...
+        ),
+        ...
       )
       axis(1, at = values, labels = levels(x@raw_data), lwd = 0)
       axis(2)
@@ -261,12 +287,21 @@ setMethod("hist", signature(x = "binary"),
       NAs <- is.na(x)
 
       h_all <- hist(y, breaks, plot = FALSE)
-      plot(h_all,
-        border = "lightgray", axes = FALSE, main = "", xlab = if (x@done) "Completed" else "Observed",
-        mgp = c(2, 1, 0), tcl = .05, col = if (x@done) "lightgray" else "blue", freq = TRUE, ylim = range(
+      plot(
+        h_all,
+        border = "lightgray",
+        axes = FALSE,
+        main = "",
+        xlab = if (x@done) "Completed" else "Observed",
+        mgp = c(2, 1, 0),
+        tcl = .05,
+        col = if (x@done) "lightgray" else "blue",
+        freq = TRUE,
+        ylim = range(
           h_all$counts,
           na.rm = TRUE
-        ), ...
+        ),
+        ...
       )
       axis(1, at = values, lwd = 0)
       axis(2)

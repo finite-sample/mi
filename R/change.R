@@ -22,8 +22,6 @@ setMethod(
     function(data, y, to, what, ...) {
       if (length(what) > 1) stop("'what' must have length one")
 
-      #   what <- match.arg(what, c("family", "imputation_method", "model", "size", "transformation",
-      #                             "type", "class", "link", "method"))
       if (what == "class") what <- "type"
       if (what == "method") what <- "imputation_method"
 

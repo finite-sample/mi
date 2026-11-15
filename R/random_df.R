@@ -111,8 +111,10 @@
 
     # partially observed variables have arbitrary CPCs among themselves
     # but are conditionally uncorrelated with all missingness indicators under MAR
-    # note: we condition on all fully observed variables and all previous partially observed variables
-    # this triangle scheme implies that the errors when predicting the partially observed variables are uncorrelated
+    # note: we condition on all fully observed variables and all previous partially observed
+    # variables
+    # this triangle scheme implies that the errors when predicting the partially observed variables
+    # are uncorrelated
     if (n_full >= 2) start <- end + 1
     end <- start + n_partial - 1
     if (nom) end <- end - length(n_cat)
@@ -135,7 +137,8 @@
       }
     }
 
-    # if there are nominal partially observed variables, make the category residuals uncorrelated (MNL assumption)
+    # if there are nominal partially observed variables, make the category residuals uncorrelated
+    # (MNL assumption)
     if (nom) {
       # if(n_full >= 2)
       start <- end + 1
@@ -158,7 +161,8 @@
       }
     }
 
-    # missingness indicators can be constructed to be instruments if MAR holds whose strength can be manipulated
+    # missingness indicators can be constructed to be instruments if MAR holds whose strength can be
+    # manipulated
     if (n_partial > 1) {
       start <- end + 1
       end <- n - 1
@@ -345,7 +349,8 @@ rdata.frame <-
     )
     if (any(types[1:n_full] == "nominal")) {
       warning(
-        "fully observed nominal variables not supported, changing them to ordinal without loss of generality"
+        "fully observed nominal variables not supported, ",
+        "changing them to ordinal without loss of generality"
       )
       types <- ifelse(types == "nominal" & seq_along(types) <= n_full, "ordinal", types)
     }
@@ -501,7 +506,8 @@ rdata.frame <-
           if (letter_mark == 1) {
             f_true <- f_true[1:(n_full + n_partial - length(n_cat))]
           } else {
-            f_true <- f_true[1:(n_full + n_partial - length(n_cat) + sum(n_cat[1:(letter_mark - 1)]))]
+            n_keep <- n_full + n_partial - length(n_cat) + sum(n_cat[1:(letter_mark - 1)])
+            f_true <- f_true[1:n_keep]
           }
           f_true <- paste(f_true, collapse = " + ")
           n_var <- paste(letters[letter_mark], j, sep = "_")
@@ -635,9 +641,8 @@ fmin <-
     omega <- exp(theta[1:n]) # standard deviations of the implicit Omega matrix
     O.cor <- make_O.cor(theta[-(1:n)])
     alphaTO.cor <- alpha %*% O.cor
-    Sigma_proposed <- (O.cor - 2 / (pi * c(1 + alphaTO.cor %*% alpha)) * crossprod(alphaTO.cor)) * tcrossprod(
-      omega
-    )
+    shrink <- 2 / (pi * c(1 + alphaTO.cor %*% alpha))
+    Sigma_proposed <- (O.cor - shrink * crossprod(alphaTO.cor)) * tcrossprod(omega)
     if (final) {
       return(Sigma_proposed)
     }
@@ -669,7 +674,8 @@ LDLt <-
     list(L = L, D = D)
   }
 
-## this function makes plausible starting values (basically treating alpha is if it were a zero vector)
+## this function makes plausible starting values (basically treating alpha is if it were a zero
+## vector)
 make_start <-
   function(Sigma) {
     log_omega <- log(sqrt(diag(Sigma)))

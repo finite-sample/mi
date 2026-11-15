@@ -182,7 +182,12 @@ setMethod(
   "change_transformation",
   signature(data = "missing_data.frame", y = "character", to = "function"),
   def =
-    function(data, y, to, inverse = stop("you must specify 'inverse = FALSE' or 'inverse = TRUE'")) {
+    function(
+      data,
+      y,
+      to,
+      inverse = stop("you must specify 'inverse = FALSE' or 'inverse = TRUE'")
+    ) {
       if (all(y %in% c("continuous", names(getClass("continuous")@subclasses)))) {
         classes <- sapply(data@variables, class)
         y <- c(sapply(y, FUN = function(x) {

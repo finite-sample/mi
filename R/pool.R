@@ -84,7 +84,9 @@ pool <-
       } else if (is(y, "ordered-categorical")) {
         FUN <- arm::bayespolr
         fit <- "bayespolr"
-        if (!("method" %in% names(dots))) dots$method <- if (y@family$link == "logit") "logistic" else y@family$link
+        if (!("method" %in% names(dots))) {
+          dots$method <- if (y@family$link == "logit") "logistic" else y@family$link
+        }
       }
     } else if (!is(FUN, "function")) {
       stop("'FUN' must be a function or NULL")

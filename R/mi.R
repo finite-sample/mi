@@ -104,7 +104,18 @@
   mdf
 }
 
-.mi_split <- function(i, y, data, verbose, s_start, s_end, ProcStart, max.minutes, parallel, save_models) {
+.mi_split <- function(
+  i,
+  y,
+  data,
+  verbose,
+  s_start,
+  s_end,
+  ProcStart,
+  max.minutes,
+  parallel,
+  save_models
+) {
   mdf <- y
   if (verbose) message("Chain ", i, "\n")
   data@priors <- mdf@priors
@@ -205,10 +216,6 @@ setMethod("mi", signature(y = "missing_data.frame", model = "missing"),
           }
         )
       }
-      #
-      #     else mdfs <- mclapply(as.list(1:n.chains),
-      #                           FUN = function(i) .mi(i, y, verbose, s_start, s_end,
-      #                                                 ProcStart, max.minutes, parallel, save_models))
 
 
       names(mdfs) <- paste("chain", seq_along(mdfs), sep = ":")
@@ -312,9 +319,6 @@ setMethod(
         }
       )
     }
-    #             else mdfs <- mclapply(as.list(1:n.chains),
-    #                                   FUN = function(i) .mi(i, y, verbose, s_start, s_end,
-    #                                                         ProcStart, max.minutes, parallel, save_models))
 
     object <- new("mi",
       call        = call,
@@ -365,9 +369,6 @@ setMethod("mi", signature(y = "missing_data.frame", model = "mi"),
           }
         )
       }
-      #     else mdfs <- mclapply(as.list(1:n.chains),
-      #                           FUN = function(i) .mi_split(i, y, mdfs[[i]], verbose, s_start, s_end,
-      #                                                 ProcStart, max.minutes, parallel, save_models))
 
       names(mdfs) <- paste("chain", seq_along(mdfs), sep = ":")
 
@@ -410,7 +411,8 @@ setMethod("mi", signature(y = "list", model = "missing"),
         stop("all elements of 'y' must be mi objects or missing_data.frame objects")
       }
 
-      ## FIXME: should probably check that all the mi objects are based on the same missing_data.frame
+      ## FIXME: should probably check that all the mi objects are based on the same
+      ## missing_data.frame
       mdfs <- lapply(mi, FUN = function(x) {
         x@data
       })
@@ -1030,22 +1032,6 @@ setMethod("mi", signature(y = "continuous", model = "glm"),
     }
 )
 
-# setMethod("mi", signature(y = "censored-continuous", model = "glm"), def =
-# function(y, model, s, ...) {
-#   if(y@imputation_method == "ppd") {
-#   }
-#   else if(y@imputation_method == "pmm") {
-#     draws <- sapply(eta[nob_obs], FUN = function(x) {
-#                    })
-#   }
-#   else if(y@imputation_method == "mean") {
-#   }
-#   else if(y@imputation_method == "median") {
-#   }
-#   else if(y@imputation_method == "expectation") draws <- predict(model, type = "response")[not_obs]
-#   else stop("'imputation_method' not recognized")
-#
-# })
 
 setMethod("mi", signature(y = "semi-continuous", model = "glm"),
   def =

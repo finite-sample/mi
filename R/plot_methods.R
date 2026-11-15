@@ -190,8 +190,13 @@ setMethod("image", signature(x = "missing_data.frame"),
       n0 <- min(nn, max(0, round((0 - rx[1]) / (rx[2] - rx[1]) * nn)))
       col.regions <- heat.colors(17)
       breaks <- seq(from = rx[1] - 1e-8, to = rx[2] + 1e-8, length.out = 16)
-      plot(image(X,
-        aspect = "fill", xlab = "Standardized Variable", ylab = "Observation Number", sub = sub, at = breaks,
+      plot(image(
+        X,
+        aspect = "fill",
+        xlab = "Standardized Variable",
+        ylab = "Observation Number",
+        sub = sub,
+        at = breaks,
         scales = list(
           x = list(
             at = seq_len(ncol(data)),
@@ -201,7 +206,11 @@ setMethod("image", signature(x = "missing_data.frame"),
             minlength = 8
           )
         ),
-        main = "Dark represents missing data", colorkey = TRUE, col.regions = col.regions, alpha.regions = 1, ...
+        main = "Dark represents missing data",
+        colorkey = TRUE,
+        col.regions = col.regions,
+        alpha.regions = 1,
+        ...
       ))
 
       invisible(NULL)
@@ -210,7 +219,15 @@ setMethod("image", signature(x = "missing_data.frame"),
 
 setMethod("image", signature(x = "mdf_list"),
   def =
-    function(x, y.order = FALSE, x.order = FALSE, clustered = TRUE, grayscale = FALSE, ask = TRUE, ...) {
+    function(
+      x,
+      y.order = FALSE,
+      x.order = FALSE,
+      clustered = TRUE,
+      grayscale = FALSE,
+      ask = TRUE,
+      ...
+    ) {
       if (.Device != "null device") {
         oldask <- grDevices::devAskNewPage(ask = ask)
         if (!oldask) on.exit(grDevices::devAskNewPage(oldask), add = TRUE)
@@ -338,7 +355,15 @@ setMethod("image", signature(x = "mi"),
 
 setMethod("image", signature(x = "mi_list"),
   def =
-    function(x, y.order = FALSE, x.order = FALSE, clustered = TRUE, grayscale = FALSE, ask = TRUE, ...) {
+    function(
+      x,
+      y.order = FALSE,
+      x.order = FALSE,
+      clustered = TRUE,
+      grayscale = FALSE,
+      ask = TRUE,
+      ...
+    ) {
       if (.Device != "null device") {
         oldask <- grDevices::devAskNewPage(ask = ask)
         if (!oldask) on.exit(grDevices::devAskNewPage(oldask), add = TRUE)
@@ -585,7 +610,12 @@ setMethod("plot", signature(x = "mi", y = "ANY"),
         if (is(x@data[[1]]@variables[[i]], "semi-continuous")) {
           for (j in 1:l) plot(x@data[[j]], x@data[[j]]@variables[[i]]@indicator, ...)
           title(
-            main = paste("\n", header, x@data[[1]]@variables[[i]]@indicator@variable_name, sep = ""),
+            main = paste(
+              "\n",
+              header,
+              x@data[[1]]@variables[[i]]@indicator@variable_name,
+              sep = ""
+            ),
             outer = TRUE
           )
         }

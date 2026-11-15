@@ -154,12 +154,16 @@ mi2stata <-
     }))
     if (unpos > 0 & !missing.ind) {
       missing.ind <- TRUE
-      warning("There are legitimately skipped values in the data that were not imputed.  Including variables to indicate which missing values
-		were imputed.  Values which are still missing but are not indicated are legitimate skips.")
+      warning(
+        "There are legitimately skipped values in the data that were not imputed.  ",
+        "Including variables to indicate which missing values\n\t\twere imputed.  ",
+        "Values which are still missing but are not indicated are legitimate skips."
+      )
     }
     if (unpos > 0 & missing.ind) {
       warning(
-        "There are legitimately skipped values in the data that were not imputed. Values which are still missing but are not indicated are legitimate skips."
+        "There are legitimately skipped values in the data that were not imputed. ",
+        "Values which are still missing but are not indicated are legitimate skips."
       )
     }
 
@@ -228,7 +232,8 @@ Rhats <-
     }
   }
 
-## tests whether a method is the one defined in my (as opposed to a user-defined method in .GlobalEnv)
+## tests whether a method is the one defined in my (as opposed to a user-defined method in
+## .GlobalEnv)
 is.method_in_mi <-
   function(generic, ...) {
     method <- selectMethod(generic, signature(...))
