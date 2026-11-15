@@ -28,7 +28,7 @@ these missing_variables relate to each other.  Most users will never need to cal
 }
 \usage{
 missing_variable(y, type, ...)
-## Hidden arugments not included in the signature:
+## Hidden arguments not included in the signature:
 ## favor_ordered = TRUE, favor_positive = FALSE, 
 ## variable_name = deparse(substitute(y))
 }
@@ -66,12 +66,12 @@ missing_variable(y, type, ...)
   In the following table, indentation indicates inheritance from the class with less indentation, and
   italics indicates that the class is virtual so no variables can be created with that class. Inherited
   classes inherit the transformations, families, link functions, and \code{\link{fit_model-methods}}
-  from their parent class, although these are often superceeded by analogues that are tailored for the
+  from their parent class, although these are often superseded by analogues that are tailored for the
   inherited class. Also note, the default transformation for the continuous class is a standardization 
   using \emph{twice} the standard deviation of the observed values.
 
   The distinction between the transformation entailed by the \code{\link{family}} and the transformation
-  entailed by the function in the \bold{tranformation} slot may be confusing at this point. The former pertains
+  entailed by the function in the \bold{transformation} slot may be confusing at this point. The former pertains
   to how the linear predictor of a variable is mapped to the space of a variable when it is on the left-hand
   side of a generalized linear model. The latter pertains --- for continuous variables only --- to how the
   values in the \bold{raw_data} slot are mapped into those in the \bold{data} and thus affects how a continuous 
@@ -134,7 +134,7 @@ missing_variable(y, type, ...)
        of the unpossible values in the \bold{data} slot } 
     \item{\code{n_drawn}:}{Object of class \code{"integer"} of length one which is the sum of
        the \bold{n_miss} and \bold{n_extra} slots}
-    \item{\code{which_drawn}:}{Object of class \code{"integer"} which is a vector concatinating
+    \item{\code{which_drawn}:}{Object of class \code{"integer"} which is a vector concatenating
        the \bold{which_miss} and \bold{which_extra} slots }
     \item{\code{imputation_method}:}{Object of class \code{"character"} of length one indicating
        how the \code{\link{NA}} values are to be imputed. Possibilities include \dQuote{ppd} for

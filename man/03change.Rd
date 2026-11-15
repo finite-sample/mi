@@ -42,7 +42,7 @@ change_type(data, y, to, ...)
   \item{what}{Typically a character string naming what is to be changed, such
      as \code{"family"}, \code{"imputation_method"}, \code{"size"}, \code{"transformation"}, 
      \code{"type"}, \code{"link"}, or \code{"model"}. Alternatively, it can be a scalar value, 
-     in which case all occurances of that value for the variable indicated by \code{y} will be changed to
+     in which case all occurrences of that value for the variable indicated by \code{y} will be changed to
      the value indicated by \code{to}
 }
   \item{to}{Typically a character string naming what \code{y} should be changed to, 
@@ -54,7 +54,7 @@ change_type(data, y, to, ...)
   \item{\dots}{Other arguments, not currently utilized}
 }
 \details{
-In order to run \code{\link{mi}} correctly, data must first be specified to be ready for multiple imputation using the \code{\link{missing_data.frame}} function.  For each variable, \code{missing_data.frame} will record information required by \code{mi}: the variable's type, distribution family, and link function; whether a variable should be standardized or tranformed by a log function or square root; what specific model to use for the conditional distribution of the variable in the \code{mi} algorithm and how to draw imputed values from this model; and whether additional rows (for the purposes of prediction) are required. \code{missing_data.frame} will attempt to guess the correct type, family, and link for each variable based on its class in a regular \code{data.frame}.  These guesses can be checked with \code{show} and adjusted if necessary with \code{change}.  Any further additions to the model in regards to variable transformations, custom conditional models, or extra non-observed predictive cases must be specified with \code{change} before \code{mi} is run.
+In order to run \code{\link{mi}} correctly, data must first be specified to be ready for multiple imputation using the \code{\link{missing_data.frame}} function.  For each variable, \code{missing_data.frame} will record information required by \code{mi}: the variable's type, distribution family, and link function; whether a variable should be standardized or transformed by a log function or square root; what specific model to use for the conditional distribution of the variable in the \code{mi} algorithm and how to draw imputed values from this model; and whether additional rows (for the purposes of prediction) are required. \code{missing_data.frame} will attempt to guess the correct type, family, and link for each variable based on its class in a regular \code{data.frame}.  These guesses can be checked with \code{show} and adjusted if necessary with \code{change}.  Any further additions to the model in regards to variable transformations, custom conditional models, or extra non-observed predictive cases must be specified with \code{change} before \code{mi} is run.
 
 In general, most users will only use the \code{change} command.  \code{change} will then call \code{change_family}, \code{change_imputation_method}, \code{change_link}, \code{change_model}, \code{change_size}, \code{change_transformation}, or \code{change_type} depending on what characteristic is specified with the \code{what} option. The other change_* functions can be called directly but are primarily intended to be called indirectly by the change function.
 
@@ -75,7 +75,7 @@ In general, most users will only use the \code{change} command.  \code{change} w
 the same length as \code{y} indicating what transformation function to use. Valid choices are \code{"identity"} for no transformation, \code{"standardize"} for standardization (using twice the standard deviation of the observed values), \code{"log"} for natural logarithm transformation, \code{"logshift"} for a \code{log(y + a)} transformation where \code{a} is a small constant, or \code{"sqrt"} for square-root transformation. Changing the transformation will also change the inverse transformation in the appropriate way. Any other value of \code{to} will produce an informative error message indicating that the transformation and inverse transformation need to be changed manually.}
 
 \item{what = a value}{Finally, if both \code{what} and \code{to} are values then the former is recoded to the latter for all
-occurances within the missing variable indicated by \code{y}.}
+occurrences within the missing variable indicated by \code{y}.}
 }
 }
 \value{

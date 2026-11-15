@@ -24,7 +24,7 @@ data are longitudinal, this extract is not.
     \item{\code{momrace}}{race of mother (1 = black, 2 = Hispanic, 3 = white)}
   }
   Note that \bold{momed} would typically be an ordered \code{\link{factor}} while \bold{momrace}
-  would typically be an unorderd \code{\link{factor}} but both are \code{\link{numeric}} in this
+  would typically be an unordered \code{\link{factor}} but both are \code{\link{numeric}} in this
   \code{\link{data.frame}} in order to illustrate the mechanism to \code{\link{change}} the
   type of a \code{\link{missing_variable}}
 }

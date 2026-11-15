@@ -83,7 +83,7 @@ missing_data.frame(y, ...)
        of zero, which should drop them when modeling some \code{\link{missing_variable}}s}
     \item{\code{priors}:}{Object of class \code{"list"} whose length is equal to the number
        of \code{\link{missing_variable}}s and whose elements give appropriate values for
-       the priors used by the model fitting function wraped by the \code{\link{fit_model-methods}}; 
+       the priors used by the model fitting function wrapped by the \code{\link{fit_model-methods}}; 
        see, e.g., \code{\link[arm]{bayesglm}}}
     \item{\code{correlations}:}{Object of class \code{"matrix"} with rows and
         columns equal to the length of the \bold{variables} slot. Its strict upper
@@ -109,7 +109,7 @@ nature of the column of the \code{\link{data.frame}} and various fallible heuris
 success rate can be enhanced by making sure that columns of the original 
 \code{\link{data.frame}} that are intended to be categorical variables are 
 (ordered if appropriate) \code{\link{factor}}s with labels. Even in the best case
-scenario, it will often be necessary to utlize the \code{\link{change}} function to 
+scenario, it will often be necessary to utilize the \code{\link{change}} function to 
 modify various discretionary aspects of the \code{\link{missing_variable}}s in the 
 \bold{variables} slot of the missing_data.frame. The \code{\link{show}} method for
 a missing_data.frame should be utilized to get a quick overview of the 
