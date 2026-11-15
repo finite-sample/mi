@@ -5,7 +5,18 @@ authors' own `CHANGELOG` file, available in those CRAN source tarballs.
 
 # mi 1.3.2
 
-- (in preparation)
+- Fixed the check failure on R-devel. R-devel (PR#17944) runs a parent
+  class's validity method on the subclass object itself, so
+  `missing_variable`'s check that every slot holds at most one value also
+  inspected subclass slots that hold one value per observation, such as the
+  `strata` of `grouped-binary`. `missing_variable()` and
+  `missing_data.frame()` then failed with "length of strata must be 0 or 1"
+  or "argument is of length zero". The check now covers only
+  `missing_variable`'s own slots.
+- Added a regression test (`tests/validity_subclass.R`) that emulates the
+  R-devel behaviour on any R version.
+- `rmarkdown` is now listed in Suggests; the vignette engine needs it.
+- DESCRIPTION gains URL and BugReports links to the GitHub repository.
 
 # mi 1.3.1 (2026-07-28)
 
