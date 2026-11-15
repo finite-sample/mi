@@ -110,7 +110,7 @@ setMethod("change_model", signature(data = "missing_data.frame", y = "character"
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
       check <- FALSE
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         categorical <- is(data@variables[[y[i]]], "categorical")
         data@variables[[y[i]]] <- change_model(y = data@variables[[y[i]]], to = to[i])
         if (categorical & !is(data@variables[[y[i]]], "categorical")) check <- TRUE
@@ -130,7 +130,7 @@ setMethod("change_model", signature(data = "missing_data.frame", y = "numeric", 
       if (length(to) == 1) {
         to <- rep(to, length(y))
       } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         categorical <- is(data@variables[[y[i]]], "categorical")
         data@variables[[y[i]]] <- change_model(y = data@variables[[y[i]]], to = to[[i]])
         if (categorical & !is(data@variables[[y[i]]], "categorical")) check <- TRUE

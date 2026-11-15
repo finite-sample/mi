@@ -75,7 +75,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "character
         #       else y <- y[1]
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         #     link <- data@variables[[y[i]]]@family$link
         if (i <= length(to)) fam <- do.call(to[i], args = list())
         data@variables[[y[i]]] <- change_family(y = data@variables[[y[i]]], to = fam)
@@ -99,7 +99,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "character
         #       else y <- y[1]
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y[i]]] <- change_family(y = data@variables[[y[i]]], to = to[[i]])
       }
       invisible(data)
@@ -116,7 +116,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "character
         }))
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y[i]]] <- change_family(y = data@variables[[y[i]]], to = to)
       }
       invisible(data)
@@ -129,7 +129,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "numeric",
       if (length(to) == 1) {
         to <- rep(to, length(y))
       } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y]] <- change_family(y = data@variables[[y]], to = do.call(to[i], args = list(...)))
       }
       invisible(data)
@@ -142,7 +142,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "numeric",
       if (length(to) == 1) {
         to <- rep(to, length(y))
       } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y]] <- change_family(y = data@variables[[y]], to = to[[i]])
       }
       invisible(data)
@@ -152,7 +152,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "numeric",
 setMethod("change_family", signature(data = "missing_data.frame", y = "numeric", to = "family"),
   def =
     function(data, y, to) {
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y]] <- change_family(y = data@variables[[y]], to = to)
       }
       invisible(data)

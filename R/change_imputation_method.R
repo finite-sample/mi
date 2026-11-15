@@ -55,7 +55,7 @@ setMethod("change_imputation_method", signature(data = "missing_data.frame", y =
       if (length(to) == 1) {
         to <- rep(to, length(y))
       } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y[i]]] <- change_imputation_method(y = data@variables[[y[i]]], to = to[i])
       }
       data
@@ -68,7 +68,7 @@ setMethod("change_imputation_method", signature(data = "missing_data.frame", y =
       if (length(to) == 1) {
         to <- rep(to, length(y))
       } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y]] <- change_imputation_method(y = data@variables[[y]], to = to[i])
       }
       data

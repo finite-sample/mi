@@ -76,7 +76,7 @@ setMethod("get_parameters", signature(object = "mi"),
       out <- array(NA_real_, c(dims[1], length(mini_list), dims[2]),
         dimnames = list(NULL, NULL, colnames(mini_list[[1]]))
       )
-      for (i in 1:NCOL(out)) out[, i, ] <- mini_list[[i]]
+      for (i in seq_len(NCOL(out))) out[, i, ] <- mini_list[[i]]
       out
     }
 )

@@ -199,7 +199,7 @@ setMethod("mi", signature(y = "missing_data.frame", model = "missing"),
       #                                                 ProcStart, max.minutes, parallel, save_models))
 
 
-      names(mdfs) <- paste("chain", 1:length(mdfs), sep = ":")
+      names(mdfs) <- paste("chain", seq_along(mdfs), sep = ":")
 
       object <- new("mi",
         call        = call,
@@ -351,9 +351,9 @@ setMethod("mi", signature(y = "missing_data.frame", model = "mi"),
       #                           FUN = function(i) .mi_split(i, y, mdfs[[i]], verbose, s_start, s_end,
       #                                                 ProcStart, max.minutes, parallel, save_models))
 
-      names(mdfs) <- paste("chain", 1:length(mdfs), sep = ":")
+      names(mdfs) <- paste("chain", seq_along(mdfs), sep = ":")
 
-      to_drop <- 1:ncol(model@data[[1]]@X)
+      to_drop <- seq_len(ncol(model@data[[1]]@X))
       for (i in 1:n.chains) {
         model@data[[i]]@variables <- c(model@data[[i]]@variables, mdfs[[i]]@variables)
         model@data[[i]]@no_missing <- c(model@data[[i]]@no_missing, mdfs[[i]]@no_missing)
@@ -685,7 +685,7 @@ setMethod("mi", signature(y = "ordered-categorical", model = "polr"),
         badHessian <- any(ev$values <= 0)
         parameters <- .draw_parameters(means, ev)
         while (!badHessian &&
-          any(diff(parameters[-(1:ncol(model$x))]) <= 0)) { # rejection sampling on cutpoints
+          any(diff(parameters[-(seq_len(ncol(model$x)))]) <= 0)) { # rejection sampling on cutpoints
           parameters <- .draw_parameters(means, ev)
         }
       }
@@ -709,13 +709,13 @@ setMethod("mi", signature(y = "ordered-categorical", model = "polr"),
           cloglog = function(q) exp(-exp(-q)),
           cauchit = pcauchy
         )
-        zeta <- parameters[-(1:ncol(model$x))]
+        zeta <- parameters[-(seq_len(ncol(model$x)))]
         draws <- sapply(eta, FUN = function(x) {
           which(rmultinom(1, 1, diff(c(0, pfun(zeta - x), 1))) == 1)
         })
       } else if (y@imputation_method == "pmm") {
         parameters <- c(coef(model), model$zeta)
-        eta <- model$x %*% parameters[1:ncol(model$x)]
+        eta <- model$x %*% parameters[seq_len(ncol(model$x))]
         pmm <- .pmm(y, eta)
         draws <- pmm[, 1]
         y@fitted[y@which_drawn, ] <- y@fitted[y@which_obs, ][pmm[, 2], ]
@@ -1069,7 +1069,7 @@ setMethod("mi", signature(y = "nonnegative-continuous", model = "glm"),
       y <- mi(y, model)
       return(y@data[y@which_miss])
     } else if (y@imputation_method == "ppd") {
-      eta <- model$x[y@which_drawn, , drop = FALSE] %*% parameters[1:NCOL(model$x)]
+      eta <- model$x[y@which_drawn, , drop = FALSE] %*% parameters[seq_len(NCOL(model$x))]
       mu <- model$link$mean$linkinv(eta)
       phi <- model$link$precision$linkinv(parameters[length(parameters)]) ## FIXME: in the parameterized case
       shape1 <- mu * phi

@@ -178,7 +178,7 @@ setMethod("complete", signature(y = "mi_list", m = "numeric"),
         }
       } else if (length(temp) > 1) {
         for (i in 2:length(temp)) {
-          for (j in 1:length(dfs)) {
+          for (j in seq_along(dfs)) {
             dfs[[j]] <- rbind(dfs[[j]], temp[[i]][[j]])
           }
         }

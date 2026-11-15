@@ -94,9 +94,9 @@ setMethod("fit_model", signature(y = "binary", data = "missing_data.frame"),
 .fit_RNL <-
   function(y, X, weights, CONTROL) {
     if (y@use_NA == TRUE) {
-      values <- c(-.Machine$integer.max, 1:length(y@levels))
+      values <- c(-.Machine$integer.max, seq_along(y@levels))
     } else {
-      values <- 1:length(y@levels)
+      values <- seq_along(y@levels)
     }
     out <- sapply(values, simplify = FALSE, FUN = function(l) {
       model <- bayesglm.fit(X, y@data == l,
@@ -226,7 +226,7 @@ setMethod("fit_model", signature(y = "interval", data = "missing_data.frame"),
 
 ## helper function
 .fit_continuous <-
-  function(y, data, s, warn, X, subset = 1:nrow(X)) {
+  function(y, data, s, warn, X, subset = seq_len(nrow(X))) {
     weights <- if (length(data@weights) == 1) data@weights[[1]] else data@weights[[y@variable_name]]
     if (!is.null(weights)) weights <- weights[subset]
 
@@ -320,7 +320,7 @@ setMethod("fit_model", signature(y = "nonnegative-continuous", data = "missing_d
       if (abs(s) > 1) {
         subset <- complete(y@indicator, m = 0L, to_factor = TRUE) == 0
       } else {
-        subset <- 1:nrow(X)
+        subset <- seq_len(nrow(X))
       }
       .fit_continuous(y = y, data = data, s = s, warn = warn, X = X, subset = subset)
     }
@@ -339,7 +339,7 @@ setMethod("fit_model", signature(y = "SC_proportion", data = "missing_data.frame
       if (abs(s) > 1) {
         subset <- complete(y@indicator, m = 0L, to_factor = TRUE) == 0
       } else {
-        subset <- 1:nrow(X)
+        subset <- seq_len(nrow(X))
       }
       .fit_proportion(y = y, data = data, s = s, warn = warn, X = X, subset = subset)
     }
@@ -347,7 +347,7 @@ setMethod("fit_model", signature(y = "SC_proportion", data = "missing_data.frame
 
 ## helper function
 .fit_proportion <-
-  function(y, data, s, warn, X, subset = 1:nrow(X)) {
+  function(y, data, s, warn, X, subset = seq_len(nrow(X))) {
     weights <- if (length(data@weights) == 1) data@weights[[1]] else data@weights[[y@variable_name]]
     if (!is.null(weights)) weights <- weights[subset]
 
@@ -470,7 +470,7 @@ setMethod("fit_model", signature(y = "character", data = "mi"),
         }
       } else {
         models <- vector("list", length(m))
-        models <- for (i in 1:length(m)) {
+        models <- for (i in seq_along(m)) {
           if (is.null(data@data[[i]]@variables[[y]]@model)) {
             models[[m[i]]] <- fit_model(y = data@data[[m[i]]]@variables[[y]], data = data@data[[m[i]]], s = s, warn = TRUE, ...)
           } else {
@@ -571,23 +571,23 @@ setMethod("fit_model", signature(y = "missing", data = "mdf_list"),
     varname <- y@variable_name
     if (is(y, "categorical")) {
       dummies <- .cat2dummies(y)[which_drawn, , drop = FALSE]
-      data@X[which_drawn, data@index[[varname]][1:NCOL(dummies)]] <- dummies
+      data@X[which_drawn, data@index[[varname]][seq_len(NCOL(dummies))]] <- dummies
     } else if (is(y, "semi-continuous")) {
       mark <- data@index[[varname]]
       data@X[which_drawn, mark[1]] <- y@data[which_drawn]
       dummies <- .cat2dummies(y@indicator)
-      data@X[which_drawn, mark[1 + 1:NCOL(dummies)]] <- dummies[which_drawn, , drop = FALSE]
+      data@X[which_drawn, mark[1 + seq_len(NCOL(dummies))]] <- dummies[which_drawn, , drop = FALSE]
     } else if (is(y, "censored_continuous")) {
       temp <- y@data[which_drawn]
       if (y@n_lower) temp <- cbind(temp, lower = y@lower_indicator@data[y@which_drawn])
       if (y@n_upper) temp <- cbind(temp, upper = y@upper_indicator@data[y@which_drawn])
-      data@X[which_drawn, data@index[[varname]][1:NCOL(temp)]] <- temp
+      data@X[which_drawn, data@index[[varname]][seq_len(NCOL(temp))]] <- temp
       data@X[y@which_censored, data@index[[varname]][1]] <- y@data[y@which_censored]
     } else if (is(y, "truncated_continuous")) {
       temp <- y@data[which_drawn]
       if (y@n_lower) temp <- cbind(temp, lower = y@lower_indicator@data[y@which_drawn])
       if (y@n_upper) temp <- cbind(temp, upper = y@upper_indicator@data[y@which_drawn])
-      data@X[which_drawn, data@index[[varname]][1:NCOL(temp)]] <- temp
+      data@X[which_drawn, data@index[[varname]][seq_len(NCOL(temp))]] <- temp
       data@X[y@which_truncated, data@index[[varname]][1]] <- y@data[y@which_truncated]
     } else {
       data@X[which_drawn, data@index[[varname]][1]] <- y@data[which_drawn]
@@ -607,7 +607,7 @@ setMethod("fit_model", signature(y = "missing", data = "mdf_list"),
     }
     on.exit(print("the problematic variable is"))
     on.exit(show(y), add = TRUE)
-    for (jj in sample(1:ncol(data), ncol(data), replace = FALSE)) {
+    for (jj in sample(seq_len(ncol(data)), ncol(data), replace = FALSE)) {
       y <- data@variables[[jj]]
       if (y@all_obs) next
       if (is(y, "irrelevant")) next
@@ -704,7 +704,7 @@ setMethod("fit_model", signature(y = "missing", data = "allcategorical_missing_d
       probs <- sapply(1:Hstar, FUN = function(h) {
         phi_h <- phi[[h]]
         numerators <- rep(1, nrow(data))
-        for (j in 1:ncol(data)) {
+        for (j in seq_len(ncol(data))) {
           y <- data@variables[[j]]
           if (is(y, "irrelevant")) next
           phi_hj <- phi_h[[y@variable_name]]
@@ -841,7 +841,7 @@ setMethod("fit_model", signature(y = "missing_data.frame", data = "missing_data.
           cat("<br>", txt, file = file.path(data@workpath, "mi.html"), append = TRUE)
         }
       }
-      for (jj in sample(1:ncol(y), ncol(y), replace = FALSE)) {
+      for (jj in sample(seq_len(ncol(y)), ncol(y), replace = FALSE)) {
         z <- y@variables[[jj]]
         if (z@all_obs) next
         if (is(z, "irrelevant")) next

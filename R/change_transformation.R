@@ -87,7 +87,7 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
         }
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
-      for (i in 1:length(y)) change_transformation(y = data@variables[[y[i]]])
+      for (i in seq_along(y)) change_transformation(y = data@variables[[y[i]]])
       data
     }
 )
@@ -130,7 +130,7 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
           function(...) stop(paste("must replace the inverse_transformation slot for", x))
         )
       })
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y[i]]] <- change_transformation(y = data@variables[[y[i]]], to = trans[[i]])
         data@variables[[y[i]]] <- change_transformation(y = data@variables[[y[i]]], to = inverse[[i]], inverse = TRUE)
 
@@ -169,7 +169,7 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
         }))
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         if (inverse) {
           data@variables[[y[i]]] <- change_transformation(y = data@variables[[y[i]]], to = to, inverse = TRUE)
         } else {

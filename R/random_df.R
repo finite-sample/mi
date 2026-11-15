@@ -317,7 +317,7 @@ rdata.frame <-
     )
     if (any(types[1:n_full] == "nominal")) {
       warning("fully observed nominal variables not supported, changing them to ordinal without loss of generality")
-      types <- ifelse(types == "nominal" & 1:length(types) <= n_full, "ordinal", types)
+      types <- ifelse(types == "nominal" & seq_along(types) <= n_full, "ordinal", types)
     }
     #     else if(!is.null(n_cat)) types[n:(n - length(n_cat) + 1)] <- "nominal"
     if (all(c("ordinal", "nominal") %in% types[-(1:n_full)])) {
@@ -525,7 +525,7 @@ rdata.frame <-
     ord <- c(ord, extras)
     X <- X[, ord]
     cn <- colnames(X)
-    cn <- cn[sapply(1:ncol(X), FUN = function(i) {
+    cn <- cn[sapply(seq_len(ncol(X)), FUN = function(i) {
       !is.factor(X[, i]) && !(toupper(cn[i]) %in% cn[-i])
     })]
     resort <- function(s) {

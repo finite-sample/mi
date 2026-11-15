@@ -93,7 +93,7 @@ setMethod("hist", signature(x = "semi-continuous"),
 
         NAs <- is.na(x)[!con]
         tab <- table(x@data[!con], NAs)
-        for (i in 1:NROW(tab)) {
+        for (i in seq_len(NROW(tab))) {
           segments(x0 = as.numeric(rownames(tab)[i]), y0 = 0, y1 = sum(tab[i, ]), col = "lightgray", lty = "dashed")
           segments(x0 = as.numeric(rownames(tab)[i]), y0 = 0, y1 = tab[i, 1], col = "blue", lty = "dashed")
           if (ncol(tab) == 2) segments(x0 = as.numeric(rownames(tab)[i]), y0 = 0, y1 = tab[i, 2], col = "red", lty = "dashed")
@@ -102,7 +102,7 @@ setMethod("hist", signature(x = "semi-continuous"),
         if (.MI_DEBUG) stopifnot(all(h_all$counts == (h_obs$counts + h_miss$counts)))
       } else {
         tab <- table(x@data[!con])
-        for (i in 1:NCOL(tab)) segments(x0 = as.numeric(names(tab)[i]), y0 = 0, y1 = tab[i], col = "blue", lty = "dashed")
+        for (i in seq_len(NCOL(tab))) segments(x0 = as.numeric(names(tab)[i]), y0 = 0, y1 = tab[i], col = "blue", lty = "dashed")
       }
       invisible(NULL)
     }
@@ -257,7 +257,7 @@ setMethod("hist", signature(x = "mdf_list"),
 
 setMethod("hist", signature(x = "mi"),
   def =
-    function(x, m = 1:length(x), ask = TRUE, ...) {
+    function(x, m = seq_along(x), ask = TRUE, ...) {
       for (i in m) hist(x@data[[i]], ask = ask, ...)
       invisible(NULL)
     }
@@ -265,7 +265,7 @@ setMethod("hist", signature(x = "mi"),
 
 setMethod("hist", signature(x = "mi_list"),
   def =
-    function(x, m = 1:length(x), ask = TRUE, ...) {
+    function(x, m = seq_along(x), ask = TRUE, ...) {
       if (.Device != "null device") {
         oldask <- grDevices::devAskNewPage(ask = ask)
         if (!oldask) on.exit(grDevices::devAskNewPage(oldask), add = TRUE)

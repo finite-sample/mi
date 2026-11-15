@@ -119,8 +119,8 @@ setMethod("image", signature(x = "missing_data.frame"),
     function(x, y.order = FALSE, x.order = FALSE, clustered = TRUE, grayscale = FALSE, ...) {
       data <- lapply(x@variables, FUN = function(z) if (is(z, "irrelevant")) NULL else is.na(z) * 1)
       data <- as.matrix(as.data.frame(data[!sapply(data, is.null)]))
-      index <- seq(nrow(data))
-      x.at <- 1:nrow(data)
+      index <- seq_len(nrow(data))
+      x.at <- seq_len(nrow(data))
       x.lab <- index
       if (x.order) {
         orderIndex <- order(colSums(data), decreasing = TRUE)
@@ -171,7 +171,7 @@ setMethod("image", signature(x = "missing_data.frame"),
       if (grayscale) {
         plot(image(X,
           aspect = "fill", xlab = "Standardized Variable", ylab = "Observation Number", sub = sub,
-          scales = list(x = list(at = 1:ncol(data), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 8)),
+          scales = list(x = list(at = seq_len(ncol(data)), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 8)),
           main = "Dark represents missing data", colorkey = FALSE, alpha.regions = 1, ...
         ))
         return(invisible(NULL))
@@ -183,7 +183,7 @@ setMethod("image", signature(x = "missing_data.frame"),
       breaks <- seq(from = rx[1] - 1e-8, to = rx[2] + 1e-8, length.out = 16)
       plot(image(X,
         aspect = "fill", xlab = "Standardized Variable", ylab = "Observation Number", sub = sub, at = breaks,
-        scales = list(x = list(at = 1:ncol(data), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 8)),
+        scales = list(x = list(at = seq_len(ncol(data)), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 8)),
         main = "Dark represents missing data", colorkey = TRUE, col.regions = col.regions, alpha.regions = 1, ...
       ))
 
@@ -273,7 +273,7 @@ setMethod("image", signature(x = "mi"),
       plot(
         image(X0,
           aspect = "fill", xlab = "", ylab = "Observation Number", sub = "", at = breaks,
-          scales = list(x = list(at = 1:ncol(data), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 5)),
+          scales = list(x = list(at = seq_len(ncol(data)), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 5)),
           main = "Original data", colorkey = TRUE, col.regions = heat.colors(17), ...
         ),
         split = c(1, 1, 1, 2)
@@ -282,7 +282,7 @@ setMethod("image", signature(x = "mi"),
       plot(
         image(X1,
           aspect = "fill", xlab = "", ylab = "Observation Number", sub = "", at = breaks,
-          scales = list(x = list(at = 1:ncol(data), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 5)),
+          scales = list(x = list(at = seq_len(ncol(data)), labels = colnames(data), rot = 90, abbreviate = TRUE, minlength = 5)),
           main = "Average completed data", colorkey = TRUE, col.regions = heat.colors(17), ...
         ),
         newpage = FALSE, split = c(1, 2, 1, 2)
@@ -391,7 +391,7 @@ setMethod("plot", signature(x = "missing_data.frame", y = "categorical"),
         model <- fit_model(y, data = x, s = s, warn = TRUE, X = X)
         yhat <- fitted(model)
       }
-      if (is.matrix(yhat)) yhat <- yhat %*% (1:ncol(yhat))
+      if (is.matrix(yhat)) yhat <- yhat %*% (seq_len(ncol(yhat)))
       the_range <- range(c(yhat, z)) #+ c(-.1, .1)
       plot(the_range, the_range,
         type = "n", xlab = "Expected Values", ylab = "Completed (jittered)",
@@ -503,12 +503,12 @@ setMethod("plot", signature(x = "mi", y = "ANY"),
   def =
     function(x, y, ask = TRUE, header = character(0), ...) {
       if (missing(y)) {
-        select <- 1:ncol(x@data[[1]])
+        select <- seq_len(ncol(x@data[[1]]))
       } else if (is.logical(y)) {
         select <- which(y)
       } else if (is.character(y)) {
         select <- which(colnames(x@data[[1]]) %in% y)
-      } else if (is.numeric(y)) select <- which(1:nrow(x@data[[1]]) %in% y)
+      } else if (is.numeric(y)) select <- which(seq_len(nrow(x@data[[1]])) %in% y)
 
       for (i in seq_along(x@data[[1]]@variables)) {
         if (x@data[[1]]@no_missing[i]) {

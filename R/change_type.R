@@ -65,7 +65,7 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "character",
         }
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
-      for (i in 1:length(y)) change_type(y = data@variables[[y[i]]])
+      for (i in seq_along(y)) change_type(y = data@variables[[y[i]]])
       data
     }
 )
@@ -85,7 +85,7 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "character",
         to <- rep(to[1], length(y))
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y[i]]] <- change_type(y = data@variables[[y[i]]], to = to[i], ...)
         data@variables[[y[i]]]@variable_name <- y[i]
       }
@@ -99,7 +99,7 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "numeric", t
       if (length(to) == 1) {
         to <- rep(to, length(y))
       } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
-      for (i in 1:length(y)) {
+      for (i in seq_along(y)) {
         data@variables[[y]] <- change_type(y = data@variables[[y]], to = to[[i]], ...)
       }
       new(class(data), variables = data@variables)

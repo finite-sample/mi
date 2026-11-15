@@ -91,7 +91,7 @@ mi2BUGS <-
         ))
       )
       for (i in seq_along(means)) {
-        for (j in 1:ncol(arr)) {
+        for (j in seq_len(ncol(arr))) {
           arr[i, j, 1:dims[1]] <- means[[i]][, j]
           arr[i, j, -c(1:dims[1])] <- sds[[i]][, j]
         }
@@ -148,13 +148,13 @@ mi2stata <-
     }, simplify = TRUE)
     is.na(stata.data) <- stata.miss
     if (missing.ind) stata.data <- cbind(stata.data, miss.indic)
-    stata.data$mi <- 1:nrow(stata.data)
+    stata.data$mi <- seq_len(nrow(stata.data))
     stata.data$mj <- 0
 
     for (i in seq_along(data.list)) {
       dl <- data.list[[i]]
       if (!missing.ind) dl <- dl[, vars]
-      dl$mi <- 1:nrow(dl)
+      dl$mi <- seq_len(nrow(dl))
       dl$mj <- i
       stata.data <- rbind(stata.data, dl)
     }
