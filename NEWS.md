@@ -3,6 +3,27 @@ between consecutive CRAN releases. They record changes visible in the code,
 not the authors' stated intent. Releases 0.02-01 to 0.10-2 also shipped the
 authors' own `CHANGELOG` file, available in those CRAN source tarballs.
 
+# mi (development version)
+
+## Repository and documentation
+
+- A README with a short example (`nlsyV`, two chains), and the pkgdown site
+  at <https://finite-sample.github.io/mi/> uses it as its home page.
+- Typos in the help pages, vignette and comments are corrected, and the
+  package uses US English (`Language: en-US`).
+
+## Internal
+
+- The R code is restyled to the tidyverse style guide and passes lintr apart
+  from object names. A fixed-seed run of `mi()`, `complete()`, `pool()` and
+  the printed summaries on `nlsyV` and `CHAIN` gives identical results
+  before and after.
+- Index sequences use `seq_along()` and `seq_len()`, which differ from
+  `1:length(x)` only when the length is zero.
+- `if()` conditions use `&&` and `||`.
+- Removed: commented-out code, unused local variables, and a first
+  definition of the internal `tobin5()` that the second one overwrote.
+
 # mi 1.3.2
 
 - Fixed the check failure on R-devel. R-devel (PR#17944) runs a parent
