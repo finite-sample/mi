@@ -33,7 +33,7 @@ setMethod("change_size", signature(data = "missing", y = "missing_variable", to 
       y@which_extra <- c(y@which_extra, SEQ)
       y@n_extra <- y@n_extra + n
       y@n_total <- y@n_total + n
-      return(y)
+      y
     }
 )
 
@@ -54,7 +54,7 @@ setMethod("change_size", signature(data = "missing", y = "categorical", to = "in
       y@which_extra <- c(y@which_extra, SEQ)
       y@n_extra <- y@n_extra + n
       y@n_total <- y@n_total + n
-      return(y)
+      y
     }
 )
 
@@ -75,7 +75,7 @@ setMethod("change_size", signature(data = "missing", y = "fixed", to = "integer"
       y@which_extra <- c(y@which_extra, SEQ)
       y@n_extra <- y@n_extra + n
       y@n_total <- y@n_total + n
-      return(y)
+      y
     }
 )
 
@@ -85,6 +85,6 @@ setMethod("change_size", signature(data = "missing_data.frame", y = "missing", t
       n <- to
       data@variables <- lapply(data@variables, FUN = function(x) change_size(x, n))
       data@DIM[1] <- data@variables[[1]]@n_total
-      return(data)
+      data
     }
 )

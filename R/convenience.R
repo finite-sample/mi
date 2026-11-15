@@ -79,7 +79,7 @@ dim.mi <-
       x@data[[1]]@DIM
     } else {
       class(x) <- "list"
-      return(dim(x))
+      dim(x)
     }
   }
 
@@ -89,7 +89,7 @@ dimnames.mi <-
       x@data[[1]]@DIMNAMES
     } else {
       class(x) <- "list"
-      return(dimnames(x))
+      dimnames(x)
     }
   }
 
@@ -99,7 +99,7 @@ names.mi <-
       x@data[[1]]@DIMNAMES[[2]]
     } else {
       class(x) <- "list"
-      return(names(x))
+      names(x)
     }
   }
 
@@ -107,7 +107,7 @@ is.na.missing_variable <-
   function(x) {
     out <- rep(FALSE, x@n_total)
     out[x@which_miss] <- TRUE
-    return(out)
+    out
   }
 
 is.na.missing_data.frame <-
@@ -121,7 +121,7 @@ is.na.mi <-
       is.na(x@data[[1]])
     } else {
       class(x) <- "list"
-      return(is.na(x))
+      is.na(x)
     }
   }
 
@@ -141,7 +141,7 @@ length.mi <-
       length(x@data)
     } else {
       class(x) <- "list"
-      return(length(x))
+      length(x)
     }
   }
 
@@ -160,16 +160,16 @@ print.mi_list <-
     if (!missing(i)) {
       cdf <- complete(x, m = 0L)
       if (!missing(j)) {
-        return(cdf[i, j, drop = drop])
+        cdf[i, j, drop = drop]
       } else {
-        return(cdf[i, , drop = drop])
+        cdf[i, , drop = drop]
       }
     } else if (length(j) > 1) {
-      return(new(class(x), variables = x@variables[j]))
+      new(class(x), variables = x@variables[j])
     } else if (is.numeric(j) && j < 0) {
-      return(new(class(x), variables = x@variables[j]))
+      new(class(x), variables = x@variables[j])
     } else {
-      return(x@variables[[j]])
+      x@variables[[j]]
     }
   }
 
@@ -188,12 +188,12 @@ print.mi_list <-
     } else {
       stop("replacement must be 'NULL' or a 'missing_variable'")
     }
-    return(new(class(x), variables = x@variables))
+    new(class(x), variables = x@variables)
   }
 
 "[[.missing_data.frame" <-
   function(x, ..., exact = TRUE) {
-    return(x[, ...])
+    x[, ...]
   }
 
 "[[<-.missing_data.frame" <-
@@ -203,17 +203,17 @@ print.mi_list <-
     } else {
       x[i, j] <- value
     }
-    return(x)
+    x
   }
 
 "$.missing_data.frame" <-
   function(x, name) {
-    return(x[, name])
+    x[, name]
   }
 
 
 "$<-.missing_data.frame" <-
   function(x, name, value) { # this never gets dispatched for some reason
     x[, name] <- value
-    return(x)
+    x
   }

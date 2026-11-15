@@ -56,7 +56,7 @@ setMethod("change_transformation", signature(data = "missing", y = "missing_vari
         y@transformation <- to
         y@data <- y@transformation(y@raw_data)
       }
-      return(y)
+      y
     }
 )
 
@@ -68,7 +68,7 @@ setMethod("change_transformation", signature(data = "missing", y = "missing_vari
       } else {
         cat("No transformation possible for non-continuous variables\n")
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -88,7 +88,7 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
       for (i in 1:length(y)) change_transformation(y = data@variables[[y[i]]])
-      return(data)
+      data
     }
 )
 
@@ -138,14 +138,14 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
         data@X[, mark] <- data@variables[[y[i]]]@data
       }
       #   initialize(data)
-      return(data)
+      data
     }
 )
 
 setMethod("change_transformation", signature(data = "missing_data.frame", y = "numeric", to = "character"),
   def =
     function(data, y, to) {
-      return(change_transformation(data = data, y = colnames(data)[y], to = to))
+      change_transformation(data = data, y = colnames(data)[y], to = to)
     }
 )
 
@@ -155,7 +155,7 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "l
       if (length(y) != data@DIM[2]) {
         stop("the length of 'y' must equal the number of variables in 'data'")
       }
-      return(change_transformation(data = data, y = names(data@variables)[y], to = to))
+      change_transformation(data = data, y = names(data@variables)[y], to = to)
     }
 )
 
@@ -179,7 +179,7 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "c
         mark <- data@index[[y[i]]][1]
         data@X[, mark] <- data@variables[[y[i]]]@data
       }
-      return(data)
+      data
     }
 )
 
@@ -187,7 +187,7 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "n
   def =
     function(data, y, to, inverse) {
       y <- names(data@variables)[y]
-      return(change_transformation(data = data, y = y, to = to, inverse))
+      change_transformation(data = data, y = y, to = to, inverse)
     }
 )
 
@@ -197,6 +197,6 @@ setMethod("change_transformation", signature(data = "missing_data.frame", y = "l
       if (length(y) != data@DIM[2]) {
         stop("the length of 'y' must equal the number of variables in 'data'")
       }
-      return(change_transformation(data = data, y = names(data@variables)[y], to = to, inverse = inverse))
+      change_transformation(data = data, y = names(data@variables)[y], to = to, inverse = inverse)
     }
 )

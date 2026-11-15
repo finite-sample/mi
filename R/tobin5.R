@@ -73,10 +73,10 @@ tobin5 <-
 
     ## FIXME: correct vcov(model_0) and vcov(model_1) now
 
-    return(list(
+    list(
       probit = probit, model_0 = model_0, model_1 = model_1,
       rho_0 = rho_0, rho_1 = rho_1
-    ))
+    )
   }
 
 tobin5 <-
@@ -145,8 +145,8 @@ tobin5 <-
 
     ## FIXME: correct vcov(model_0) and vcov(model_1) now
 
-    return(list(
+    list(
       probit = probit, model_0 = model_0, model_1 = model_1,
       rho_0 = rho_0, rho_1 = rho_1
-    ))
+    )
   }

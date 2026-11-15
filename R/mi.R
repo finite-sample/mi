@@ -22,7 +22,7 @@
       y@parameters <- y@parameters[1:s, , drop = FALSE]
       y@imputations <- y@imputations[1:s, , drop = FALSE]
     }
-    return(y)
+    y
   }
 
 .MPinverse <- function(eta, tol = sqrt(.Machine$double.eps)) {
@@ -30,7 +30,7 @@
   ev <- eigen(cov_eta, TRUE)
   ev$values <- ifelse(ev$values > tol, 1 / ev$values, 0)
   Sigma_inv <- crossprod(sqrt(ev$values) * (t(ev$vectors)))
-  return(Sigma_inv)
+  Sigma_inv
 }
 
 .mi <- function(i, y, verbose, s_start, s_end, ProcStart, max.minutes, parallel, save_models) {
@@ -42,11 +42,11 @@
     if (s > 0) {
       pars <- unlist(sapply(mdf@variables, FUN = function(y) {
         if (is(y, "irrelevant")) {
-          return(NA_real_)
+          NA_real_
         } else if (y@all_obs) {
-          return(NA_real_)
+          NA_real_
         } else {
-          return(y@parameters[s, , drop = TRUE])
+          y@parameters[s, , drop = TRUE]
         }
       }))
       pars <- t(pars[!is.na(pars)])
@@ -57,11 +57,11 @@
       )
       imps <- unlist(sapply(mdf@variables, FUN = function(y) {
         if (is(y, "irrelevant")) {
-          return(NA_real_)
+          NA_real_
         } else if (y@all_obs) {
-          return(NA_real_)
+          NA_real_
         } else {
-          return(y@imputations[s, , drop = TRUE])
+          y@imputations[s, , drop = TRUE]
         }
       }))
       imps <- t(imps[!is.na(imps)])
@@ -90,12 +90,12 @@
     } else {
       y@model <- NULL
     }
-    return(y)
+    y
   })
 
   mdf@done <- TRUE
   if (verbose) message("Done with chain ", i, "\n")
-  return(mdf)
+  mdf
 }
 
 .mi_split <- function(i, y, data, verbose, s_start, s_end, ProcStart, max.minutes, parallel, save_models) {
@@ -125,12 +125,12 @@
     } else {
       y@model <- NULL
     }
-    return(y)
+    y
   })
 
   mdf@done <- TRUE
   if (verbose) message("Done with chain ", i, "\n")
-  return(mdf)
+  mdf
 }
 
 
@@ -156,7 +156,7 @@ setMethod("mi", signature(y = "missing_data.frame", model = "missing"),
           }
         }
         x@done <- TRUE
-        return(x)
+        x
       })
       if (is(y, "allcategorical_missing_data.frame")) {
         y@latents@imputations <- matrix(NA_integer_, nrow = n.iter, ncol = nrow(y))
@@ -207,7 +207,7 @@ setMethod("mi", signature(y = "missing_data.frame", model = "missing"),
         total_iters = as.integer(s_end)
       )
 
-      return(object)
+      object
     }
 )
 
@@ -216,11 +216,11 @@ setMethod("mi", signature(y = "data.frame", model = "missing"),
     function(y, n.iter = 30, n.chains = 4, max.minutes = Inf, seed = NA, verbose = TRUE,
              save_models = FALSE, parallel = .Platform$OS.type != "Windows") {
       y <- as(y, "missing_data.frame")
-      return(mi(y,
+      mi(y,
         n.iter = n.iter, n.chains = n.chains, max.minutes = max.minutes,
         seed = seed, verbose = verbose, save_models = save_models,
         parallel = parallel
-      ))
+      )
     }
 )
 
@@ -229,7 +229,7 @@ setMethod("mi", signature(y = "matrix", model = "missing"),
     function(y, n.iter = 30, n.chains = 4, max.minutes = Inf, seed = NA, verbose = TRUE,
              save_models = FALSE, parallel = .Platform$OS.type != "Windows") {
       y <- as(y, "missing_data.frame")
-      return(mi(y, n.iter, n.chains, max.minutes, seed, verbose, save_models, parallel))
+      mi(y, n.iter, n.chains, max.minutes, seed, verbose, save_models, parallel)
     }
 )
 
@@ -264,7 +264,7 @@ setMethod(
             x@indicator@imputations <- rbind(x@indicator@imputations, matrix(NA_integer_, n.iter, x@indicator@n_drawn))
             x@indicator@parameters <- rbind(x@indicator@parameters, matrix(NA_real_, n.iter, ncol(x@indicator@parameters)))
           }
-          return(x)
+          x
         })
       }
     }
@@ -303,7 +303,7 @@ setMethod(
       data        = mdfs,
       total_iters = as.integer(c(total_iters, n.iter))
     )
-    return(object)
+    object
   }
 )
 
@@ -372,7 +372,7 @@ setMethod("mi", signature(y = "missing_data.frame", model = "mi"),
         total_iters = as.integer(s_end)
       )
 
-      return(object)
+      object
     }
 )
 
@@ -381,7 +381,7 @@ setMethod("mi", signature(y = "mdf_list", model = "missing"),
     function(y, ...) {
       out <- lapply(y, FUN = mi, ...)
       class(out) <- "mi_list"
-      return(out)
+      out
     }
 )
 
@@ -394,7 +394,7 @@ setMethod("mi", signature(y = "list", model = "missing"),
 
       ## FIXME: should probably check that all the mi objects are based on the same missing_data.frame
       mdfs <- lapply(mi, FUN = function(x) {
-        return(x@data)
+        x@data
       })
 
       object <- new("mi",
@@ -402,7 +402,7 @@ setMethod("mi", signature(y = "list", model = "missing"),
         data        = mdfs,
         total_iters = y[[1]]@total_iters
       )
-      return(object)
+      object
     }
 )
 
@@ -415,7 +415,7 @@ setMethod(
       seed = seed, verbose = verbose, save_models = save_models, parallel = parallel
     )
     class(out) <- "mi_list"
-    return(out)
+    out
   }
 )
 
@@ -424,7 +424,7 @@ setMethod("mi", signature(y = "mi_list", model = "missing"),
     function(y, ...) {
       out <- lapply(y, FUN = mi, ...)
       class(out) <- "mi_list"
-      return(out)
+      out
     }
 )
 
@@ -439,7 +439,7 @@ setMethod("show", signature(object = "mi"),
         "Each chain is the evolution of an object of", class(object@data[[1]]), "class with",
         nrow(object@data[[1]]), "observations on", ncol(object@data[[1]]), "variables.\n"
       )
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -447,7 +447,7 @@ setMethod("show", signature(object = "mi_list"),
   def =
     function(object) {
       sapply(object, show)
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -485,7 +485,7 @@ setMethod("summary", signature(object = "mi"),
           )
         }
       }
-      return(out)
+      out
     }
 )
 
@@ -519,7 +519,7 @@ setMethod("mi", signature(y = "missing_variable", model = "missing"),
       if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
       draws <- sample(y@data[y@which_obs], size = y@n_drawn, replace = TRUE)
       y@data[y@which_drawn] <- draws
-      return(y)
+      y
     }
 )
 
@@ -549,7 +549,7 @@ setMethod("mi", signature(y = "semi-continuous", model = "missing"),
         stop("FIXME: semi-continuous is not supported yet")
       }
       y@data[y@which_drawn] <- draws
-      return(y)
+      y
     }
 )
 
@@ -603,7 +603,7 @@ setMethod("mi", signature(y = "bounded-continuous", model = "missing"),
 
       draws <- runif(y@n_drawn, min = a, max = b)
       y@data[y@which_drawn] <- draws
-      return(y)
+      y
     }
 )
 
@@ -613,16 +613,16 @@ setMethod("mi", signature(y = "categorical", model = "missing"),
       if (y@n_drawn == 0) stop("'impute' should not have been called because there are no missing data")
       draws <- sample(y@data[y@which_obs], size = y@n_drawn, replace = TRUE)
       y@data[y@which_drawn] <- draws
-      return(y)
+      y
     }
 )
 
 .draw_parameters <-
   function(means, ev) {
     if (any(ev$values <= 0)) {
-      return(means)
+      means
     } else {
-      return(means + (ev$vectors %*% (sqrt(ev$values) * rnorm(length(means))))[, 1])
+      means + (ev$vectors %*% (sqrt(ev$values) * rnorm(length(means))))[, 1]
     }
   }
 
@@ -636,7 +636,7 @@ setMethod("mi", signature(y = "categorical", model = "missing"),
       draws <- sapply(MD[y@which_drawn], FUN = function(x) {
         mark <- which.min(abs(MD_observed - x))
         drawmark <- c(y_observed[mark], mark)
-        return(drawmark)
+        drawmark
       })
     } else if (is(y, "grouped-binary")) {
       draws <- sapply(y@which_drawn, FUN = function(i) {
@@ -650,7 +650,7 @@ setMethod("mi", signature(y = "categorical", model = "missing"),
         y_can <- y@data[candidates]
         mark <- which.min(abs(eta_can - eta[i]))
         drawmark <- c(y_can[mark], mark)
-        return(drawmark)
+        drawmark
       })
     } else {
       eta_obs <- eta[y@which_obs]
@@ -661,10 +661,10 @@ setMethod("mi", signature(y = "categorical", model = "missing"),
         } # happens with semi-continuous
         mark <- which.min(abs(eta_obs - x))
         drawmark <- c(y_obs[mark], mark)
-        return(drawmark)
+        drawmark
       })
     }
-    return(t(draws))
+    t(draws)
   }
 
 setOldClass("polr")
@@ -730,7 +730,7 @@ setMethod("mi", signature(y = "ordered-categorical", model = "polr"),
 
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -774,7 +774,7 @@ setMethod("mi", signature(y = "unordered-categorical", model = "multinom"),
 
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -789,7 +789,7 @@ setMethod("mi", signature(y = "unordered-categorical", model = "RNL"),
           parameters <- .draw_parameters(coef(m), ev)
           eta <- m$x[y@which_drawn, , drop = FALSE] %*% parameters
           pred <- m$family$linkinv(eta)
-          return(pred)
+          pred
         })
         if (y@use_NA) {
           Pr <- Pr[, -1] / rowSums(Pr[, -1])
@@ -805,7 +805,7 @@ setMethod("mi", signature(y = "unordered-categorical", model = "RNL"),
           ev <- eigen(vcov(m), symmetric = TRUE)
           parameters <- .draw_parameters(coef(m), ev)
           eta <- m$x %*% parameters
-          return(eta)
+          eta
         })
         pmm <- .pmm(y, eta)
         draws <- pmm[, 1]
@@ -816,7 +816,7 @@ setMethod("mi", signature(y = "unordered-categorical", model = "RNL"),
 
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -854,7 +854,7 @@ setMethod("mi", signature(y = "binary", model = "glm"),
       draws <- as.integer(draws)
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -881,7 +881,7 @@ setMethod("mi", signature(y = "grouped-binary", model = "clogit"),
       draws <- as.integer(draws)
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -896,7 +896,7 @@ setMethod("mi", signature(y = "interval", model = "glm"),
         stop("only ppd is supported as an imputation method for interval variables")
       }
 
-      return(y)
+      y
     }
 )
 
@@ -909,7 +909,7 @@ setMethod("mi", signature(y = "categorical", model = "matrix"),
       draws <- apply(model, 1, FUN = function(p) which(rmultinom(1, 1, p) == 1))
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -966,7 +966,7 @@ setMethod("mi", signature(y = "categorical", model = "matrix"),
     } else {
       stop("'imputation_method' not recognized")
     }
-    return(draws)
+    draws
   }
 
 setMethod("mi", signature(y = "continuous", model = "glm"),
@@ -975,7 +975,7 @@ setMethod("mi", signature(y = "continuous", model = "glm"),
       draws <- .mi_continuous(y, model)
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -1033,7 +1033,7 @@ setMethod("mi", signature(y = "nonnegative-continuous", model = "glm"),
       if (length(mark)) draws[mark] <- y@transformation(rep(0, length(mark)))
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -1093,7 +1093,7 @@ setMethod("mi", signature(y = "nonnegative-continuous", model = "glm"),
     } else {
       stop("'imputation_method' not recognized")
     }
-    return(draws)
+    draws
   }
 
 setOldClass("betareg")
@@ -1103,7 +1103,7 @@ setMethod("mi", signature(y = "proportion", model = "betareg"),
       draws <- .mi_proportion(y, model)
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -1113,7 +1113,7 @@ setMethod("mi", signature(y = "proportion", model = "glm"),
       draws <- .mi_continuous(y, model)
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -1137,7 +1137,7 @@ setMethod("mi", signature(y = "SC_proportion", model = "betareg"),
 
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 
@@ -1150,7 +1150,7 @@ setMethod("mi", signature(y = "SC_proportion", model = "betareg"),
     A <- lambda * B
     ans <- rnbinom(n, size = A, mu = lambda)
   }
-  return(ans)
+  ans
 }
 
 setMethod("mi", signature(y = "count", model = "glm"),
@@ -1187,7 +1187,7 @@ setMethod("mi", signature(y = "count", model = "glm"),
       draws <- as.integer(draws)
       y@data[y@which_drawn] <- draws
       y@imputations[s, ] <- draws
-      return(y)
+      y
     }
 )
 

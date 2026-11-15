@@ -53,7 +53,7 @@
       strong, experiment, treatment_cor, nom, last_CPC
     )
     if (restrictions == "MARish") L <- .MAR_opt(L, n_full, n_partial)
-    return(L)
+    L
   }
 
 .rcorvine_helper <-
@@ -184,7 +184,7 @@
     }
 
     L[n, n] <- exp(0.5 * W[n - 1])
-    return(L)
+    L
   }
 
 ## Function to draw a Cholesky factor of a random correlation matrix
@@ -228,7 +228,7 @@
     holder <- matrix(NA_real_, nrow = diff, ncol = ncol(L))
     L <- .rcorvine_helper(L, holder, n_full, n_partial, n_cat, alpha, restrictions, strong, experiment, treatment_cor, nom)
     if (restrictions == "MARish") L <- .MAR_opt(L, n_full, n_partial)
-    return(L)
+    L
   }
 
 .MAR_opt <-
@@ -252,13 +252,13 @@
       }
       diag(L)[row_mark] <- sqrt(diags)
       Sigma_inv <- chol2inv(t(L))
-      return(c(crossprod(Sigma_inv[block_mark])))
+      c(crossprod(Sigma_inv[block_mark]))
     }
 
     opt <- optim(L[cell_mark], foo, method = "BFGS")
     L[cell_mark] <- opt$par
     diag(L)[row_mark] <- sqrt(1 - rowSums(L[row_mark, , drop = FALSE]^2, na.rm = TRUE))
-    return(L)
+    L
   }
 
 .NMARness <-
@@ -279,7 +279,7 @@
         D_icons <- det(tcrossprod(L[mark, , drop = FALSE]))
         mark <- c(j, cons)
         D_jcons <- det(tcrossprod(L[mark, , drop = FALSE]))
-        return(1 - D_ijcons * D_cons / (D_icons * D_jcons))
+        1 - D_ijcons * D_cons / (D_icons * D_jcons)
       })
     })
   }
@@ -530,7 +530,7 @@ rdata.frame <-
     })]
     resort <- function(s) {
       ord <- order(as.integer(gsub("^[a-z,A-Z]_", "", s)))
-      return(s[ord])
+      s[ord]
     }
     cn <- c(
       if (experiment) "treatment_propensity",
@@ -542,7 +542,7 @@ rdata.frame <-
     rownames(L) <- colnames(L) <- cn
     out <- list(true = X, obs = X_obs, empirical_CPCs = correlations, L = L)
     if (!is.null(alpha)) out <- c(out, list(alpha = alpha, skewness = result$sn_skewness, kurtosis = result$sn_kurtosis))
-    return(out)
+    out
   }
 
 ## this function makes a positive definite correlation matrix given choose(n,2) unbounded parameters
@@ -570,7 +570,7 @@ make_O.cor <-
       W[gap1] <- W[gap1] + log(1 - partials^2)
     }
     L[n, n] <- exp(0.5 * W[n - 1])
-    return(tcrossprod(L))
+    tcrossprod(L)
   }
 
 ## this objective function is the Frobenius norm of the difference between Sigma and Sigma_proposed
@@ -584,7 +584,7 @@ fmin <-
     if (final) {
       return(Sigma_proposed)
     }
-    return(crossprod(c(Sigma - Sigma_proposed))[1])
+    crossprod(c(Sigma - Sigma_proposed))[1]
   }
 
 ## this function makes a 3-factor Cholesky factorization of a PSD A matrix
@@ -609,7 +609,7 @@ LDLt <-
         }
       }
     }
-    return(list(L = L, D = D))
+    list(L = L, D = D)
   }
 
 ## this function makes plausible starting values (basically treating alpha is if it were a zero vector)
@@ -635,7 +635,7 @@ make_start <-
     }
     holder <- t(holder)
     CPCs <- holder[lower.tri(holder)]
-    return(c(log_omega, atanh(CPCs)))
+    c(log_omega, atanh(CPCs))
   }
 
 ## this function finds Omega via optim() and returns it as part of a list with
@@ -667,5 +667,5 @@ find_Omega <-
     opt$delta <- delta
     opt$sn_skewness <- ((4 - pi) / 4)^2 * (num / (1 - num))^3
     opt$sn_kurtosis <- 2 * (pi - 3) * (num / (1 - num))^2
-    return(opt)
+    opt
   }

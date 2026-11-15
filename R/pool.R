@@ -175,7 +175,7 @@ pool <-
       formula = formula, fit = fit, models = models,
       coefficients = rowMeans(coefs), ses = ses, pooled_summary = pooled_summary, call = kall
     )
-    return(out)
+    out
   }
 
 setMethod("display", signature(object = "pooled"),
@@ -214,7 +214,7 @@ setMethod("display", signature(object = "pooled"),
           ))
         }
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -222,41 +222,41 @@ setMethod("show", signature(object = "pooled"),
   def =
     function(object) {
       display(object)
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
 setMethod("summary", signature(object = "pooled"),
   def =
     function(object, ...) {
-      return(object@pooled_summary)
+      object@pooled_summary
     }
 )
 
 setMethod("coef", signature(object = "pooled"),
   def =
     function(object, ...) {
-      return(object@coefficients)
+      object@coefficients
     }
 )
 
 setMethod("vcov", signature(object = "pooled"),
   def =
     function(object, ...) {
-      return(object@vcov)
+      object@vcov
     }
 )
 
 setMethod("residuals", signature(object = "pooled"),
   def =
     function(object, ...) {
-      return(rowMeans(sapply(object@models, residuals)))
+      rowMeans(sapply(object@models, residuals))
     }
 )
 
 setMethod("fitted", signature(object = "pooled"),
   def =
     function(object, ...) {
-      return(rowMeans(sapply(object@models, fitted, ...)))
+      rowMeans(sapply(object@models, fitted, ...))
     }
 )

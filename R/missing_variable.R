@@ -99,7 +99,7 @@
       stop(paste("cannot infer variable type for", variable_name))
     }
 
-    return(type)
+    type
   }
 
 ## this constructor largely supplants typecast in previous versions of library(mi)
@@ -108,14 +108,14 @@ setMethod("missing_variable", signature(y = "ANY", type = "missing"),
     function(y, favor_ordered = TRUE, favor_positive = FALSE, threshold = 5,
              variable_name = deparse(substitute(y))) {
       type <- .guess_type(y, favor_ordered, favor_positive, threshold, variable_name)
-      return(missing_variable(y = y, type = type, variable_name = variable_name))
+      missing_variable(y = y, type = type, variable_name = variable_name)
     }
 )
 
 setMethod("missing_variable", signature(y = "ANY", type = "character"),
   def =
     function(y, type, variable_name = deparse(substitute(y)), ...) {
-      return(new(type, raw_data = y, variable_name = variable_name, ...))
+      new(type, raw_data = y, variable_name = variable_name, ...)
     }
 )
 
@@ -147,7 +147,7 @@ setMethod("missing_variable", signature(y = "ANY", type = "character"),
     )
     rownames(df) <- object@variable_name
     if (is(object, "semi-continuous")) df <- rbind(df, .show_helper(object@indicator))
-    return(df)
+    df
   }
 
 setMethod("show", signature(object = "missing_variable"),

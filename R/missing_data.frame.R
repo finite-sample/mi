@@ -55,7 +55,7 @@ setMethod("missing_data.frame", signature(y = "data.frame"),
 setMethod("missing_data.frame", signature(y = "matrix"),
   def =
     function(y, ...) {
-      return(missing_data.frame(y = as.data.frame(y), ...))
+      missing_data.frame(y = as.data.frame(y), ...)
     }
 )
 
@@ -65,7 +65,7 @@ setMethod("missing_data.frame", signature(y = "list"),
       if (!all(sapply(y, is, class2 = "missing_variable"))) {
         stop("all list elements must inherit from the 'missing_variable' class")
       }
-      return(new("missing_data.frame", variables = y))
+      new("missing_data.frame", variables = y)
     }
 )
 
@@ -86,14 +86,14 @@ setAs(
 setAs(
   from = "missing_data.frame", to = "data.frame", def =
     function(from) {
-      return(complete(from, m = 0L))
+      complete(from, m = 0L)
     }
 )
 
 setAs(
   from = "missing_data.frame", to = "matrix", def =
     function(from) {
-      return(complete(from, m = 0L, to_matrix = TRUE))
+      complete(from, m = 0L, to_matrix = TRUE)
     }
 )
 
@@ -128,82 +128,82 @@ setAs(
     link <- y@family$link
     if (is(y, "count")) {
       if (fam == "quasipoisson" && link == "log") {
-        return("qpoisson")
+        "qpoisson"
       } else if (fam == "poisson" && link == "log") {
-        return("poisson")
+        "poisson"
       } else {
-        return("****")
+        "****"
       }
     } else if (is(y, "binary")) {
       if (is(y, "grouped-binary")) {
         return("clogit")
       }
       if (fam == "quasibinomial") {
-        return(paste("q", link, sep = ""))
+        paste("q", link, sep = "")
       } else if (fam == "binomial") {
-        return(link)
+        link
       } else {
-        return("****")
+        "****"
       }
     } else if (is(y, "interval")) {
-      return("survreg")
+      "survreg"
     } else if (is(y, "ordered-categorical")) {
-      return(paste("o", link, sep = ""))
+      paste("o", link, sep = "")
     } else if (is(y, "unordered-categorical")) {
       if (fam == "binomial") {
         out <- "RN"
       } else {
         out <- "m"
       }
-      return(paste(out, link, sep = ""))
+      paste(out, link, sep = "")
     } else if (is(y, "proportion")) {
-      return(if (fam == "gaussian") "linear" else "betareg")
+      if (fam == "gaussian") "linear" else "betareg"
     } else if (is(y, "SC_proportion")) {
       out <- .default_model(y@indicator, data)
-      return(c("betareg", out))
+      c("betareg", out)
     } else if (is(y, "semi-continuous")) {
       out <- .default_model(y@indicator, data)
       if (fam == "gaussian") {
         if (link == "identity") {
-          return(c("linear", out))
+          c("linear", out)
         } else if (link == "log") {
-          return(c("loglinear", out))
+          c("loglinear", out)
         } else if (link == "inverse") {
-          return(c("inverselinear", out))
+          c("inverselinear", out)
         } else {
-          return(c("****", out))
+          c("****", out)
         }
       } else if (fam == "Gamma") {
-        return(c("****", out))
+        c("****", out)
       } else if (fam == "inverse.gaussian") {
-        return(c("****", out))
+        c("****", out)
       } else if (fam == "quasi") {
-        return(c("quasi", out))
+        c("quasi", out)
       } else {
-        return(c("****", out))
+        c("****", out)
       }
     } else if (is(y, "continuous")) {
       if (fam == "gaussian") {
         if (link == "identity") {
-          return("linear")
+          "linear"
         } else if (link == "log") {
-          return("loglinear")
+          "loglinear"
         } else if (link == "inverse") {
-          return("inverselinear")
+          "inverselinear"
         } else {
-          return("****")
+          "****"
         }
       } else if (fam == "Gamma") {
-        return("****")
+        "****"
       } else if (fam == "inverse.gaussian") {
-        return("****")
+        "****"
       } else if (fam == "quasi") {
-        return("quasi")
+        "quasi"
       } else {
-        return("****")
+        "****"
       }
     } else {
-      return("user-defined")
+      "user-defined"
     }
   }
 
@@ -234,7 +234,7 @@ setMethod("show", "missing_data.frame",
       if (any(df1$model == "****", na.rm = TRUE)) {
         cat("\n**** The model lacks a widely-recognized name but is determined by the chosen type, family, and link.\n")
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -245,7 +245,7 @@ setMethod("show", "mdf_list",
         cat("\n", names(object)[i], "\n")
         show(object[[i]])
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 

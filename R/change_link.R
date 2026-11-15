@@ -23,7 +23,7 @@ setMethod("change_link", signature(data = "missing", y = "missing_variable", to 
       fam <- do.call(y@family$family, args = list(link = to))
       y@family <- fam
       validObject(y, complete = TRUE)
-      return(y)
+      y
     }
 )
 
@@ -31,7 +31,7 @@ setMethod("change_link", signature(data = "missing", y = "missing_variable", to 
   def =
     function(y, to) {
       cat("Likely choices include:", y@known_links, sep = "\n")
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -56,7 +56,7 @@ setMethod("change_link", signature(data = "missing_data.frame", y = "character",
       for (i in 1:length(y)) {
         data@variables[[y[i]]] <- change_link(y = data@variables[[y[i]]], to = to[i])
       }
-      return(invisible(data))
+      invisible(data)
     }
 )
 
@@ -69,7 +69,7 @@ setMethod("change_link", signature(data = "missing_data.frame", y = "numeric", t
       for (i in 1:length(y)) {
         data@variables[[y]] <- change_link(y = data@variables[[y]], to = to[i])
       }
-      return(invisible(data))
+      invisible(data)
     }
 )
 
@@ -79,6 +79,6 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "logical",
       if (length(y) != data@DIM[2]) {
         stop("the length of 'y' must equal the number of variables in 'data'")
       }
-      return(change_link(data, which(y), to))
+      change_link(data, which(y), to)
     }
 )

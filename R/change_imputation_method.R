@@ -23,7 +23,7 @@ setMethod("change_imputation_method", signature(data = "missing", y = "missing_v
       to <- match.arg(tolower(to), getClass(class(y))@prototype@imputation_method)
       y@imputation_method <- to
       validObject(y, complete = TRUE)
-      return(y)
+      y
     }
 )
 
@@ -31,7 +31,7 @@ setMethod("change_imputation_method", signature(data = "missing", y = "missing_v
   def =
     function(y, to) {
       cat("Possible methods include:", getClass(class(y))@prototype@imputation_method, sep = "\n")
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -58,7 +58,7 @@ setMethod("change_imputation_method", signature(data = "missing_data.frame", y =
       for (i in 1:length(y)) {
         data@variables[[y[i]]] <- change_imputation_method(y = data@variables[[y[i]]], to = to[i])
       }
-      return(data)
+      data
     }
 )
 
@@ -71,7 +71,7 @@ setMethod("change_imputation_method", signature(data = "missing_data.frame", y =
       for (i in 1:length(y)) {
         data@variables[[y]] <- change_imputation_method(y = data@variables[[y]], to = to[i])
       }
-      return(data)
+      data
     }
 )
 
@@ -81,6 +81,6 @@ setMethod("change_imputation_method", signature(data = "missing_data.frame", y =
       if (length(y) != data@DIM[2]) {
         stop("the length of 'y' must equal the number of variables in 'data'")
       }
-      return(change_imputation_method(data, which(y), to))
+      change_imputation_method(data, which(y), to)
     }
 )

@@ -52,7 +52,7 @@ setMethod("hist", signature(x = "missing_variable"),
 
         if (.MI_DEBUG) stopifnot(all(h_all$counts == (h_obs$counts + h_miss$counts)))
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -104,7 +104,7 @@ setMethod("hist", signature(x = "semi-continuous"),
         tab <- table(x@data[!con])
         for (i in 1:NCOL(tab)) segments(x0 = as.numeric(names(tab)[i]), y0 = 0, y1 = tab[i], col = "blue", lty = "dashed")
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -159,7 +159,7 @@ setMethod("hist", signature(x = "categorical"),
         if (.MI_DEBUG) stopifnot(all(h_all$counts == (h_obs$counts + h_miss$counts)))
       }
 
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -212,7 +212,7 @@ setMethod("hist", signature(x = "binary"),
         if (.MI_DEBUG) stopifnot(all(h_all$counts == (h_obs$counts + h_miss$counts)))
       }
 
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -237,7 +237,7 @@ setMethod("hist", signature(x = "missing_data.frame"),
         }
         title(main = header)
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -251,7 +251,7 @@ setMethod("hist", signature(x = "mdf_list"),
         on.exit(options(op), add = TRUE)
       }
       sapply(x, FUN = hist, ...)
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -259,7 +259,7 @@ setMethod("hist", signature(x = "mi"),
   def =
     function(x, m = 1:length(x), ask = TRUE, ...) {
       for (i in m) hist(x@data[[i]], ask = ask, ...)
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -273,6 +273,6 @@ setMethod("hist", signature(x = "mi_list"),
         on.exit(options(op), add = TRUE)
       }
       sapply(x, FUN = hist, m = m, ask = ask, ...)
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )

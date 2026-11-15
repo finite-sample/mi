@@ -141,22 +141,22 @@ setMethod("image", signature(x = "missing_data.frame"),
         data <- lapply(x@variables, FUN = function(z) {
           y <- z@data
           if (is(z, "irrelevant")) {
-            return(NULL)
+            NULL
           } else if (is(z, "continuous")) {
-            return((y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE)))
+            (y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE))
           } else if (is(z, "count")) {
-            return((y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE)))
+            (y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE))
           } else if (is(z, "categorical")) {
             y <- z@data
             if (is(z, "binary")) {
               y <- y == max(y, na.rm = TRUE)
-              return((y - 0.5) * 2)
+              (y - 0.5) * 2
             } else {
               the_range <- seq(from = -.99, to = 1, length.out = length(unique(na.omit(y))))
-              return(the_range[as.integer(as.factor(y))])
+              the_range[as.integer(as.factor(y))]
             }
           } else {
-            return((y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE)))
+            (y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE))
           }
         })
         data <- as.matrix(as.data.frame(data[!sapply(data, is.null)]))
@@ -187,7 +187,7 @@ setMethod("image", signature(x = "missing_data.frame"),
         main = "Dark represents missing data", colorkey = TRUE, col.regions = col.regions, alpha.regions = 1, ...
       ))
 
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -201,7 +201,7 @@ setMethod("image", signature(x = "mdf_list"),
         on.exit(options(op), add = TRUE)
       }
       sapply(x, FUN = image, y.order = y.order, x.order = x.order, clustered = clustered, grayscale = grayscale, ...)
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -227,22 +227,22 @@ setMethod("image", signature(x = "mi"),
         y <- if (raw) z@raw_data else z@data
         # 	    y <- z@data
         if (is(z, "irrelevant")) {
-          return(NULL)
+          NULL
         } else if (is(z, "continuous")) {
-          return((y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE)))
+          (y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE))
         } else if (is(z, "count")) {
-          return((y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE)))
+          (y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE))
         } else if (is(z, "categorical")) {
           y <- if (raw) as.numeric(z@raw_data) else z@data
           if (is(z, "binary")) {
             y <- y == max(y, na.rm = TRUE)
-            return((y - 0.5) * 2)
+            (y - 0.5) * 2
           } else {
             the_range <- seq(from = -.99, to = 1, length.out = length(unique(na.omit(y))))
-            return(the_range[as.integer(as.factor(y))])
+            the_range[as.integer(as.factor(y))]
           }
         } else {
-          return((y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE)))
+          (y - mean(y, na.rm = TRUE)) / (2 * sd(y, na.rm = TRUE))
         }
       }
       temp <- lapply(x@data[[1]]@variables, FUN = foo)
@@ -287,7 +287,7 @@ setMethod("image", signature(x = "mi"),
         ),
         newpage = FALSE, split = c(1, 2, 1, 2)
       )
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -301,7 +301,7 @@ setMethod("image", signature(x = "mi_list"),
         on.exit(options(op), add = TRUE)
       }
       sapply(x, FUN = image, y.order = y.order, x.order = x.order, clustered = clustered, grayscale = grayscale, ...)
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -350,7 +350,7 @@ setMethod("image", signature(x = "mi_list"),
       aa <- data.frame(arm::binned.resids(x, y, nclass)$binned)
       points(aa$xbar, aa$ybar, pch = 19, cex = cex.pts, col = col.pts)
     }
-    return(invisible(NULL))
+    invisible(NULL)
   }
 
 setMethod("plot", signature(x = "missing_data.frame", y = "missing_variable"),
@@ -370,7 +370,7 @@ setMethod("plot", signature(x = "missing_data.frame", y = "missing_variable"),
       lines(lowess(x = yhat[!NAs], y = z[!NAs]), col = "blue")
       .binnedplot(yhat[!NAs], (y@data - yhat)[!NAs])
       .binnedpoints(yhat[NAs], (y@data - yhat)[NAs])
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -401,7 +401,7 @@ setMethod("plot", signature(x = "missing_data.frame", y = "categorical"),
       points(yhat, jitter(z), col = ifelse(NAs, "red", "blue"), pch = ".", cex = 2)
       .binnedplot(yhat[!NAs], (y@data - yhat)[!NAs])
       .binnedpoints(yhat[NAs], (y@data - yhat)[NAs])
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -430,7 +430,7 @@ setMethod("plot", signature(x = "missing_data.frame", y = "binary"),
       points(yhat, jitter(z), col = ifelse(NAs, "red", "blue"), pch = ".", cex = 2)
       .binnedplot(yhat[!NAs], (y@data - 1 - yhat)[!NAs])
       .binnedpoints(yhat[NAs], (y@data - 1 - yhat)[NAs])
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -451,7 +451,7 @@ def =
     barplot(tab_obs, beside = TRUE, xlab = "Observed Values", ylim = the_range)
     names(tab_model) <- levels(z)
     barplot(tab_model, beside = TRUE, xlab = "Expected Values", ylim = the_range)
-    return(invisible(NULL))
+    invisible(NULL)
   }
 )
 
@@ -472,7 +472,7 @@ def =
     barplot(tab_obs, beside = TRUE, xlab = "Observed Values", ylim = the_range)
     names(tab_model) <- levels(z)
     barplot(tab_model, beside = TRUE, xlab = "Expected Values", ylim = the_range)
-    return(invisible(NULL))
+    invisible(NULL)
   }
 )
 
@@ -495,7 +495,7 @@ setMethod("plot", signature(x = "missing_data.frame", y = "semi-continuous"),
       lines(lowess(x = yhat[!NAs], y = z[!NAs]), col = "blue")
       .binnedplot(yhat[!NAs], (y@data - yhat)[!NAs])
       .binnedpoints(yhat[NAs], (y@data - yhat)[NAs])
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -544,7 +544,7 @@ setMethod("plot", signature(x = "mi", y = "ANY"),
         }
         title(main = new_header, outer = TRUE)
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -556,6 +556,6 @@ setMethod("plot", signature(x = "mi_list", y = "ANY"),
       } else {
         for (i in seq_along(x)) plot(x[[i]], y = y, ask = ask, header = paste(names(x)[i], ": ", sep = ""), ...)
       }
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )

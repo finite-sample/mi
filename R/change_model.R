@@ -117,9 +117,9 @@ setMethod("change_model", signature(data = "missing_data.frame", y = "character"
         if (!categorical & is(data@variables[[y[i]]], "categorical")) check <- TRUE
       }
       if (check) {
-        return(new(class(data), variables = data@variables))
+        new(class(data), variables = data@variables)
       } else {
-        return(data)
+        data
       }
     }
 )
@@ -137,9 +137,9 @@ setMethod("change_model", signature(data = "missing_data.frame", y = "numeric", 
         if (!categorical & is(data@variables[[y[i]]], "categorical")) check <- TRUE
       }
       if (check) {
-        return(new(class(data), variables = data@variables))
+        new(class(data), variables = data@variables)
       } else {
-        return(data)
+        data
       }
     }
 )
@@ -150,6 +150,6 @@ setMethod("change_model", signature(data = "missing_data.frame", y = "logical", 
       if (length(y) != data@DIM[2]) {
         stop("the length of 'y' must equal the number of variables in 'data'")
       }
-      return(change_model(data, which(y), to))
+      change_model(data, which(y), to)
     }
 )

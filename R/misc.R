@@ -57,7 +57,7 @@ mipply <- ## FIXME: should probably be a generic function instead of poor man's 
     } else {
       stop("'X' must be of class 'mi', 'missing_data.frame', 'missing_variable', or 'mi_list'")
     }
-    return(out)
+    out
   }
 
 ## create a bugs array from an mi object
@@ -75,12 +75,12 @@ mi2BUGS <-
       means <- lapply(1:iterations, FUN = function(m) {
         matrices <- lapply(imputations@data, FUN = complete, m = m, to_matrix = TRUE, include_missing = FALSE)
         out <- sapply(matrices, colMeans)[mark, , drop = FALSE]
-        return(out)
+        out
       })
       sds <- lapply(1:iterations, FUN = function(m) {
         matrices <- lapply(imputations@data, FUN = complete, m = m, to_matrix = TRUE, include_missing = FALSE)
         out <- sapply(matrices, FUN = function(x) apply(x, 2, sd))[mark, , drop = FALSE]
-        return(out)
+        out
       })
       dims <- dim(means[[1]])
       arr <- array(
@@ -104,7 +104,7 @@ mi2BUGS <-
     } else {
       arr <- get_parameters(imputations)
     }
-    return(arr) # compatible with R2WinBUGS
+    arr # compatible with R2WinBUGS
   }
 
 ## Outputs completed data in either Stata (.dta) format or comma-separated (.csv) format
@@ -144,7 +144,7 @@ mi2stata <-
     stata.data <- data.list[[1]][, vars]
     stata.miss <- sapply(imputations@data[[1]]@variables, FUN = function(x) {
       v <- is.element(1:x@n_total, x@which_drawn)
-      return(v)
+      v
     }, simplify = TRUE)
     is.na(stata.data) <- stata.miss
     if (missing.ind) stata.data <- cbind(stata.data, miss.indic)
@@ -180,13 +180,13 @@ Rhats <-
       W <- colMeans(variances)
       B <- iter * apply(xbars, MARGIN = 2, FUN = var)
       R <- sqrt((iter - 1) / iter + 1 / iter * B / W)
-      return(R)
+      R
     }
 
     if (is(imputations, "mi")) {
-      return(make_Rhat(BUGS))
+      make_Rhat(BUGS)
     } else {
-      return(sapply(BUGS, FUN = make_Rhat))
+      sapply(BUGS, FUN = make_Rhat)
     }
   }
 
@@ -194,7 +194,7 @@ Rhats <-
 is.method_in_mi <-
   function(generic, ...) {
     method <- selectMethod(generic, signature(...))
-    return(environmentName(environment(method@.Data)) == "mi")
+    environmentName(environment(method@.Data)) == "mi"
   }
 
 ## cube root transformation
@@ -233,14 +233,14 @@ is.method_in_mi <-
     if (identical(body(trans), body(qnorm))) {
       return("qnorm")
     }
-    return("user-defined")
+    "user-defined"
   }
 
 .prune <- function(class) {
   classes <- names(getClass(class, where = "mi")@subclasses)
   classes <- classes[!sapply(classes, isVirtualClass, where = "mi")]
   if (!isVirtualClass(class, where = "mi")) classes <- c(class, classes)
-  return(classes)
+  classes
 }
 
 .possible_missing_variable <-
@@ -310,7 +310,7 @@ is.method_in_mi <-
       maybe[.prune("categorical")] <- FALSE
     }
 
-    return(maybe)
+    maybe
   }
 
 .cat2dummies <-
@@ -322,7 +322,7 @@ is.method_in_mi <-
       levels <- sort(unique(y@data))
       out <- t(sapply(y@data, FUN = function(x) as.integer(x == levels)[-1]))
     }
-    return(out)
+    out
   }
 
 setMethod("fitted", signature(object = "RNL"),
@@ -331,10 +331,10 @@ setMethod("fitted", signature(object = "RNL"),
       Pr <- sapply(object, FUN = function(m) {
         eta <- m$x %*% coef(m)
         pred <- m$family$linkinv(eta)
-        return(pred)
+        pred
       })
       Pr <- Pr / rowSums(Pr)
-      return(Pr)
+      Pr
     }
 )
 
@@ -348,7 +348,7 @@ setMethod("fitted", signature(object = "clogit"),
         mean(plogis(intercept + lp)) - target
       }
       opt <- uniroot(foo, lower = 0, upper = 1)
-      return(plogis(qlogis(opt$root) + lp))
+      plogis(qlogis(opt$root) + lp)
     }
 )
 
@@ -358,5 +358,5 @@ setMethod("fitted", signature(object = "clogit"),
     l <- length(alpha)
     x <- matrix(rgamma(l * n, alpha), ncol = l, byrow = TRUE)
     sm <- rowSums(x)
-    return(x / sm)
+    x / sm
   }

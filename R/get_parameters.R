@@ -21,7 +21,7 @@
 setMethod("get_parameters", signature(object = "ANY"),
   def =
     function(object, ...) {
-      return(c(coef(object)))
+      c(coef(object))
     }
 )
 
@@ -29,7 +29,7 @@ setOldClass("polr")
 setMethod("get_parameters", signature(object = "polr"),
   def =
     function(object, ...) {
-      return(c(coef(object), object$zeta))
+      c(coef(object), object$zeta)
     }
 )
 
@@ -37,7 +37,7 @@ setOldClass("multinom")
 setMethod("get_parameters", signature(object = "multinom"),
   def =
     function(object, ...) {
-      return(c(t(coef(object))))
+      c(t(coef(object)))
     }
 )
 
@@ -51,9 +51,9 @@ setMethod("get_parameters", signature(object = "missing_variable"),
         } else {
           mark <- latest
         }
-        return(object@parameters[mark, ])
+        object@parameters[mark, ]
       } else {
-        return(object@parameters)
+        object@parameters
       }
     }
 )
@@ -64,7 +64,7 @@ setMethod("get_parameters", signature(object = "missing_data.frame"),
       mini_list <- lapply(object@variables, get_parameters, latest = latest, ...)
       out <- matrix(NA_real_, nrow(mini_list[[1]]), ncol = 0)
       for (i in seq_along(mini_list)) out <- cbind(out, mini_list[[i]])
-      return(out)
+      out
     }
 )
 
@@ -77,7 +77,7 @@ setMethod("get_parameters", signature(object = "mi"),
         dimnames = list(NULL, NULL, colnames(mini_list[[1]]))
       )
       for (i in 1:NCOL(out)) out[, i, ] <- mini_list[[i]]
-      return(out)
+      out
     }
 )
 

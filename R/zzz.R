@@ -17,12 +17,12 @@
 
 .onLoad <- function(lib, pkg) {
   #   library.dynam("mi", pkg, lib)
-  return(invisible(NULL))
+  invisible(NULL)
 }
 
 .onUnload <- function(libpath) {
   #   library.dynam.unload("mi", libpath)
-  return(invisible(NULL))
+  invisible(NULL)
 }
 
 .onAttach <- function(...) {

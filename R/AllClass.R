@@ -130,7 +130,7 @@ setClass("missing_variable",
         break
       }
     }
-    return(out)
+    out
   }
 )
 
@@ -190,7 +190,7 @@ setMethod("initialize", "missing_variable",
       .Object@n_drawn <- .Object@n_miss + .Object@n_extra
       .Object@which_drawn <- c(.Object@which_miss, .Object@which_extra)
       .Object@done <- FALSE
-      return(.Object)
+      .Object
     }
 )
 
@@ -212,7 +212,7 @@ setClass("fixed", representation("irrelevant"),
     } else if (length(vals) > 1) {
       out <- paste(object@variable_name, ": purportedly 'fixed' variables cannot have multiple unique values")
     }
-    return(out)
+    out
   }
 )
 
@@ -250,7 +250,7 @@ setMethod("initialize", "categorical",
       #     lev <- c(lev[1], lev[-1][mark])
       .Object@levels <- lev
       .Object@data <- as.integer(factor(.Object@raw_data))
-      return(.Object)
+      .Object
     }
 )
 
@@ -405,7 +405,7 @@ validity = function(object) {
   } else if (!(object@use_NA %in% c(TRUE, FALSE))) {
     out <- paste(object@variable_name, ": use_NA must be TRUE or FALSE")
   }
-  return(out)
+  out
 }
 )
 
@@ -429,7 +429,7 @@ validity = function(object) {
   } else if (!all(object@imputation_method %in% im)) {
     out <- paste(object@variable_name, ": 'imputation_method' must be one of:\n", paste(im, collapse = ", "))
   }
-  return(out)
+  out
 }
 )
 
@@ -448,7 +448,7 @@ setClass("interval", representation("ordered-categorical"),
     } else if (object@family$family != "gaussian") {
       out <- "the 'family' slot of 'interval' class must be 'gaussian()'"
     }
-    return(out)
+    out
   }
 )
 
@@ -482,7 +482,7 @@ setClass("binary", representation("ordered-categorical"),
     } else if (!(object@family$link %in% kl)) {
       out <- paste(object@variable_name, ": the 'link' slot of the 'family' slot of a object of class 'binary' must be one of", paste(kl, collapse = ", "))
     }
-    return(out)
+    out
   }
 )
 
@@ -495,7 +495,7 @@ setMethod("initialize", "binary",
         return(.Object)
       }
       .Object@data <- as.integer(.Object@data == max(.Object@data, na.rm = TRUE)) + 1L
-      return(.Object)
+      .Object
     }
 )
 
@@ -516,7 +516,7 @@ setClass("grouped-binary", representation("binary", strata = "character"),
         "see help('grouped-binary-class')"
       ))
     }
-    return(out)
+    out
   }
 )
 
@@ -529,7 +529,7 @@ setMethod("initialize", "grouped-binary",
         return(.Object)
       }
       .Object@imputation_method <- "pmm"
-      return(.Object)
+      .Object
     }
 )
 
@@ -557,18 +557,18 @@ setClass("count", representation("missing_variable"),
     } else if (sum(object@n_unpossible)) {
       out <- paste(object@variable_name, ": unpossible observations not supported for count variables yet")
     }
-    return(out)
+    out
   }
 )
 
 .identity_transform <- function(y, ...) {
-  return(y)
+  y
 }
 .standardize_transform <- function(y, mean = stop("must supply mean"), sd = stop("must supply sd"), inverse = FALSE) {
   if (inverse) {
-    return(y * 2 * sd + mean)
+    y * 2 * sd + mean
   } else {
-    return((y - mean) / (2 * sd))
+    (y - mean) / (2 * sd)
   }
 }
 
@@ -605,7 +605,7 @@ setClass("continuous",
     } else if (!(object@family$link %in% kl)) {
       out <- paste(object@variable_name, ": the 'link' slot of the 'family' slot of a object of class 'binary' must be one of", paste(kl, collapse = ", "))
     }
-    return(out)
+    out
   }
 )
 
@@ -636,7 +636,7 @@ setMethod("initialize", "continuous",
       }
       .Object@data <- .Object@transformation(.Object@raw_data)
       .Object@data[.Object@which_miss] <- NA_real_
-      return(.Object)
+      .Object
     }
 )
 
@@ -661,7 +661,7 @@ setClass("bounded-continuous", representation("continuous", lower = "numeric", u
     } else if (!requireNamespace("truncnorm")) {
       out <- paste(object@variable_name, ": the 'truncnorm' package must be installed to use the 'bounded-continuous' class")
     }
-    return(out)
+    out
   }
 )
 
@@ -675,7 +675,7 @@ setMethod("initialize", "bounded-continuous",
       }
       .Object@lower <- lower
       .Object@upper <- upper
-      return(.Object)
+      .Object
     }
 )
 
@@ -690,7 +690,7 @@ setClass("positive-continuous", representation("continuous"),
     if (any(object@raw_data <= 0, na.rm = TRUE)) {
       out <- paste(object@variable_name, ": positive variables must be positive")
     }
-    return(out)
+    out
   }
 )
 
@@ -721,7 +721,7 @@ setClass("proportion", representation("positive-continuous", link.phi = "WeAreFa
     } else if (object@family$family == "binomial" && !requireNamespace("betareg")) {
       out <- paste(object@variable_name, ": you must install the 'betareg' package to model proportions as proportions")
     }
-    return(out)
+    out
   }
 )
 
@@ -862,7 +862,7 @@ setClass("nonnegative-continuous", representation("semi-continuous"),
     if (any(object@raw_data < 0, na.rm = TRUE)) {
       out <- paste(object@variable_name, ": nonnegative variables must be nonnegative")
     }
-    return(out)
+    out
   }
 )
 
@@ -885,7 +885,7 @@ setMethod("initialize", "nonnegative-continuous",
       if (!all(is.finite(.Object@data[!is.na(.Object)]))) {
         stop(paste(.Object@variable_name, ": some transformed values are infinite or undefined"))
       }
-      return(.Object)
+      .Object
     }
 )
 
@@ -920,7 +920,7 @@ setClass("SC_proportion", representation("nonnegative-continuous", link.phi = "W
     } else if (!requireNamespace("betareg")) {
       out <- paste(object@variable_name, ": you must install the 'betareg' package to model proportions")
     }
-    return(out)
+    out
   }
 )
 
@@ -954,7 +954,7 @@ setMethod("initialize", "SC_proportion",
           variable_name = paste(.Object@variable_name, ":is_one", sep = "")
         )
       }
-      return(.Object)
+      .Object
     }
 )
 
@@ -967,7 +967,7 @@ setMethod("initialize", "SC_proportion",
 .get_slot <-
   function(object, name, simplify = TRUE) {
     if (isS4(object)) {
-      return(slot(object, name))
+      slot(object, name)
     } else if (is.list(object)) {
       sapply(object, FUN = slot, name = name, simplify = simplify)
     } else {
@@ -1028,7 +1028,7 @@ setClass("missing_data.frame",
         } else if (all(mx1 %in% mx2)) {
           return(3L)
         }
-        return(0L)
+        0L
       })
       if (any(dupes == 1L)) {
         temp <- matrix(names(missingness)[combos[, which(dupes == 1L)]], ncol = 2, byrow = TRUE)
@@ -1054,7 +1054,7 @@ setClass("missing_data.frame",
         print(temp)
       }
     }
-    return(out)
+    out
   }
 )
 
@@ -1074,12 +1074,12 @@ setClass("missing_data.frame",
     } else if (is(y, "categorical")) {
       out <- list(prior.mean = mu, prior.scale = 2.5, prior.df = 1, prior.counts.for.bins = 1 / (1 + length(y@levels)))
     }
-    return(out)
+    out
   }
 
   out <- lapply(variables, FUN = function(y) foo(y))
   for (i in seq_along(variables)) if (is(y <- variables[[i]], "semi-continuous")) out[[y@indicator@variable_name]] <- foo(y@indicator)
-  return(out)
+  out
 }
 
 setMethod("initialize", "missing_data.frame",
@@ -1106,9 +1106,9 @@ setMethod("initialize", "missing_data.frame",
 
       Z <- lapply(.Object@variables, FUN = function(y) {
         if (is(y, "irrelevant")) {
-          return(NULL)
+          NULL
         } else {
-          return(is.na(y))
+          is.na(y)
         }
       })
       Z <- as.matrix(as.data.frame(Z[!sapply(Z, is.null)]))
@@ -1159,31 +1159,31 @@ setMethod("initialize", "missing_data.frame",
 
       X <- lapply(.Object@variables, FUN = function(x) {
         if (is(x, "irrelevant")) {
-          return(NULL)
+          NULL
         } else if (is(x, "categorical")) {
-          return(.cat2dummies(x))
+          .cat2dummies(x)
         } else if (is(x, "semi-continuous")) {
           out <- cbind(x@data, .cat2dummies(x@indicator))
           colnames(out) <- c(
             x@variable_name,
             paste(x@variable_name, 2:ncol(out) - 1, sep = "_")
           )
-          return(out)
+          out
         } else if (is(x, "censored-continuous")) {
           temp <- x@data
           if (x@n_lower) temp <- cbind(temp, lower = x@lower_indicator@data)
           if (x@n_upper) temp <- cbind(temp, upper = x@upper_indicator@data)
           if (x@n_both) stop("FIXME: censoring on both sides not supported yet")
-          return(temp)
+          temp
         } else if (is(x, "truncated-continuous")) {
           temp <- x@data
           n <- length(temp)
           if (x@n_lower) temp <- cbind(lower = x@lower_indicator@data, temp)
           if (x@n_upper) temp <- cbind(upper = x@upper_indicator@data, temp)
           if (x@n_both) stop("FIXME: censoring on both sides not supported yet")
-          return(temp)
+          temp
         } else {
-          return(x@data)
+          x@data
         }
       }) ## NOTE: Might need to make this more complicated in the future
       X <- X[!sapply(X, is.null)]
@@ -1258,7 +1258,7 @@ setClass("allcategorical_missing_data.frame",
     } else if (length(object@Hstar) && object@Hstar < 1) {
       out <- "'Hstar' must be >= 1"
     }
-    return(out)
+    out
   }
 )
 
@@ -1272,7 +1272,7 @@ setMethod("initialize", "allcategorical_missing_data.frame",
       .Object@latents <- new("unordered-categorical", raw_data = rep(NA_integer_, n))
       .Object@priors <- list(a = rep(1, ncol(.Object)), a_alpha = 1, b_alpha = 1)
       names(.Object@priors$a) <- colnames(.Object)
-      return(.Object)
+      .Object
     }
 )
 
@@ -1298,7 +1298,7 @@ validity = function(object) {
   } else if (length(object@case) && !(object@case %in% c("outcomes", "covariates", "both"))) {
     out <- "'case' must be exactly one of 'outcomes', 'covariates', or 'both'"
   }
-  return(out)
+  out
 }
 )
 
@@ -1315,7 +1315,7 @@ setMethod("initialize", "experiment_missing_data.frame",
       covariates <- any(!.Object@no_missing[.Object@concept == "covariates"])
 
       .Object@case <- if (outcomes & covariates) "both" else if (outcomes) "covariates" else "outcomes"
-      return(.Object)
+      .Object
     }
 )
 
@@ -1330,7 +1330,7 @@ prototype(
 ),
 validity = function(object) {
   out <- TRUE
-  return(out)
+  out
 }
 )
 
@@ -1343,7 +1343,7 @@ setMethod("initialize", "multilevel_missing_data.frame",
       df <- complete(.Object, m = 0L)
       mdf_list <- missing_data.frame(df, by = .Object@groups, types = classes)
       .Object@mdf_list <- mdf_list
-      return(.Object)
+      .Object
     }
 )
 

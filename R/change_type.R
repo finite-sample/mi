@@ -33,9 +33,9 @@ setMethod("change_type", signature(data = "missing", y = "missing_variable", to 
       vals <- vals[!is.na(vals)]
       if (length(vals) <= 1) {
         warning(paste(y@variable_name, ": cannot change type because only one unique value"))
-        return(y)
+        y
       } else {
-        return(new(to, variable_name = y@variable_name, raw_data = raw, imputation_method = y@imputation_method, ...))
+        new(to, variable_name = y@variable_name, raw_data = raw, imputation_method = y@imputation_method, ...)
       }
     }
 )
@@ -46,7 +46,7 @@ setMethod("change_type", signature(data = "missing", y = "missing_variable", to 
       classes <- .possible_missing_variable(y@raw_data)
       classes <- names(classes[classes])
       cat("Likely choices include:", classes, sep = "\n")
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -66,7 +66,7 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "character",
       }
       y <- match.arg(y, data@DIMNAMES[[2]], several.ok = TRUE)
       for (i in 1:length(y)) change_type(y = data@variables[[y[i]]])
-      return(data)
+      data
     }
 )
 
@@ -89,7 +89,7 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "character",
         data@variables[[y[i]]] <- change_type(y = data@variables[[y[i]]], to = to[i], ...)
         data@variables[[y[i]]]@variable_name <- y[i]
       }
-      return(new(class(data), variables = data@variables))
+      new(class(data), variables = data@variables)
     }
 )
 
@@ -102,7 +102,7 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "numeric", t
       for (i in 1:length(y)) {
         data@variables[[y]] <- change_type(y = data@variables[[y]], to = to[[i]], ...)
       }
-      return(new(class(data), variables = data@variables))
+      new(class(data), variables = data@variables)
     }
 )
 
@@ -112,6 +112,6 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "logical", t
       if (length(y) != data@DIM[2]) {
         stop("the length of 'y' must equal the number of variables in 'data'")
       }
-      return(change_type(data, which(y), to, ...))
+      change_type(data, which(y), to, ...)
     }
 )

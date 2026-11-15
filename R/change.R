@@ -49,9 +49,9 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "ANY"
               if (y@n_unpossible) {
                 w <- rep(1, y@n_total)
                 w[y@which_unpossible] <- 0
-                return(w)
+                w
               } else {
-                return(NULL)
+                NULL
               }
             })
           } else {
@@ -69,26 +69,26 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "ANY"
       }
 
       if (what == "family") {
-        return(change_family(data = data, y = y, to = to))
+        change_family(data = data, y = y, to = to)
       } else if (what == "link") {
-        return(change_link(data = data, y = y, to = to))
+        change_link(data = data, y = y, to = to)
       } else if (what == "imputation_method") {
-        return(change_imputation_method(data = data, y = y, to = to))
+        change_imputation_method(data = data, y = y, to = to)
       } else if (what == "model") {
-        return(change_model(data = data, y = y, to = to))
+        change_model(data = data, y = y, to = to)
       } else if (what == "size") {
-        return(change_size(data = data, n = y))
+        change_size(data = data, n = y)
       } else if (what == "transformation") {
         if (missing(to)) {
-          return(change_transformation(data = data, y = y))
+          change_transformation(data = data, y = y)
         } else {
-          return(change_transformation(data = data, y = y, to = to, ...))
+          change_transformation(data = data, y = y, to = to, ...)
         }
       } else if (what == "type") {
         if (missing(to)) {
-          return(change_type(data = data, y = y))
+          change_type(data = data, y = y)
         } else {
-          return(change_type(data = data, y = y, to = to, ...))
+          change_type(data = data, y = y, to = to, ...)
         }
       } else {
         stop("this should never happen")
@@ -113,7 +113,7 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "nume
         mv <- new(class(mv), raw_data = mv@raw_data, variable_name = mv@variable_name)
       } else if (is(mv, "continuous")) mv@data <- mv@transformation(mv@raw_data)
       data@variables[[y]] <- mv
-      return(data) ## FIXME: maybe reinitialize data?
+      data ## FIXME: maybe reinitialize data?
     }
 )
 
@@ -150,15 +150,15 @@ setMethod("change", signature(data = "missing_data.frame", y = "ANY", to = "char
           if (y@n_unpossible) {
             w <- rep(1, y@n_total)
             w[y@which_unpossible] <- 0
-            return(w)
+            w
           } else {
-            return(NULL)
+            NULL
           }
         })
       } else {
         data@weights[[y]][mv@which_unpossible] <- 0
       }
-      return(data)
+      data
     }
 )
 
@@ -174,6 +174,6 @@ setMethod("change", signature(data = "mdf_list", y = "ANY", to = "ANY", what = "
     function(data, y, to, what, ...) {
       out <- lapply(data, FUN = change, y = y, to = to, what = what, ...)
       class(out) <- "mdf_list"
-      return(out)
+      out
     }
 )

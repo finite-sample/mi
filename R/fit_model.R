@@ -78,7 +78,7 @@ setMethod("fit_model", signature(y = "binary", data = "missing_data.frame"),
       }
       out$x <- X
       class(out) <- c("bayesglm", "glm", "lm")
-      return(out)
+      out
     }
 )
 
@@ -88,7 +88,7 @@ setMethod("fit_model", signature(y = "binary", data = "missing_data.frame"),
       weights = weights, Hess = y@imputation_method == "ppd",
       model = TRUE, trace = FALSE, MaxNWts = 10000
     )
-    return(model)
+    model
   }
 
 .fit_RNL <-
@@ -105,10 +105,10 @@ setMethod("fit_model", signature(y = "binary", data = "missing_data.frame"),
       )
       model$x <- X # bayesglm.fit() by default does not retain the model matrix it uses
       class(model) <- c("bayesglm", "glm", "lm")
-      return(model)
+      model
     })
     class(out) <- "RNL"
-    return(out)
+    out
   }
 
 setMethod("fit_model", signature(y = "unordered-categorical", data = "missing_data.frame"),
@@ -140,7 +140,7 @@ setMethod("fit_model", signature(y = "unordered-categorical", data = "missing_da
       } else {
         stop("estimator not recognized")
       }
-      return(out)
+      out
     }
 )
 
@@ -173,7 +173,7 @@ setMethod("fit_model", signature(y = "grouped-binary", data = "missing_data.fram
       groups <- sapply(y@strata, FUN = function(x) complete(data@variables[[x]], m = 0L), simplify = FALSE)
       out <- .clogit(y@data ~ X + strata(groups), method = "breslow", weights = weights, n = nrow(X))
       out$x <- X
-      return(out)
+      out
     }
 )
 
@@ -213,7 +213,7 @@ setMethod("fit_model", signature(y = "ordered-categorical", data = "missing_data
         warning(paste("bayespolr() did not converge for variable", y@variable_name, "on iteration", abs(s)))
       }
       out$x <- X
-      return(out)
+      out
     }
 )
 
@@ -260,7 +260,7 @@ setMethod("fit_model", signature(y = "interval", data = "missing_data.frame"),
     }
     out$x <- X
     class(out) <- c("bayesglm", "glm", "lm")
-    return(out)
+    out
   }
 
 setMethod("fit_model", signature(y = "continuous", data = "missing_data.frame"),
@@ -278,7 +278,7 @@ setMethod("fit_model", signature(y = "continuous", data = "missing_data.frame"),
           X <- cbind(X, interaction = X * data@variables[[treatment]]@data)
         }
       }
-      return(.fit_continuous(y, data, s, warn, X))
+      .fit_continuous(y, data, s, warn, X)
     }
 )
 
@@ -322,7 +322,7 @@ setMethod("fit_model", signature(y = "nonnegative-continuous", data = "missing_d
       } else {
         subset <- 1:nrow(X)
       }
-      return(.fit_continuous(y = y, data = data, s = s, warn = warn, X = X, subset = subset))
+      .fit_continuous(y = y, data = data, s = s, warn = warn, X = X, subset = subset)
     }
 )
 
@@ -341,7 +341,7 @@ setMethod("fit_model", signature(y = "SC_proportion", data = "missing_data.frame
       } else {
         subset <- 1:nrow(X)
       }
-      return(.fit_proportion(y = y, data = data, s = s, warn = warn, X = X, subset = subset))
+      .fit_proportion(y = y, data = data, s = s, warn = warn, X = X, subset = subset)
     }
 )
 
@@ -377,7 +377,7 @@ setMethod("fit_model", signature(y = "SC_proportion", data = "missing_data.frame
     }
     out$x <- X
     class(out) <- c("betareg")
-    return(out)
+    out
   }
 
 setMethod("fit_model", signature(y = "proportion", data = "missing_data.frame"),
@@ -394,7 +394,7 @@ setMethod("fit_model", signature(y = "proportion", data = "missing_data.frame"),
       } else {
         out <- .fit_proportion(y, data, s, warn, X)
       }
-      return(out)
+      out
     }
 )
 
@@ -407,7 +407,7 @@ setMethod("fit_model", signature(y = "count", data = "missing_data.frame"),
       } else {
         X <- data@X[, ]
       }
-      return(.fit_continuous(y, data, s, warn, X)) # even though counts are not continuous
+      .fit_continuous(y, data, s, warn, X) # even though counts are not continuous
     }
 )
 
@@ -449,7 +449,7 @@ setMethod("fit_model", signature(y = "continuous", data = "experiment_missing_da
           X <- data@X[, ]
         }
       }
-      return(mi::.fit_continuous(y, data, s, warn, X))
+      mi::.fit_continuous(y, data, s, warn, X)
     }
 )
 
@@ -478,7 +478,7 @@ setMethod("fit_model", signature(y = "character", data = "mi"),
           }
         }
       }
-      return(models)
+      models
     }
 )
 
@@ -497,7 +497,7 @@ setMethod("fit_model", signature(y = "missing", data = "mi"),
           fit_model(y = v, data = data, m = m)
         }
       })
-      return(models)
+      models
     }
 )
 
@@ -507,7 +507,7 @@ setMethod("fit_model", signature(y = "missing", data = "mdf_list"),
     function(data, s = -1, verbose = FALSE, warn = FALSE, ...) {
       out <- lapply(data, fit_model, s = s, verbose = verbose, warn = warn, ...)
       class(out) <- "mdf_list"
-      return(out)
+      out
     }
 )
 
@@ -562,7 +562,7 @@ setMethod("fit_model", signature(y = "missing", data = "mdf_list"),
       if (length(parameters) == ncol(y@parameters)) y@parameters[s, ] <- parameters
     }
 
-    return(y)
+    y
   }
 
 .update_X <-
@@ -592,7 +592,7 @@ setMethod("fit_model", signature(y = "missing", data = "mdf_list"),
     } else {
       data@X[which_drawn, data@index[[varname]][1]] <- y@data[which_drawn]
     }
-    return(data)
+    data
   }
 
 .fit_model_mdf <-
@@ -632,14 +632,14 @@ setMethod("fit_model", signature(y = "missing", data = "mdf_list"),
     }
     if (.MI_DEBUG) sapply(data@variables, validObject, complete = TRUE)
     on.exit()
-    return(data)
+    data
   }
 
 ## unlike the above methods, these return a (modified) missing_data.frame
 setMethod("fit_model", signature(y = "missing", data = "missing_data.frame"),
   def =
     function(data, s = -1, verbose = FALSE, warn = FALSE, ...) {
-      return(.fit_model_mdf(data = data, s = s, verbose = verbose, warn = warn, ...))
+      .fit_model_mdf(data = data, s = s, verbose = verbose, warn = warn, ...)
     }
 )
 
@@ -668,13 +668,13 @@ setMethod("fit_model", signature(y = "missing", data = "allcategorical_missing_d
           if (y@all_obs) {
             return(y)
           }
-          return(mi(y)) # bootstrapping
+          mi(y) # bootstrapping
         })
         data@X <- do.call(cbind, args = lapply(data@variables, FUN = function(y) {
           if (is(y, "irrelevant")) {
-            return(NULL)
+            NULL
           } else {
-            return(y@data)
+            y@data
           }
         }))
         phi <- lapply(1:Hstar, FUN = function(h) {
@@ -682,7 +682,7 @@ setMethod("fit_model", signature(y = "missing", data = "allcategorical_missing_d
             if (is(y, "irrelevant")) {
               return(NULL)
             }
-            return(c(tabulate(y@data, nbins = length(y@levels)) / y@n_total))
+            c(tabulate(y@data, nbins = length(y@levels)) / y@n_total)
           })
         })
         data@parameters$phi <- phi
@@ -712,7 +712,7 @@ setMethod("fit_model", signature(y = "missing", data = "allcategorical_missing_d
             data@X[, y@variable_name] * phi_hj[data@X[, y@variable_name]]
         }
         numerators <- numerators * pi[h]
-        return(numerators)
+        numerators
       })
       z <- apply(probs, 1, FUN = function(prob) {
         which(rmultinom(1, 1, prob) == 1) # rmultinom normalizes internally
@@ -743,7 +743,7 @@ setMethod("fit_model", signature(y = "missing", data = "allcategorical_missing_d
           }
           mark <- z == h
           tab <- tabulate(y@data[mark], nbins = length(y@levels))
-          return(.rdirichlet(1, data@priors$a[y@variable_name] + c(tab)))
+          .rdirichlet(1, data@priors$a[y@variable_name] + c(tab))
         })
       })
       data@parameters$phi <- phi
@@ -779,13 +779,13 @@ setMethod("fit_model", signature(y = "missing", data = "allcategorical_missing_d
       })
       data@X <- do.call(cbind, args = lapply(data@variables, FUN = function(y) {
         if (is(y, "irrelevant")) {
-          return(NULL)
+          NULL
         } else {
-          return(y@data)
+          y@data
         }
       }))
 
-      return(data)
+      data
     }
 )
 
@@ -797,7 +797,7 @@ setMethod("fit_model", signature(y = "missing", data = "allcategorical_missing_d
     rownames(Pr) <- uc
     #     Pr <- Pr[as.character(classes),,drop=FALSE]
     Pr <- Pr / rowSums(Pr)
-    return(list(fitted = Pr))
+    list(fitted = Pr)
   }
 
 setMethod("fit_model", signature(
@@ -806,7 +806,7 @@ setMethod("fit_model", signature(
 ),
 def =
   function(y, data, s = -1, verbose = FALSE, warn = FALSE, ...) {
-    return(.fit_model_Sophie(y, data, s, verbose, warn, ...))
+    .fit_model_Sophie(y, data, s, verbose, warn, ...)
   }
 )
 
@@ -816,7 +816,7 @@ setMethod("fit_model", signature(
 ),
 def =
   function(y, data, s = -1, verbose = FALSE, warn = FALSE, ...) {
-    return(.fit_model_Sophie(y, data, s, verbose, warn, ...))
+    .fit_model_Sophie(y, data, s, verbose, warn, ...)
   }
 )
 
@@ -826,7 +826,7 @@ setMethod("fit_model", signature(
 ),
 def =
   function(y, data, s = -1, verbose = FALSE, warn = FALSE, ...) {
-    return(.fit_model_Sophie(y, data, s, verbose, warn, ...))
+    .fit_model_Sophie(y, data, s, verbose, warn, ...)
   }
 )
 
@@ -863,7 +863,7 @@ setMethod("fit_model", signature(y = "missing_data.frame", data = "missing_data.
         }
       }
       if (.MI_DEBUG) sapply(data@variables, validObject, complete = TRUE)
-      return(y)
+      y
     }
 )
 
@@ -912,6 +912,6 @@ setMethod("fit_model", signature(y = "missing", data = "multilevel_missing_data.
           }
         }
       }
-      return(data)
+      data
     }
 )

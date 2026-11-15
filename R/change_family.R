@@ -22,7 +22,7 @@ setMethod("change_family", signature(data = "missing", y = "missing_variable", t
     function(y, to) {
       y@family <- to
       validObject(y, complete = TRUE)
-      return(y)
+      y
     }
 )
 
@@ -30,7 +30,7 @@ setMethod("change_family", signature(data = "missing", y = "missing_variable", t
   def =
     function(y, to) {
       cat("Likely families include:", y@known_families, sep = "\n")
-      return(invisible(NULL))
+      invisible(NULL)
     }
 )
 
@@ -47,7 +47,7 @@ setMethod("change_family", signature(data = "missing", y = "proportion", to = "f
       }
       y@data <- y@transformation(y@data)
       validObject(y, complete = TRUE)
-      return(y)
+      y
     }
 )
 
@@ -56,7 +56,7 @@ setMethod("change_family", signature(data = "missing", y = "unordered-categorica
     function(y, to) {
       y@family <- to
       y@estimator <- if (y@family$family == "binomial") "RNL" else "MNL"
-      return(y)
+      y
     }
 )
 
@@ -80,7 +80,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "character
         if (i <= length(to)) fam <- do.call(to[i], args = list())
         data@variables[[y[i]]] <- change_family(y = data@variables[[y[i]]], to = fam)
       }
-      return(invisible(data))
+      invisible(data)
     }
 )
 
@@ -102,7 +102,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "character
       for (i in 1:length(y)) {
         data@variables[[y[i]]] <- change_family(y = data@variables[[y[i]]], to = to[[i]])
       }
-      return(invisible(data))
+      invisible(data)
     }
 )
 
@@ -119,7 +119,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "character
       for (i in 1:length(y)) {
         data@variables[[y[i]]] <- change_family(y = data@variables[[y[i]]], to = to)
       }
-      return(invisible(data))
+      invisible(data)
     }
 )
 
@@ -132,7 +132,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "numeric",
       for (i in 1:length(y)) {
         data@variables[[y]] <- change_family(y = data@variables[[y]], to = do.call(to[i], args = list(...)))
       }
-      return(invisible(data))
+      invisible(data)
     }
 )
 
@@ -145,7 +145,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "numeric",
       for (i in 1:length(y)) {
         data@variables[[y]] <- change_family(y = data@variables[[y]], to = to[[i]])
       }
-      return(invisible(data))
+      invisible(data)
     }
 )
 
@@ -155,7 +155,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "numeric",
       for (i in 1:length(y)) {
         data@variables[[y]] <- change_family(y = data@variables[[y]], to = to)
       }
-      return(invisible(data))
+      invisible(data)
     }
 )
 
@@ -165,7 +165,7 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "logical",
       if (length(y) != data@DIM[2]) {
         stop("the length of 'y' must equal the number of variables in 'data'")
       }
-      return(change_family(data, which(y), to))
+      change_family(data, which(y), to)
     }
 )
 
@@ -175,6 +175,6 @@ setMethod("change_family", signature(data = "missing_data.frame", y = "logical",
       if (length(y) != data@DIM[2]) {
         stop("the length of 'y' must equal the number of variables in 'data'")
       }
-      return(change_family(data, which(y), to))
+      change_family(data, which(y), to)
     }
 )

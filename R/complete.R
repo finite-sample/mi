@@ -23,14 +23,14 @@ setMethod("complete", signature(y = "missing_variable", m = "integer"),
     function(y, m, ...) {
       out <- y@data
       if (m > 0 & y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
-      return(out)
+      out
     }
 )
 
 setMethod("complete", signature(y = "irrelevant", m = "integer"),
   def =
     function(y, m, ...) {
-      return(y@raw_data)
+      y@raw_data
     }
 )
 
@@ -43,7 +43,7 @@ setMethod("complete", signature(y = "categorical", m = "integer"),
         out <- factor(out, ordered = is(y, "ordered-categorical"))
         levels(out) <- y@levels
       }
-      return(out)
+      out
     }
 )
 
@@ -56,7 +56,7 @@ setMethod("complete", signature(y = "binary", m = "integer"),
         out <- factor(out, ordered = FALSE)
         levels(out) <- y@levels
       }
-      return(out)
+      out
     }
 )
 
@@ -66,7 +66,7 @@ setMethod("complete", signature(y = "continuous", m = "integer"),
       out <- y@data
       if (m > 0 & y@n_drawn) out[y@which_drawn] <- as.numeric(y@imputations[m, ])
       if (transform) out <- y@inverse_transformation(out)
-      return(out)
+      out
     }
 )
 
@@ -79,7 +79,7 @@ setMethod("complete", signature(y = "nonnegative-continuous", m = "integer"),
         out <- y@inverse_transformation(out)
         out[y@raw_data == 0] <- 0
       }
-      return(out)
+      out
     }
 )
 
@@ -91,7 +91,7 @@ setMethod("complete", signature(y = "SC_proportion", m = "integer"),
       if (transform) out <- y@inverse_transformation(out)
       out[y@raw_data == 0] <- 0
       out[y@raw_data == 1] <- 1
-      return(out)
+      out
     }
 )
 
@@ -112,7 +112,7 @@ setMethod("complete", signature(y = "missing_data.frame", m = "integer"),
         colnames(M) <- paste("missing", colnames(M), sep = "_")
         out <- cbind(out, M)
       }
-      return(out)
+      out
     }
 )
 
@@ -156,14 +156,14 @@ setMethod("complete", signature(y = "mi", m = "numeric"),
           }
         }
       }
-      return(out)
+      out
     }
 )
 
 setMethod("complete", signature(y = "mi", m = "missing"),
   def =
     function(y, to_matrix = FALSE, include_missing = TRUE) {
-      return(complete(y, m = length(y), to_matrix = to_matrix, include_missing = include_missing))
+      complete(y, m = length(y), to_matrix = to_matrix, include_missing = include_missing)
     }
 )
 
@@ -183,13 +183,13 @@ setMethod("complete", signature(y = "mi_list", m = "numeric"),
           }
         }
       }
-      return(dfs)
+      dfs
     }
 )
 
 setMethod("complete", signature(y = "mi_list", m = "missing"),
   def =
     function(y, to_matrix = FALSE, include_missing = TRUE) {
-      return(complete(y, m = length(y[[1]]), to_matrix = to_matrix, include_missing = include_missing))
+      complete(y, m = length(y[[1]]), to_matrix = to_matrix, include_missing = include_missing)
     }
 )
