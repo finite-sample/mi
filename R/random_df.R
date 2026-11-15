@@ -41,7 +41,6 @@
     } else {
       holder <- matrix(NA_real_, nrow = 2 * n_partial, ncol = 2 * n_partial)
     }
-    count <- 1
 
     if (eta <= 0) stop("'eta' must be positive")
     # if eta == 1, then tcrossprod(L) is uniform over correlation matrices

@@ -168,7 +168,6 @@ setMethod("mi", signature(y = "missing_data.frame", model = "missing"),
       s_start <- 0
       s_end <- n.iter
 
-      Time.Elapsed <- proc.time() - ProcStart
       y@variables <- lapply(y@variables, FUN = function(x) {
         if (!x@all_obs && !is(x, "irrelevant")) {
           x@parameters <- matrix(NA_real_, nrow = n.iter, ncol = 0)
@@ -1083,7 +1082,6 @@ setMethod("mi", signature(y = "nonnegative-continuous", model = "glm"),
         "as a fallback due to Hessian error"
       ))
 
-      old_method <- y@imputation_method
       y@imputation_method <- "pmm"
       y <- mi(y, model)
       return(y@data[y@which_miss])

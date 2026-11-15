@@ -189,6 +189,7 @@ setMethod("fit_model", signature(y = "grouped-binary", data = "missing_data.fram
       } else {
         data@weights[[y@variable_name]]
       }
+      # nolint next: object_usage_linter. Used in the formula below.
       groups <- sapply(
         y@strata,
         FUN = function(x) complete(data@variables[[x]], m = 0L),

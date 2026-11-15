@@ -119,8 +119,6 @@ setMethod("image", signature(x = "missing_data.frame"),
       data <- lapply(x@variables, FUN = function(z) if (is(z, "irrelevant")) NULL else is.na(z) * 1)
       data <- as.matrix(as.data.frame(data[!sapply(data, is.null)]))
       index <- seq_len(nrow(data))
-      x.at <- seq_len(nrow(data))
-      x.lab <- index
       if (x.order) {
         orderIndex <- order(colSums(data), decreasing = TRUE)
         sub <- "Ordered by number of missing items per variable"
@@ -185,9 +183,7 @@ setMethod("image", signature(x = "missing_data.frame"),
         ))
         return(invisible(NULL))
       }
-      nn <- 100
       rx <- range(X, finite = TRUE)
-      n0 <- min(nn, max(0, round((0 - rx[1]) / (rx[2] - rx[1]) * nn)))
       col.regions <- heat.colors(17)
       breaks <- seq(from = rx[1] - 1e-8, to = rx[2] + 1e-8, length.out = 16)
       plot(image(
@@ -469,7 +465,7 @@ setMethod("plot", signature(x = "missing_data.frame", y = "categorical"),
         yhat <- fitted(model)
       }
       if (is.matrix(yhat)) yhat <- yhat %*% (seq_len(ncol(yhat)))
-      the_range <- range(c(yhat, z)) #+ c(-.1, .1)
+      the_range <- range(c(yhat, z))
       plot(the_range, the_range,
         type = "n", xlab = "Expected Values", ylab = "Completed (jittered)",
         mgp = c(2, 1, 0), tcl = .05
@@ -498,7 +494,7 @@ setMethod("plot", signature(x = "missing_data.frame", y = "binary"),
         model <- fit_model(y = y, data = x, s = s, warn = TRUE, X = X)
         yhat <- fitted(model)
       }
-      the_range <- range(c(yhat, z)) #+ c(-.1, .1)
+      the_range <- range(c(yhat, z))
       plot(the_range, the_range,
         type = "n", xlab = "Expected Values", ylab = "Completed (jittered)",
         mgp = c(2, 1, 0), tcl = .05
@@ -559,9 +555,8 @@ setMethod("plot", signature(x = "missing_data.frame", y = "semi-continuous"),
       NAs <- is.na(y@raw_data)
       z <- y@data
       hist(y)
-      s <- nrow(y@parameters) + 1
       yhat <- z
-      yhat[complete(y@indicator, m = 0L, to_factor = TRUE) == 0] <- y@fitted # fitted(model)
+      yhat[complete(y@indicator, m = 0L, to_factor = TRUE) == 0] <- y@fitted
       the_range <- range(c(yhat, z))
       plot(the_range, the_range,
         type = "n", xlab = "Expected Values", ylab = "Completed",

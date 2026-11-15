@@ -20,7 +20,8 @@
 
 setClassUnion("MatrixTypeThing", c("matrix"))
 setOldClass("family")
-suppressWarnings(setClassUnion("WeAreFamily", c("family", "character"))) # arm + lme4 = warnings
+# Loading arm and lme4 together warns here.
+suppressWarnings(setClassUnion("WeAreFamily", c("family", "character")))
 setOldClass("mi_list")
 setOldClass("mdf_list")
 
@@ -1245,7 +1246,6 @@ setMethod("initialize", "missing_data.frame",
           temp
         } else if (is(x, "truncated-continuous")) {
           temp <- x@data
-          n <- length(temp)
           if (x@n_lower) temp <- cbind(lower = x@lower_indicator@data, temp)
           if (x@n_upper) temp <- cbind(upper = x@upper_indicator@data, temp)
           if (x@n_both) stop("FIXME: censoring on both sides not supported yet")
@@ -1334,9 +1334,7 @@ setMethod("initialize", "allcategorical_missing_data.frame",
   def =
     function(.Object, include_missingness = TRUE, ...) {
       .Object <- callNextMethod()
-      l <- length(.Object@variables)
       n <- nrow(.Object)
-      uc <- factor(rep(NA_integer_, n))
       .Object@latents <- new("unordered-categorical", raw_data = rep(NA_integer_, n))
       .Object@priors <- list(a = rep(1, ncol(.Object)), a_alpha = 1, b_alpha = 1)
       names(.Object@priors$a) <- colnames(.Object)
