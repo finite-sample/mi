@@ -557,9 +557,9 @@ setMethod("fit_model", signature(y = "missing", data = "mi"),
         sapply(data@data[[1]], FUN = function(y) is(y, "irrelevant"))
       models <- sapply(varnames, simplify = FALSE, FUN = function(v) {
         if (v %in% exclude) {
+          ## maybe just skip these?
           paste(v, "not modeled")
-        } ## maybe just skip these?
-        else {
+        } else {
           fit_model(y = v, data = data, m = m)
         }
       })

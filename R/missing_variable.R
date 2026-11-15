@@ -46,8 +46,7 @@
     } else if (len == 2) {
       if (!is.numeric(values)) {
         type <- "binary"
-      } else if (all(values ==
-        as.integer(values))) {
+      } else if (all(values == as.integer(values))) {
         type <- "binary"
       } else if (favor_positive) {
         if (all(values > 0)) {
@@ -79,15 +78,13 @@
     } else if (is.character(y)) {
       type <- "unordered-categorical"
     } else if (is.numeric(y)) {
-      if (all(values >= 0) &&
-        all(values <= 1)) {
+      if (all(values >= 0) && all(values <= 1)) {
         if (any(values %in% 0:1)) {
           type <- "SC_proportion"
         } else {
           type <- "proportion"
         }
-      } else if (len <= threshold &&
-        all(values == as.integer(values))) {
+      } else if (len <= threshold && all(values == as.integer(values))) {
         type <- if (favor_ordered) "ordered-categorical" else "unordered-categorical"
       } else if (favor_positive) {
         if (all(values > 0)) {

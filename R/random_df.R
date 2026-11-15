@@ -182,7 +182,9 @@
             CPCs <- holder[count, (count + 1):(count + length(gap))]
           } else if (strong == 1) {
             CPCs <- .rgbeta(length(gap), alpha)
-          } else if (strong == 0) CPCs <- rep(0, length(gap))
+          } else if (strong == 0) {
+            CPCs <- rep(0, length(gap))
+          }
           L[gap, i] <- CPCs * exp(0.5 * W[gap1])
           W[gap1] <- W[gap1] + log(1 - CPCs^2)
         }

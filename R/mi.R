@@ -709,8 +709,8 @@ setMethod("mi", signature(y = "ordered-categorical", model = "polr"),
         ev <- eigen(vcov(model), symmetric = TRUE)
         badHessian <- any(ev$values <= 0)
         parameters <- .draw_parameters(means, ev)
-        while (!badHessian &&
-          any(diff(parameters[-(seq_len(ncol(model$x)))]) <= 0)) { # rejection sampling on cutpoints
+        # rejection sampling on cutpoints
+        while (!badHessian && any(diff(parameters[-(seq_len(ncol(model$x)))]) <= 0)) {
           parameters <- .draw_parameters(means, ev)
         }
       }

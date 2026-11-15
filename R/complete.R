@@ -141,8 +141,8 @@ setMethod("complete", signature(y = "mi", m = "numeric"),
           to_matrix = to_matrix,
           include_missing = include_missing
         )
-      } # not a list
-      else if (m <= l) {
+      } else if (m <= l) {
+        # not a list
         out <- lapply(
           y@data[1:m],
           complete,

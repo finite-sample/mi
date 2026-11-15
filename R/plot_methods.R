@@ -68,8 +68,8 @@ setMethod(
           }
         zcol <- rep.int(NA_integer_, length(z))
         for (i in seq_along(col.regions)) {
-          zcol[!is.na(x) & !is.na(y) & !is.na(z) &
-            at[i] <= z & z < at[i + 1]] <- i
+          in_bin <- !is.na(x) & !is.na(y) & !is.na(z) & at[i] <= z & z < at[i + 1]
+          zcol[in_bin] <- i
         }
         zcol <- zcol[subscripts]
         if (any(subscripts)) {
@@ -90,11 +90,14 @@ setMethod(
             p1 <- min(pSize)
             lwd <- ## crude for now
               if (p1 < 2 || pA < 6) {
-                0.01
-              } # effectively 0
-              else if (p1 >= 4) {
+                0.01 # effectively 0
+              } else if (p1 >= 4) {
                 1
-              } else if (p1 > 3) 0.5 else 0.2
+              } else if (p1 > 3) {
+                0.5
+              } else {
+                0.2
+              }
           } else {
             stopifnot(is.numeric(lwd), all(lwd >= 0))
           } # allow 0
@@ -118,17 +121,13 @@ setMethod("image", signature(x = "missing_data.frame"),
     function(x, y.order = FALSE, x.order = FALSE, clustered = TRUE, grayscale = FALSE, ...) {
       data <- lapply(x@variables, FUN = function(z) if (is(z, "irrelevant")) NULL else is.na(z) * 1)
       data <- as.matrix(as.data.frame(data[!sapply(data, is.null)]))
-      index <- seq_len(nrow(data))
       if (x.order) {
         orderIndex <- order(colSums(data), decreasing = TRUE)
         sub <- "Ordered by number of missing items per variable"
       }
       if (y.order) {
         orderIndex <- order(rowSums(data), decreasing = FALSE)
-        index <- row.names(data)
         sub <- "Ordered by number of missing items per observation"
-        x.at <- NULL
-        x.lab <- FALSE
       }
       if (clustered) {
         orderIndex <- order.dendrogram(
@@ -257,7 +256,6 @@ setMethod("image", signature(x = "mi"),
       }
       if (y.order) {
         orderIndex <- order(rowSums(data), decreasing = FALSE)
-        index <- row.names(data)
         sub <- "Ordered by number of missing items per observation"
       }
       if (clustered) {
@@ -580,7 +578,9 @@ setMethod("plot", signature(x = "mi", y = "ANY"),
         select <- which(y)
       } else if (is.character(y)) {
         select <- which(colnames(x@data[[1]]) %in% y)
-      } else if (is.numeric(y)) select <- which(seq_len(nrow(x@data[[1]])) %in% y)
+      } else if (is.numeric(y)) {
+        select <- which(seq_len(nrow(x@data[[1]])) %in% y)
+      }
 
       for (i in seq_along(x@data[[1]]@variables)) {
         if (x@data[[1]]@no_missing[i]) {

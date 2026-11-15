@@ -163,14 +163,16 @@ setClass("missing_variable",
 ## but can be modified by a subsequently-called initialize() method
 setMethod("initialize", "missing_variable",
   def =
-    function(.Object, NA.strings = c(
+    function(.Object,
+             NA.strings = c(
                "", ".", "Na", "N/a", "N / a", "NaN",
                "Not Applicable", "Not applicable",
                "Not Available", "Not available",
                "Not Ascertained", "Not ascertained",
                "Unavailable", "Unknown", "Missing",
                "Dk", "Don't Know", "Don't know", "Do Not Know", "Do not know"
-             ), ...) {
+             ),
+             ...) {
       .Object <- callNextMethod()
       if (length(.Object@raw_data) == 0) {
         return(.Object)
@@ -287,8 +289,7 @@ multinomial <- function(link = "logit") {
         domain = NA
       )
       linktemp <- eval(link)
-      if (!is.character(linktemp) || length(linktemp) !=
-        1L) {
+      if (!is.character(linktemp) || length(linktemp) != 1L) {
         stop("'link' is invalid", domain = NA)
       }
     }
@@ -324,8 +325,7 @@ multinomial <- function(link = "logit") {
     } else {
       wt
     }
-    -2 * sum(ifelse(m > 0, (wt / m), 0) * dbinom(round(m *
-      y), round(m), mu, log = TRUE))
+    -2 * sum(ifelse(m > 0, (wt / m), 0) * dbinom(round(m * y), round(m), mu, log = TRUE))
   }
   initialize <- expression({
     if (NCOL(y) == 1) {
@@ -392,78 +392,79 @@ multinomial <- function(link = "logit") {
 }
 
 ## unordered categorical, which corresponds to an unordered factor with more than 2 levels
-setClass("unordered-categorical", representation("categorical",
-  estimator = "character",
-  use_NA = "logical",
-  rank = "integer"
-),
-prototype(
-  estimator = "MNL",
-  imputation_method = c("ppd", "pmm", "mode", "mcar", NA_character_),
-  family = multinomial(link = "logit"),
-  known_families = c("multinomial", "binomial"),
-  known_links = c("logit", "probit", "cauchit", "log", "cloglog"),
-  use_NA = FALSE,
-  rank = NA_integer_
-),
-validity = function(object) {
-  out <- TRUE
-  values <- unique(object@raw_data)
-  values <- values[!is.na(values)]
+setClass(
+  "unordered-categorical",
+  representation(
+    "categorical",
+    estimator = "character",
+    use_NA = "logical",
+    rank = "integer"
+  ),
+  prototype(
+    estimator = "MNL",
+    imputation_method = c("ppd", "pmm", "mode", "mcar", NA_character_),
+    family = multinomial(link = "logit"),
+    known_families = c("multinomial", "binomial"),
+    known_links = c("logit", "probit", "cauchit", "log", "cloglog"),
+    use_NA = FALSE,
+    rank = NA_integer_
+  ),
+  validity = function(object) {
+    out <- TRUE
+    values <- unique(object@raw_data)
+    values <- values[!is.na(values)]
 
-  im <- getClass(class(object))@prototype@imputation_method
-  if (length(values) > 0 && length(values) <= 2) {
-    out <- paste(
-      object@variable_name,
-      "unordered-categoricals must have more than 2 levels; otherwise use binary"
-    )
-  } else if (!all(object@imputation_method %in% im)) {
-    out <- paste(
-      object@variable_name,
-      ": 'imputation_method' must be one of:\n",
-      paste(im, collapse = ", ")
-    )
+    im <- getClass(class(object))@prototype@imputation_method
+    if (length(values) > 0 && length(values) <= 2) {
+      out <- paste(
+        object@variable_name,
+        "unordered-categoricals must have more than 2 levels; otherwise use binary"
+      )
+    } else if (!all(object@imputation_method %in% im)) {
+      out <- paste(
+        object@variable_name,
+        ": 'imputation_method' must be one of:\n",
+        paste(im, collapse = ", ")
+      )
+    } else if (!(object@estimator %in% c("MNL", "RNL"))) {
+      out <- paste(object@variable_name, ": estimator not recognized")
+    } else if (!(object@use_NA %in% c(TRUE, FALSE))) {
+      out <- paste(object@variable_name, ": use_NA must be TRUE or FALSE")
+    }
+    out
   }
-  #            else if(object@family$family != "multinomial") {
-  #            }
-  #            else if(object@family$link != "logit") {
-  #            }
-  else if (!(object@estimator %in% c("MNL", "RNL"))) {
-    out <- paste(object@variable_name, ": estimator not recognized")
-  } else if (!(object@use_NA %in% c(TRUE, FALSE))) {
-    out <- paste(object@variable_name, ": use_NA must be TRUE or FALSE")
-  }
-  out
-}
 )
 
 ## ordered categorical, which corresponds to an ordered factor
-setClass("ordered-categorical", representation("categorical",
-  cutpoints = "numeric"
-),
-prototype(
-  imputation_method = c("ppd", "pmm", "mode", "mcar", NA_character_),
-  family = multinomial(link = "logit"),
-  known_families = c("multinomial", "gaussian", "binomial", "quasibinomial"),
-  known_links = "logit"
-),
-validity = function(object) {
-  out <- TRUE
-  im <- getClass(class(object))@prototype@imputation_method
-  # interval and binary are validated separately
-  if (!(object@family$family %in% getClass(class(object))@prototype@known_families)) {
-    out <- "the 'family' slot of 'ordered-categorial' class must be 'multinomial()'"
-  } else if (object@family$family == "multinomial" && object@family$link != "logit") {
-    out <- "the 'family' slot of 'ordered-categorial' class must be 'multinomial(link = 'logit')'"
-  } else if (!all(object@imputation_method %in% im)) {
-    out <- paste(
-      object@variable_name,
-      ": 'imputation_method' must be one of:\n",
-      paste(im, collapse = ", ")
-    )
+setClass(
+  "ordered-categorical",
+  representation(
+    "categorical",
+    cutpoints = "numeric"
+  ),
+  prototype(
+    imputation_method = c("ppd", "pmm", "mode", "mcar", NA_character_),
+    family = multinomial(link = "logit"),
+    known_families = c("multinomial", "gaussian", "binomial", "quasibinomial"),
+    known_links = "logit"
+  ),
+  validity = function(object) {
+    out <- TRUE
+    im <- getClass(class(object))@prototype@imputation_method
+    # interval and binary are validated separately
+    if (!(object@family$family %in% getClass(class(object))@prototype@known_families)) {
+      out <- "the 'family' slot of 'ordered-categorial' class must be 'multinomial()'"
+    } else if (object@family$family == "multinomial" && object@family$link != "logit") {
+      out <- "the 'family' slot of 'ordered-categorial' class must be 'multinomial(link = 'logit')'"
+    } else if (!all(object@imputation_method %in% im)) {
+      out <- paste(
+        object@variable_name,
+        ": 'imputation_method' must be one of:\n",
+        paste(im, collapse = ", ")
+      )
+    }
+    out
   }
-  out
-}
 )
 
 ## ordered categorical with known cutpoints that discretize a continuous variable (like income)
@@ -1342,30 +1343,36 @@ setMethod("initialize", "allcategorical_missing_data.frame",
     }
 )
 
-setClass("experiment_missing_data.frame", representation("missing_data.frame",
-  concept = "factor",
-  case = "character"
-),
-validity = function(object) {
-  out <- TRUE
-  l <- length(object@concept)
-  if (l != length(object@variables)) {
-    out <- "length of 'concept' must equal the number of variables"
-  } else if (!all(levels(object@concept) %in% c("outcome", "covariate", "treatment"))) {
-    out <- "all elements of 'concept' must be exactly one of 'outcome', 'covariate', or 'treatment'"
-  } else if (sum(object@concept == "treatment") != 1) {
-    out <- "there must be exactly one variable designated 'treatment'"
-  } else if (!is(object@variables[[which(object@concept == "treatment")]], "binary")) {
-    out <- "the 'treatment' variable must be of class 'binary'"
-  } else if (object@variables[[which(object@concept == "treatment")]]@n_miss) {
-    out <- "'treatment' variable cannot have any missingness"
-  } else if (length(object@case) > 1) {
-    out <- "'case' must be exactly one of 'outcomes', 'covariates', or 'both'"
-  } else if (length(object@case) && !(object@case %in% c("outcomes", "covariates", "both"))) {
-    out <- "'case' must be exactly one of 'outcomes', 'covariates', or 'both'"
+setClass(
+  "experiment_missing_data.frame",
+  representation(
+    "missing_data.frame",
+    concept = "factor",
+    case = "character"
+  ),
+  validity = function(object) {
+    out <- TRUE
+    l <- length(object@concept)
+    if (l != length(object@variables)) {
+      out <- "length of 'concept' must equal the number of variables"
+    } else if (!all(levels(object@concept) %in% c("outcome", "covariate", "treatment"))) {
+      out <- paste(
+        "all elements of 'concept' must be exactly one of",
+        "'outcome', 'covariate', or 'treatment'"
+      )
+    } else if (sum(object@concept == "treatment") != 1) {
+      out <- "there must be exactly one variable designated 'treatment'"
+    } else if (!is(object@variables[[which(object@concept == "treatment")]], "binary")) {
+      out <- "the 'treatment' variable must be of class 'binary'"
+    } else if (object@variables[[which(object@concept == "treatment")]]@n_miss) {
+      out <- "'treatment' variable cannot have any missingness"
+    } else if (length(object@case) > 1) {
+      out <- "'case' must be exactly one of 'outcomes', 'covariates', or 'both'"
+    } else if (length(object@case) && !(object@case %in% c("outcomes", "covariates", "both"))) {
+      out <- "'case' must be exactly one of 'outcomes', 'covariates', or 'both'"
+    }
+    out
   }
-  out
-}
 )
 
 setMethod("initialize", "experiment_missing_data.frame",
@@ -1393,17 +1400,20 @@ setMethod("initialize", "experiment_missing_data.frame",
 
 .empty_mdf_list <- list()
 class(.empty_mdf_list) <- "mdf_list"
-setClass("multilevel_missing_data.frame", representation("missing_data.frame",
-  groups = "character",
-  mdf_list = "mdf_list"
-),
-prototype(
-  mdf_list = .empty_mdf_list
-),
-validity = function(object) {
-  out <- TRUE
-  out
-}
+setClass(
+  "multilevel_missing_data.frame",
+  representation(
+    "missing_data.frame",
+    groups = "character",
+    mdf_list = "mdf_list"
+  ),
+  prototype(
+    mdf_list = .empty_mdf_list
+  ),
+  validity = function(object) {
+    out <- TRUE
+    out
+  }
 )
 
 setMethod("initialize", "multilevel_missing_data.frame",

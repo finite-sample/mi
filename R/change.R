@@ -134,7 +134,9 @@ setMethod(
         }
       } else if (is.na(what) || is.na(to)) {
         mv <- new(class(mv), raw_data = mv@raw_data, variable_name = mv@variable_name)
-      } else if (is(mv, "continuous")) mv@data <- mv@transformation(mv@raw_data)
+      } else if (is(mv, "continuous")) {
+        mv@data <- mv@transformation(mv@raw_data)
+      }
       data@variables[[y]] <- mv
       data ## FIXME: maybe reinitialize data?
     }
