@@ -81,7 +81,9 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "character",
     function(data, y, to, ...) {
       if (length(to) == 1) {
         to <- rep(to, length(y))
-      } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
+      } else if (length(to) != length(y)) {
+        stop("'y' and 'to' must have the same length")
+      }
       if (all(y %in% names(getClass("missing_variable")@subclasses))) {
         classes <- sapply(data@variables, class)
         y <- c(sapply(y, FUN = function(x) {
@@ -104,7 +106,9 @@ setMethod("change_type", signature(data = "missing_data.frame", y = "numeric", t
     function(data, y, to, ...) {
       if (length(to) == 1) {
         to <- rep(to, length(y))
-      } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
+      } else if (length(to) != length(y)) {
+        stop("'y' and 'to' must have the same length")
+      }
       for (i in seq_along(y)) {
         data@variables[[y]] <- change_type(y = data@variables[[y]], to = to[[i]], ...)
       }

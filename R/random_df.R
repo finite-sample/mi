@@ -128,7 +128,9 @@
         if (restrictions %in% c("triangular", "stratified")) {
           CPCs[length(gap):(length(gap) - n_partial + 1)] <- 0
           if (i == end && !is.na(last_CPC)) CPCs[length(CPCs)] <- last_CPC
-        } else if (restrictions == "MCAR") CPCs[] <- 0
+        } else if (restrictions == "MCAR") {
+          CPCs[] <- 0
+        }
 
         L[gap, i] <- CPCs * exp(0.5 * W[gap1])
         W[gap1] <- W[gap1] + log(1 - CPCs^2)
@@ -406,7 +408,9 @@ rdata.frame <-
     } else {
       if (length(alpha) == 1 && is.na(alpha)) {
         alpha <- rt(ncol(L), df)
-      } else if (length(alpha) != ncol(L)) stop(paste("length of alpha must be", ncol(L)))
+      } else if (length(alpha) != ncol(L)) {
+        stop(paste("length of alpha must be", ncol(L)))
+      }
       Sigma <- tcrossprod(L)
       result <- find_Omega(Sigma, alpha, control = list(maxit = 1000))
       X <- as.data.frame(sn::rmsn(N, Omega = result$Omega, alpha = alpha))

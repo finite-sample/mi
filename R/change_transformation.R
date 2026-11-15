@@ -109,7 +109,9 @@ setMethod(
     function(data, y, to) {
       if (length(to) == 1) {
         to <- rep(to, length(y))
-      } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
+      } else if (length(to) != length(y)) {
+        stop("'y' and 'to' must have the same length")
+      }
       if (all(y %in% c("continuous", names(getClass("continuous")@subclasses)))) {
         classes <- sapply(data@variables, class)
         y <- c(sapply(y, FUN = function(x) {

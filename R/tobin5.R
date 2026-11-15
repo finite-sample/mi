@@ -40,7 +40,9 @@ tobin5 <-
       f <- paste(mark, collapse = " + ")
       f <- paste(y@variable_name, " ~ ", f, " + IMR", sep = "")
       f <- as.formula(f)
-    } else if (!is(f, "formula")) stop("'f' must be 'NULL' or a formula")
+    } else if (!is(f, "formula")) {
+      stop("'f' must be 'NULL' or a formula")
+    }
 
     df <- as.data.frame(cbind(mdf@X, IMR = IMR_0))
     if (is(y, "continuous")) {
@@ -114,7 +116,9 @@ tobin5 <-
       f <- paste(mark, collapse = " + ")
       f <- paste(y@variable_name, " ~ ", f, " + IMR", sep = "")
       f <- as.formula(f)
-    } else if (!is(f, "formula")) stop("'f' must be 'NULL' or a formula")
+    } else if (!is(f, "formula")) {
+      stop("'f' must be 'NULL' or a formula")
+    }
 
     if (!is(mdf@variables[[y]], "continuous")) {
       stop("only continuous dependent variables are supported at the moment")

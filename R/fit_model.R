@@ -943,7 +943,9 @@ setMethod("fit_model", signature(y = "missing", data = "multilevel_missing_data.
 
       # update group means
       means <- sapply(data@mdf_list, FUN = function(x) colMeans(x@X[, -1]))
-      if (is.list(means)) {} else means <- t(means)
+      if (is.list(means)) {} else {
+        means <- t(means)
+      }
       mark <- 0L ## FIXME
       data@X[, mark] <- means
 

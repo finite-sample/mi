@@ -60,7 +60,9 @@ setMethod(
       y <- match.arg(y, colnames(data), several.ok = TRUE)
       if (length(to) == 1) {
         to <- rep(to, length(y))
-      } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
+      } else if (length(to) != length(y)) {
+        stop("'y' and 'to' must have the same length")
+      }
       for (i in seq_along(y)) {
         data@variables[[y[i]]] <- change_imputation_method(y = data@variables[[y[i]]], to = to[i])
       }
@@ -75,7 +77,9 @@ setMethod(
     function(data, y, to) {
       if (length(to) == 1) {
         to <- rep(to, length(y))
-      } else if (length(to) != length(y)) stop("'y' and 'to' must have the same length")
+      } else if (length(to) != length(y)) {
+        stop("'y' and 'to' must have the same length")
+      }
       for (i in seq_along(y)) {
         data@variables[[y]] <- change_imputation_method(y = data@variables[[y]], to = to[i])
       }
