@@ -17,7 +17,8 @@ Depends: R (>= 3.0.0), methods, Matrix, stats4
 Imports: arm (>= 1.4-11)
 Suggests: betareg, lattice, knitr, MASS, nnet, parallel, sn, survival,
         truncnorm, foreign
-URL: https://sites.stat.columbia.edu/gelman/
+URL: https://github.com/finite-sample/mi, https://sites.stat.columbia.edu/gelman/
+BugReports: https://github.com/finite-sample/mi/issues
 License: GPL (>= 2)
 LazyLoad: yes
 Author: Andrew Gelman [ctb],
