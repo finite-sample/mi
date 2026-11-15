@@ -35,4 +35,3 @@ y <- missing_variable(x, type = "SC_proportion")
 x <- rpois(10, lambda = 5)
 x[1] <- NA
 y <- missing_variable(x, type = "count")
-
