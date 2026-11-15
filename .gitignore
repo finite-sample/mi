@@ -3,3 +3,7 @@
 *.Rcheck/
 *.tar.gz
 inst/doc
+
+# pkgdown output. Disposable local build product; CI builds and
+# publishes the definitive site.
+/docs/
