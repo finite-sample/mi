@@ -120,7 +120,8 @@ setMethod("fit_model", signature(y = "unordered-categorical", data = "missing_da
     function(y, data, warn, s, ...) {
       to_drop <- data@index[[y@variable_name]]
       if (y@use_NA) {
-        y@data[y@which_drawn] <- -.Machine$integer.max # make NAs the smallest possible signed integer
+        # make NAs the smallest possible signed integer
+        y@data[y@which_drawn] <- -.Machine$integer.max
       }
       if (length(to_drop)) {
         X <- data@X[, -to_drop]

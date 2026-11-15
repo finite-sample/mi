@@ -118,7 +118,8 @@ mi2BUGS <-
         function(x) lapply(x@variables, function(y) y@imputations)
       )
       n.parameters <- rapply(imp_list, ncol)
-      arr <- array(NA_real_, c(sum(imputations@total_iters), length(imp_list), n.parameters)) ## FIXME: names?
+      ## FIXME: names?
+      arr <- array(NA_real_, c(sum(imputations@total_iters), length(imp_list), n.parameters))
       for (i in seq_along(imp_list)) arr[, i, ] <- unlist(imp_list[[i]])
     } else {
       arr <- get_parameters(imputations)

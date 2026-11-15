@@ -1104,7 +1104,8 @@ setMethod("mi", signature(y = "nonnegative-continuous", model = "glm"),
     } else if (y@imputation_method == "ppd") {
       eta <- model$x[y@which_drawn, , drop = FALSE] %*% parameters[seq_len(NCOL(model$x))]
       mu <- model$link$mean$linkinv(eta)
-      phi <- model$link$precision$linkinv(parameters[length(parameters)]) ## FIXME: in the parameterized case
+      ## FIXME: in the parameterized case
+      phi <- model$link$precision$linkinv(parameters[length(parameters)])
       shape1 <- mu * phi
       shape2 <- phi - shape1
       draws <- rbeta(y@n_drawn, shape1, shape2)

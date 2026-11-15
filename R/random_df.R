@@ -44,7 +44,8 @@
     count <- 1
 
     if (eta <= 0) stop("'eta' must be positive")
-    alpha <- eta + (n - 2) / 2 # if eta == 1, then tcrossprod(L) is uniform over correlation matrices
+    # if eta == 1, then tcrossprod(L) is uniform over correlation matrices
+    alpha <- eta + (n - 2) / 2
     L <- matrix(NA_real_, n, n)
     L[upper.tri(L)] <- 0
     L[1, 1] <- 1
@@ -466,7 +467,8 @@ rdata.frame <-
         f_true <- as.formula(paste(y_var, "~", f_true))
         ols_y <- lm(f_true, data = X)
 
-        correlations[i] <- cor(residuals(ols_u), residuals(ols_y)) # this differs only randomly from 0 under MAR due to finite N
+        # this differs only randomly from 0 under MAR due to finite N
+        correlations[i] <- cor(residuals(ols_u), residuals(ols_y))
       }
     }
     letter_mark <- 1
@@ -505,7 +507,8 @@ rdata.frame <-
           n_var <- paste(letters[letter_mark], j, sep = "_")
           f_true <- as.formula(paste(n_var, "~", f_true))
           ols_n <- lm(f_true, data = X)
-          correlations[which(is.na(correlations))[1]] <- cor(residuals(ols_u), residuals(ols_n)) # this differs only randomly from 0 under MAR
+          # this differs only randomly from 0 under MAR
+          correlations[which(is.na(correlations))[1]] <- cor(residuals(ols_u), residuals(ols_n))
         }
         letter_mark <- letter_mark + 1
       }
@@ -695,11 +698,13 @@ make_start <-
 ## this function finds Omega via optim() and returns it as part of a list with
 find_Omega <-
   function(Sigma, alpha, method = "BFGS", start = make_start(Sigma), ...) {
-    stopifnot(isSymmetric(Sigma)) # Sigma is the intended covariance matrix of the multivariate skew-normal variable
+    # Sigma is the intended covariance matrix of the multivariate skew-normal variable
+    stopifnot(isSymmetric(Sigma))
     stopifnot(all(eigen(Sigma, TRUE, TRUE)$values > 0))
     n <- nrow(Sigma)
     alpha <- c(alpha)
-    stopifnot(length(alpha) == n) # alpha is a shape parameter for the multivariate skew-normal variable
+    # alpha is a shape parameter for the multivariate skew-normal variable
+    stopifnot(length(alpha) == n)
 
     opt <- optim(start, fmin, method = method, Sigma = Sigma, alpha = alpha, ...)
     if (opt$convergence != 0) {

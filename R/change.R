@@ -122,7 +122,8 @@ setMethod(
       if (is.logical(y) | is.numeric(y)) y <- colnames(data)[y]
 
       mv <- data@variables[[y]]
-      mv@raw_data[mv@raw_data == what] <- to # NOTE: exception to "never change the raw_data slot rule"
+      # NOTE: exception to "never change the raw_data slot rule"
+      mv@raw_data[mv@raw_data == what] <- to
       if (is(mv, "categorical")) {
         values <- unique(mv@raw_data)
         values <- values[!is.na(values)]

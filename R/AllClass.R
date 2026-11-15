@@ -449,7 +449,8 @@ prototype(
 validity = function(object) {
   out <- TRUE
   im <- getClass(class(object))@prototype@imputation_method
-  if (!(object@family$family %in% getClass(class(object))@prototype@known_families)) { # interval and binary are validated separately
+  # interval and binary are validated separately
+  if (!(object@family$family %in% getClass(class(object))@prototype@known_families)) {
     out <- "the 'family' slot of 'ordered-categorial' class must be 'multinomial()'"
   } else if (object@family$family == "multinomial" && object@family$link != "logit") {
     out <- "the 'family' slot of 'ordered-categorial' class must be 'multinomial(link = 'logit')'"
@@ -639,7 +640,8 @@ setClass("continuous",
     transformation = .standardize_transform,
     inverse_transformation = .standardize_transform,
     family = gaussian(),
-    known_families = c("gaussian", "Gamma", "inverse.gaussian", "binomial"), # binomial() is only for (SC_)proportions
+    # binomial() is only for (SC_)proportions
+    known_families = c("gaussian", "Gamma", "inverse.gaussian", "binomial"),
     known_links = .known_links[.known_links != "sqrt"],
     known_transformations = c(
       "standardize",
@@ -1013,11 +1015,13 @@ setClass("missing_data.frame",
     patterns = "factor", # indicates which missingness_pattern an observation belongs to
     DIM = "integer", # observations x variables
     DIMNAMES = "list", # list of rownames and colnames
-    postprocess = "function", # makes additional variables from existing variables (interactions, etc.)
+    # makes additional variables from existing variables (interactions, etc.)
+    postprocess = "function",
     index = "list", # this indicate which variables to exclude when modeling a given variable
     X = "MatrixTypeThing", # ALL variables (categorical variables are in dummy-variable form)
     weights = "list", # this gets passed to bayesglm() and similar modeling functions
-    priors = "list", # the elements of this get passed to bayesglm() and other modeling functions in arm
+    # the elements of this get passed to bayesglm() and other modeling functions in arm
+    priors = "list",
     correlations = "matrix", # has SMCs and Spearman correlations
     done = "logical", # are we done?
     workpath = "character"
@@ -1091,7 +1095,8 @@ setClass("missing_data.frame",
   }
 )
 
-.set_priors <- function(variables, mu = 0) { ## FIXME: maybe add an option to draw from such a t distribution?
+## FIXME: maybe add an option to draw from such a t distribution?
+.set_priors <- function(variables, mu = 0) {
   foo <- function(y) {
     out <- list(
       prior.mean = mu, prior.scale = 2.5, prior.df = 1,
